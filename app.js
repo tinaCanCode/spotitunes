@@ -9,6 +9,8 @@ const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
 
+//require spotify Web api
+const SpotifyWebApi = require('spotify-web-api-node');
 
 mongoose
   .connect('mongodb://localhost/spotitunes', {useNewUrlParser: true})
@@ -29,6 +31,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 
 // setting the spotify-api goes here:
 const spotifyApi = new SpotifyWebApi({
@@ -60,12 +63,15 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 
 
 // default value for title local
-app.locals.title = 'Express - Generated with IronGenerator';
+app.locals.title = 'Spotitunes - Find all your favorite Podcasts in one App';
 
 
 
 const index = require('./routes/index');
 app.use('/', index);
+
+const spotify = require("./routes/spotify");
+app.use("/spotify", spotify);
 
 
 module.exports = app;
