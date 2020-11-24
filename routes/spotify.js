@@ -42,14 +42,34 @@ router.get("/search-results", (req, res) => {
 
 
   spotifyApi
-  //.search(req.query.podcast, ["track", "artist", "playlist", "show"])
-    .searchShows(req.query.podcast, {market: "DE", limit: 6})
+    //.search(req.query.podcast, ["track", "artist", "playlist", "show"])
+    .searchShows(req.query.podcast, { market: "DE", limit: 6 })
     //.searchEpisodes(req.query.podcast)
     .then(data => {
-      console.log('The received data from the API: ', data.body.shows.items);
-      res.render("spotify/search-result", {podcasts: data.body.shows.items})
+      console.log('The received data from the API about shows: ', data.body.shows.items);
+      res.render("spotify/search-result", { podcasts: data.body.shows.items })
     })
     .catch(err => console.log('The error while searching artists occurred: ', err));
 })
+
+
+
+// DETAILS
+
+router.get("/details/:showId", (req, res) => {
+  console.log(req.params.showId)
+    spotifyApi
+    .getShow(req.params.showId
+      , {market: "DE"}
+    )
+    .then(data => {
+      console.log('The received data from the API about one show: ', data.body);
+      res.render("spotify/details", { podcasts: data.body })
+    })
+    .catch(err => console.log('The error while searching show occurred: ', err));
+})
+
+
+
 
 module.exports = router;
