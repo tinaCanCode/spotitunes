@@ -1,0 +1,29 @@
+{{!-- Signup form --}}
+{{!-- <h2>Sign In</h2> --}}
+<div id="signup">
+<form action="/signup" method="POST">
+<h3>Signup</h3>
+  <div class="form-group">
+    <label for="input-username">Username</label>
+    <input type="text" class="form-control" id="input-username" name="username" placeholder="Your username"/>
+  </div>
+  <div class="form-group">
+      <label for="input-email">Email</label>
+    <input type="email" id="input-email" name="email" placeholder="Your email" class="form-control"/>
+    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+  </div>
+  <div class="form-group">
+    <label for="input-password">Password</label>
+    <input type="password" name="password" class="form-control" id="input-password" placeholder="********"/>
+  </div>
+  <button type="submit" class="btn btn-sm btn-outline-secondary">Create Account</button>
+   {{#if errorMessage}}
+    <p class="error">{{errorMessage}}</p>
+  {{/if}}
+</form>
+</div>
+
+
+
+
+

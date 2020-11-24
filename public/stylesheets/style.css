@@ -1,8 +1,78 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; }
+  
+  background-color: #19181A ;
+  color: white;
+  font: "Lucida Grande", Helvetica, Arial, sans-serif; 
+  font-size: 1rem;
+  
+}
 
-a {
-  color: #00B7FF; }
 
-/*# sourceMappingURL=style.css.map */
+.backgroundImage{
+  height: 1000px;
+  background-image: url("/images/1_1-2.jpg");
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 50px 0 0 0;
+position: relative;
+text-align: center;
+padding: 5%;
+} */
+
+h1{
+
+  color:white; 
+}
+
+p{
+
+  color:white;
+
+}
+
+.btn{
+  color: #b19f9e;
+  border-color: #b19f9e;
+  
+}
+
+.btn-lg{
+  color: white;
+  border-color: white;
+  margin-top: 20%;
+  margin-bottom: 20%;
+}
+
+#signup{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.btn-sm{
+  margin-left: 10px;
+}
+
+
+
+@media (max-width: 575.98px) { 
+  h1{
+    font-size: 30px;
+  }
+ }
+
+@media (max-width: 767.98px) { 
+  h1{
+    font-size: 30 px;
+  }
+ }
+
+/* @media (max-width: 991.98px) { ... }
+
+@media (max-width: 1199.98px) { ... } */
+
+
+/*# sourceMappingURL=style.css.map
