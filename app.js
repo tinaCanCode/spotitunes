@@ -33,6 +33,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 
+
+
 // setting the spotify-api goes here:
 const spotifyApi = new SpotifyWebApi({
   clientId: process.env.CLIENT_ID,
@@ -63,12 +65,19 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 
 
 // default value for title local
-app.locals.title = 'Spotitunes - Find all your favorite Podcasts in one App';
+// app.locals.title = 'Spotitunes - Find all your favorite Podcasts in one App';
+app.locals.title = 'Spotitunes';
 
 
 
 const index = require('./routes/index');
 app.use('/', index);
+
+const authRouter = require('./routes/auth');
+app.use('/', authRouter);    
+
+
+
 
 const spotify = require("./routes/spotify");
 app.use("/spotify", spotify);
