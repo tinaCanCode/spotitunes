@@ -8,9 +8,16 @@ const hbs          = require('hbs');
 const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
+const unirest = require('unirest');
 
 //require spotify Web api
 const SpotifyWebApi = require('spotify-web-api-node');
+// required setup for listennotes api
+
+const response = await unirest.get('https://listen-api.listennotes.com/api/v2/search?q=star%20wars&sort_by_date=0&type=episode&offset=0&len_min=10&len_max=30&genre_ids=68%2C82&published_before=1580172454000&published_after=0&only_in=title%2Cdescription&language=English&safe_mode=0')
+.header('X-ListenAPI-Key', '92deae50310140ab877e8f1d4e4c8fcd')
+response.toJSON();
+
 
 mongoose
   .connect('mongodb://localhost/spotitunes', {useNewUrlParser: true})
