@@ -1,9 +1,12 @@
 {{#if user}}
-  <h2>Welcome, {{ user.username }}!</h2>
-  <p>This is your profile page my friend!</p>
-  <button>
-    <a href="/userProfile">Logout</a>
-  </button>
+  <h2>{{ user.username }} - Profile page</h2>
+   <form action="/logout" method="post"><button type="submit">Logout</button></form>
+  <h3>My favorite Podcasts</h3>
+  {{#each podcasts}}
+  <p>{{this.body.name}} - {{this.body.publisher}}</p>
+  {{/each}}
+
+
 {{else}}
   <p>Still no logged in user, sorry!</p>
 {{/if}}

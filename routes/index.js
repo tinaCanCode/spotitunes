@@ -33,7 +33,7 @@ router.post('/add-favorite', (req, res, next) => {
     return User.findOneAndUpdate({_id: req.session.currentUser._id}, { $push: { favoritePodcasts: resp._id } }, {new: true})
   })
   // Redirect to Homepage
-  .then(() => res.redirect("/"))
+  .then(() => res.redirect("/userProfile"))
   .catch(err => console.log(`Err while creating the post in the DB: ${err}`));
 })
 
