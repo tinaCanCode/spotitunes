@@ -36,8 +36,6 @@ router.post('/signup', (req, res)=> {
     return;
   }
 
- 
-
 bcryptjs
     .genSalt(saltRounds)
     .then(salt => bcryptjs.hash(password, salt))
@@ -51,7 +49,7 @@ bcryptjs
     })
     .then(createdUser => {
       console.log('Newly created user is: ', createdUser);
-      res.redirect('/userProfile');
+      res.redirect('/login');
     })
     .catch(error => {
       if (error instanceof mongoose.Error.ValidationError) {
@@ -78,6 +76,7 @@ router.get('/login', (req, res) => res.render('auth/login'));
 // .post() login route ==> to process form data
 router.post('/login', (req, res, next) => {
   const { email, password } = req.body;
+  console.log("SESSION: ", req.session)
  
   if (email === '' || password === '') {
     res.render('auth/login', {
@@ -92,14 +91,15 @@ router.post('/login', (req, res, next) => {
         res.render('auth/login', { errorMessage: 'Email is not registered. Try with other email.' });
         return;
       } else if (bcryptjs.compareSync(password, user.password)) {
-        res.render('users/user-profile', { user });
+        //res.render("users/user-profile", {user});
+        req.session.currentUser = user;
+        res.redirect("/");
       } else {
         res.render('auth/login', { errorMessage: 'Incorrect password.' });
       }
     })
     .catch(error => next(error));
 });
-
 
 router.get('/userProfile', (req, res) => res.render('users/user-profile'));
 
