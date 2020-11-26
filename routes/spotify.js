@@ -24,7 +24,7 @@ router.get('/', (req, res, next) => {
 
 router.get("/search-results", (req, res) => {
 
-  console.log(req.query.podcast); // {podcast: "Testsearch"}
+  //console.log(req.query.podcast); // {podcast: "Testsearch"}
 
   //   axios({
   //     method: 'GET',
@@ -46,8 +46,8 @@ router.get("/search-results", (req, res) => {
     .searchShows(req.query.podcast, { market: "DE", limit: 6 })
     //.searchEpisodes(req.query.podcast)
     .then(data => {
-      console.log('The received data from the API about shows: ', data.body.shows.items);
-      res.render("spotify/search-result", { podcasts: data.body.shows.items })
+      //console.log('The received data from the API: ', data.body.shows.items);
+      res.render("spotify/search-result", {podcasts: data.body.shows.items})
     })
     .catch(err => console.log('The error while searching artists occurred: ', err));
 })
