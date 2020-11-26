@@ -1,12 +1,14 @@
- <div class="backgroundImage">
-        <h1>Welcome to {{title}}</h1>
-        <p>Find your favourite podcasts in one app</p>
-        <div class="container">
-  <a href="search" class="btn btn-outline-secondary btn-lg" role="button">Search for Podcasts</a>
-</div>
-
+<div class="backgroundImage">
+      <h1>Welcome to {{title}}{{#if user}}, {{user.username}} {{/if}}
+      </h1>
+      <p>Find your favourite podcasts in one app</p>
+      {{#if user}}
+      <form action="/logout" method="post"><button type="submit">Logout</button></form>
+      <div class="container">
+            <a href="search" class="btn btn-outline-secondary btn-lg" role="button">Search for Podcasts</a>
+            <a href="spotify" class="btn btn-outline-secondary btn-lg" role="button">Search for Spotify Podcasts</a>
       </div>
-
-
-{{!-- <h1>{{title}}</h1>
-<p>Welcome to {{title}}</p> --}}
+      {{else}}
+      <p>Use the buttons in the navigation to signup or login</p>
+      {{/if}}
+</div>

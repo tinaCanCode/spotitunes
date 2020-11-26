@@ -4,8 +4,13 @@
 <div id="podcast-search-results">
   {{#each podcasts}}
     <div>
-        <h3>{{this.name}}</h3>
-        <button type="submit">Add as favorite</button>
+        <h2><a href="/spotify/details/{{this.id}}">{{this.name}}</a></h2>
+        <img class="podcastImg" src="{{this.images.[1].url}}">
+        <form action="/add-favorite" method="post">
+      <input type="text" name="spotifyid" value="{{this.id}}">
+      <button type="submit" id="favorite-btn">Add as favorite</button>
+    </form>
+        
     </div>
   {{/each}}
 </div>

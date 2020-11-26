@@ -9,6 +9,8 @@ const mongoose = require('mongoose');
 const logger = require('morgan');
 const path = require('path');
 const unirest = require('unirest');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 
 //require spotify Web api
 const SpotifyWebApi = require('spotify-web-api-node');
@@ -40,6 +42,20 @@ const app_name = require('./package.json').name;
 const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.')[0]}`);
 
 const app = express();
+
+// Session Management
+app.use(
+  session({
+    secret: 'doesnt-matter',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 * 60 }, // 1 hour
+    store: new MongoStore({
+      mongooseConnection: mongoose.connection,
+      ttl: 60 * 60 * 24 // 60sec * 60min * 24h => 1 day
+    })
+  })
+);
 
 // Middleware Setup
 app.use(logger('dev'));
@@ -94,6 +110,7 @@ app.use("/", listenNotes);
 
 const spotify = require("./routes/spotify");
 app.use("/spotify", spotify);
+
 
 
 module.exports = app;
