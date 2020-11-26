@@ -9,6 +9,8 @@ const mongoose = require('mongoose');
 const logger = require('morgan');
 const path = require('path');
 const unirest = require('unirest');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 
 //require spotify Web api
 const SpotifyWebApi = require('spotify-web-api-node');
@@ -21,7 +23,7 @@ const SpotifyWebApi = require('spotify-web-api-node');
 let result 
 unirest.get('https://listen-api.listennotes.com/api/v2/search?q=star%20wars&sort_by_date=0&type=episode&offset=0&len_min=10&len_max=30&genre_ids=68%2C82&published_before=1580172454000&published_after=0&only_in=title%2Cdescription&language=English&safe_mode=0')
   .header('X-ListenAPI-Key', '92deae50310140ab877e8f1d4e4c8fcd').then(response=>{
-    console.log("response from api",response.toJSON())
+    //console.log("response from api",response.toJSON())
     result = response.toJSON()
   })
 //response.toJSON();
@@ -40,6 +42,20 @@ const app_name = require('./package.json').name;
 const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.')[0]}`);
 
 const app = express();
+
+// Session Management
+app.use(
+  session({
+    secret: 'doesnt-matter',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 * 60 }, // 1 hour
+    store: new MongoStore({
+      mongooseConnection: mongoose.connection,
+      ttl: 60 * 60 * 24 // 60sec * 60min * 24h => 1 day
+    })
+  })
+);
 
 // Middleware Setup
 app.use(logger('dev'));

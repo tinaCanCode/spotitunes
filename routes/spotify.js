@@ -17,29 +17,15 @@ spotifyApi
   .catch(error => console.log('Something went wrong when retrieving an access token', error));
 
 
-/* GET search page */
+
+  /* GET search page */
 router.get('/', (req, res, next) => {
   res.render('spotify/search');
 });
 
 router.get("/search-results", (req, res) => {
 
-  console.log(req.query.podcast); // {podcast: "Testsearch"}
-
-  //   axios({
-  //     method: 'GET',
-  //     url: 'https://api.spotify.com/v1/search',
-  //     params: req.query
-  //   })
-  //     .then(response => {
-  //       console.log("Search successful")
-  //       res.render("spotify/search-result") //Add data
-  //     })
-  //     .catch(err => {
-  //       console.log("There was an error")
-  //     });
-  // })
-
+  //console.log(req.query.podcast); // {podcast: "Testsearch"}
 
   spotifyApi
     //.search(req.query.podcast, ["track", "artist", "playlist", "show"])
@@ -50,6 +36,7 @@ router.get("/search-results", (req, res) => {
       res.render("spotify/search-result", { podcasts: data.body.shows.items })
     })
     .catch(err => console.log('The error while searching artists occurred: ', err));
+        
 })
 
 
