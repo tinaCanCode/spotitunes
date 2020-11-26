@@ -46,7 +46,7 @@ router.get("/search-results", (req, res) => {
     .searchShows(req.query.podcast, { market: "DE", limit: 6 })
     //.searchEpisodes(req.query.podcast)
     .then(data => {
-      console.log('The received data from the API about shows: ', data.body.shows.items);
+      // console.log('The received data from the API about shows: ', data.body.shows.items);
       res.render("spotify/search-result", { podcasts: data.body.shows.items })
     })
     .catch(err => console.log('The error while searching artists occurred: ', err));
@@ -63,7 +63,7 @@ router.get("/details/:showId", (req, res) => {
       , {market: "DE"}
     )
     .then(data => {
-      console.log('The received data from the API about one show: ', data.body);
+      console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
       res.render("spotify/details", { podcasts: data.body })
     })
     .catch(err => console.log('The error while searching show occurred: ', err));
