@@ -4,7 +4,9 @@
   {{#each searchResults}}
     <div>
         <h3>{{this.title_original}}</h3>
-        <button type="submit">Add as favorite</button>
+        <form action="/listennotes/{{this.id}}/addtofavorite" method="post">
+          <button>Add to favorites</button>
+        </form>
     </div>
   {{/each}}
 </div>
