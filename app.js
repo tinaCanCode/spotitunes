@@ -105,8 +105,8 @@ app.use('/', index);
 const authRouter = require('./routes/auth');
 app.use('/', authRouter);
 
-
-
+const listenNotes = require("./routes/listenNotes");
+app.use("/", listenNotes);
 
 const spotify = require("./routes/spotify");
 app.use("/spotify", spotify);
