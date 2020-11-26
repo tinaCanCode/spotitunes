@@ -4,6 +4,8 @@
   <h3>My favorite Podcasts</h3>
   {{#each podcasts}}
   <p>{{this.body.name}} - {{this.body.publisher}}</p>
+  <img class="podcastImg" src="{{this.body.images.[1].url}}">
+  <p><a href="/spotify/details/{{this.body.id}}">Show Details</a></p>
   {{/each}}
 
 
