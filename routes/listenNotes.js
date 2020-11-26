@@ -17,7 +17,7 @@ router.get('/listennotes/search-results', (req, res) => {
   .then((response) => {
     //console.log("the response: " + response.toJSON().body.results)
     response.toJSON()
-    res.render('listenNotes/search-results', {searchResults : response.toJSON().body.results})
+    res.render('listenNotes/search-results-ln', {searchResults : response.toJSON().body.results})
   })
 })
 
