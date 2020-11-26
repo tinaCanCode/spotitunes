@@ -1,0 +1,26 @@
+<form action="/details/:showId", method="GET"></form>
+<section class="podcastDetails"></section>
+
+    <div>
+        <h2>{{podcasts.name}}</h2>
+        <img class="podcastImg" src="{{podcasts.images.[1].url}}">
+        <h4>Description</h4>
+        <p>{{podcasts.description}}</p>
+        <h5>Publisher: {{podcasts.publisher}}</h5>
+        <h5>Number of episodes: {{podcasts.total_episodes}}</h5>
+        <h5>Last episodes: </h5>
+        {{#each podcasts.episodes.items}}
+        <li>{{this.name}}</li>
+        <img class="podcastDetailImg" src="{{this.images.[1].url}}">
+<p>Release date: {{this.release_date}}</p>
+        <p>{{this.description}}</p>
+        <p><a href="{{this.external_urls.spotify}}">Play in Spotify</a></p>
+        {{/each}}
+        <button type="submit">Add as favorite</button>
+        
+    </div>
+  
+
+
+
+</section>
