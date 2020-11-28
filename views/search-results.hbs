@@ -4,9 +4,9 @@
 <div id="podcast-search-results">
   {{#each allResults}}
   <div class="one-podcast">
-    <h2 class="podcast-title"><a href="/details/{{this.id}}">{{this.title}}</a></h2>
+    <h2 class="podcast-title"><a href="{{this.origin}}/details/{{this.id}}">{{this.title}}</a></h2>
     <div><img class="podcastImg" src="{{this.imageURL}}"></div>
-    <form action="/podcasts/{{this.id}}/addtofavorite" method="post">
+    <form action="/{{this.origin}}/{{this.id}}/addtofavorite" method="post">
       <button>Add to favorites</button>
     </form>
   </div>
@@ -14,9 +14,9 @@
 </div>
 {{!-- {{#each resultsOverviewSPotify}}
   <div>
-    <h2><a href="/details/{{this.id}}">{{this.name}}</a></h2>
+    <h2><a href="spotify/details/{{this.id}}">{{this.name}}</a></h2>
     <img class="podcastImg" src="{{this.images.[1].url}}">
-    <form action="/podcasts/{{this.id}}/addtofavorite" method="post">
+    <form action="/spotify/{{this.id}}/addtofavorite" method="post">
       <button>Add to favorites</button>
     </form>
 

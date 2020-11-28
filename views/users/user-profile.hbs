@@ -1,14 +1,26 @@
 {{#if user}}
-  <h2>{{ user.username }} - Profile page</h2>
-   <form action="/logout" method="post"><button type="submit">Logout</button></form>
-  <h3>My favorite Podcasts</h3>
-  {{#each podcasts}}
-  <p>{{this.body.name}} - {{this.body.publisher}}</p>
-  <img class="podcastImg" src="{{this.body.images.[1].url}}">
-  <p><a href="/spotify/details/{{this.body.id}}">Show Details</a></p>
-  {{/each}}
+<h2>{{ user.username }} - Profile page</h2>
+<form action="/logout" method="post">
+  <button type="submit">Logout</button>
+</form>
+
+<h3>My favorite Podcasts</h3>
+{{#each podcasts}}
+
+{{#if this.body.listennotes_url}}
+<p>{{this.body.title}} - {{this.body.publisher}}</p>
+<img class="podcastImg" src="{{this.body.image}}">
+<p><a href="/listennotes/details/{{this.body.id}}">Show Details</a></p>
+
+{{else}}
+<p>{{this.body.name}} - {{this.body.publisher}}</p>
+<img class="podcastImg" src="{{this.body.images.[1].url}}">
+<p><a href="/spotify/details/{{this.body.id}}">Show Details</a></p>
+
+{{/if}}
+{{/each}}
 
 
 {{else}}
-  <p>Still no logged in user, sorry!</p>
+<p>Still no logged in user, sorry!</p>
 {{/if}}
