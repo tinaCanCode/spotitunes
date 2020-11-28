@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 //require spotify Web api
 const SpotifyWebApi = require('spotify-web-api-node');
+const Podcast = require('../models/Podcast');
 
 // setting the spotify-api goes here:
 const spotifyApi = new SpotifyWebApi({
@@ -56,6 +57,66 @@ router.get("/details/:showId", (req, res) => {
     .catch(err => console.log('The error while searching show occurred: ', err));
 })
 
+
+//  *********************COMMENTS SECTION***************************
+
+// GET route to display the form to create a new comment
+
+// router.get('/details/:showId', (req, res) => {
+//   const { showId } = req.params;
+//   Podcast.findById(showId)
+//     .then(foundShow => res.render('spotify/details', foundShow))
+//     .catch(err => console.log(`Err while getting a single show from the  DB: ${err}`));
+// });
+
+// ***************************************************
+
+// Add Spotify Podcast to database
+router.post('/details/:showId/newcomment', (req, res, next) => {
+
+  const { showId } = req.params;
+  const { content } = req.body;
+
+
+  const newComment = { content: content, author: req.session.currentUser._id }
+
+
+  console.log(showId)
+  // check if podcast with id is already in db
+  Podcast.exists({podcastId: showId})
+  .then(podcastExists => {
+    if (!podcastExists) {
+      return Podcast.create({podcastId: showId})
+    } else {
+      return Podcast.findOne({podcastId: showId})
+    }
+  })
+  // Add ObjectId of newly created Podcast 
+  .then(resp => {
+    console.log("Response from mongo:", resp)
+    return Podcast.findByIdAndUpdate(resp._id, { $push: { comments: newComment} })
+  // Redirect to Homepage
+  .then(() => res.redirect(`/spotify/details/${showId}`))
+  .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
+})
+});
+
+
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// router.post('/details/:showId', (req, res) => {
+//   const { showId } = req.params;
+//   const { content } = req.body;
+
+  
+
+//   const newComment = { content: content, author: req.session.user._id }
+
+//   Podcast.findByIdAndUpdate(showId, { comments: { $push: newComment} })
+//   .then(() => res.redirect(`/details/${showId}`))
+// });
+  
 
 
 
