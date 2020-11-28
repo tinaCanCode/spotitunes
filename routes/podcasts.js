@@ -43,7 +43,7 @@ router.get('/search-results', (req, res) => {
       let listenNotesResults = response[0].toJSON().body.results
       let spotifyResults = response[1].body.shows.items 
       
-      // Create smaller ListenNotes podcasts object
+      // Create smaller and uniformised ListenNotes podcasts object
       for (let i = 0; i < listenNotesResults.length; i++) {
         let resultSummary = {
           id : listenNotesResults[i].id,
@@ -55,7 +55,7 @@ router.get('/search-results', (req, res) => {
         allResults.push(resultSummary)
       }
 
-      // Create smaller ListenNotes podcasts object
+      // Create smaller and uniformised Spotify podcasts object
       for (let i = 0; i < spotifyResults.length; i++) {
         let resultSummary = {
           id : spotifyResults[i].id,
