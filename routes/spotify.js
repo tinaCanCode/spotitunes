@@ -1,6 +1,9 @@
 const axios = require('axios');
 const express = require('express');
 const router = express.Router();
+const { exists } = require('../models/Podcast');
+const Podcast = require('../models/Podcast');
+const User = require('../models/User');
 //require spotify Web api
 const SpotifyWebApi = require('spotify-web-api-node');
 
@@ -56,7 +59,28 @@ router.get("/details/:showId", (req, res) => {
     .catch(err => console.log('The error while searching show occurred: ', err));
 })
 
+// Add Spotify Podcasts as favorites
 
-
+router.post('/:id/addtofavorite', (req, res) => {
+  // create new object in database
+  // push this ID to user "favorites" array
+  console.log("THE PARAMS: " + req.params.id)
+  Podcast.exists({podcastId: req.params.id})
+  .then(podcastExists => {
+    if (!podcastExists) {
+      return Podcast.create({podcastId: req.params.id})
+    } else {
+      return Podcast.findOne({podcastId: req.params.id})
+    }
+  })
+  // Add ObjectId of newly created Podcast to Users favorite podcasts
+  .then(resp => {
+    console.log("Podcast you want to add:", resp)
+    return User.findOneAndUpdate({_id: req.session.currentUser._id}, { $push: { favoritePodcasts: resp._id } }, {new: true})
+  })
+  // Redirect to Homepage
+  .then(() => res.redirect("/userProfile")) //res.send("added"))
+  .catch(err => console.log(`Err while creating the post in the DB: ${err}`));
+})
 
 module.exports = router;
