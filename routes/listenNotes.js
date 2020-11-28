@@ -33,18 +33,27 @@ router.post('/listennotes/:id/addtofavorite', (req, res) => {
       return Podcast.findOne({podcastId: req.params.id})
     }
   })
-  res.send("added to favorites")
+// Add ObjectId of newly created Podcast to Users favorite podcasts
+  .then(resp => {
+    console.log("Response from mongo:", resp)
+    return User.findOneAndUpdate({_id: req.session.currentUser._id}, { $push: { favoritePodcasts: resp._id } }, {new: true})
+  })
+// Redirect to Homepage
+  .then(() => res.redirect("/userProfile"))
+  .catch(err => console.log(`Err while creating the post in the DB: ${err}`))
 })
 
 
-  // unirest.get(`https://listen-api.listennotes.com/api/v2/podcasts/${req.params.id}`)
-  //   .header('X-ListenAPI-Key', '92deae50310140ab877e8f1d4e4c8fcd')
-  // .then((response) => {
-  //   //console.log("the response: " + response.toJSON().body.results)
-  //   response.toJSON()
-  //   res.render('listenNotes/search-results', {searchResults : response.toJSON().body.results})
-  // })
+// router.post('/listennotes/:id/addtofavorite', (req, res) => {
+//   unirest.get(`https://listen-api.listennotes.com/api/v2/podcasts/${req.params.id}`)
+//     .header('X-ListenAPI-Key', '92deae50310140ab877e8f1d4e4c8fcd')
+//   .then((response) => {
+//     //console.log("the response: " + response.toJSON().body.results)
+//     response.toJSON()
+//     res.render('listenNotes/search-results', {searchResults : response.toJSON().body.results})
+//   })
 // })
+
 
 // router.post('/add-favorite', (req, res, next) => {
 //   console.log(req.body.spotifyid)
