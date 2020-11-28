@@ -3,13 +3,12 @@
 
 <div id="podcast-search-results">
   {{#each allResults}}
-  <div>
-    <h2><a href="/details/{{this.id}}">{{this.title}}</a></h2>
-    <img class="podcastImg" src="{{this.imageURL}}">
+  <div class="one-podcast">
+    <h2 class="podcast-title"><a href="/details/{{this.id}}">{{this.title}}</a></h2>
+    <div><img class="podcastImg" src="{{this.imageURL}}"></div>
     <form action="/podcasts/{{this.id}}/addtofavorite" method="post">
       <button>Add to favorites</button>
     </form>
-
   </div>
   {{/each}}
 </div>

@@ -78,8 +78,16 @@ router.get('/search-results', (req, res) => {
         return 0;
       }
 
+      // Delete duplicates from allResults
+      var uniqueResults = allResults.reduce((unique, o) => {
+        if (!unique.some(obj => obj.title === o.title)) {
+          unique.push(o);
+        }
+        return unique;
+    },[]);
+
       //console.log("TEST FOR MERGED RESULTS 1: " + allResults[0].title)
-      res.render('search-results', {allResults : allResults.sort(compare)})
+      res.render('search-results', {allResults : uniqueResults.sort(compare)})
     })
     .catch(err => console.log('The error while searching artists occurred: ', err))
 })

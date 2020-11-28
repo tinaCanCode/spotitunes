@@ -56,11 +56,32 @@ p{
   margin-left: 10px;
 }
 
+.one-podcast {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 30px;
+    align-items: center;
+    width : 200px;
+    justify-content: flex-end;
+}
 
+#podcast-search-results {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.podcastImg {
+  width : 100px;
+  margin : 10px;
+}
+
+.podcast-title {
+  font-size: 15px;;
+}
 
 @media (max-width: 575.98px) { 
   h1{
-    font-size: 30px;
+    font-size: 20px;
   }
  }
 
