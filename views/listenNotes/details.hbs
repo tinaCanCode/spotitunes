@@ -1,0 +1,20 @@
+<section class="podcastDetails"></section>
+
+<div>
+  <h2>{{podcasts.title}}</h2>
+  <img class="podcastImg" src="{{podcasts.image}}">
+  <h4>Description</h4>
+  <p>{{podcasts.description}}</p>
+  <h5>Publisher: {{podcasts.publisher}}</h5>
+  <h5>Number of episodes: {{podcasts.total_episodes}}</h5>
+  <h5>Last episodes: </h5>
+  {{#each podcasts.episodes}}
+  <li>{{this.title}}</li>
+  <img class="podcastDetailImg" src="{{this.thumbnail}}">
+  <p>Release date: {{this.pub_date_ms}}</p>
+  <p>{{this.description}}</p>
+  <p><a href="{{this.listennotes_url}}">Listen on Listen Notes</a></p>
+  {{/each}}
+</div>
+
+</section>

@@ -4,7 +4,7 @@
 <div id="podcast-search-results">
   {{#each listenNotesResults}}
   <div>
-    <h2><a href="/details/{{this.id}}">{{this.title_original}}</a></h2>
+    <h2><a href="listennotes/details/{{this.id}}">{{this.title_original}}</a></h2>
     <img class="podcastImg" src="{{this.image}}">
     <form action="/podcasts/{{this.id}}/addtofavorite" method="post">
       <button>Add to favorites</button>
@@ -15,7 +15,7 @@
 </div>
 {{#each spotifyResults}}
   <div>
-    <h2><a href="/details/{{this.id}}">{{this.name}}</a></h2>
+    <h2><a href="spotify/details/{{this.id}}">{{this.name}}</a></h2>
     <img class="podcastImg" src="{{this.images.[1].url}}">
     <form action="/podcasts/{{this.id}}/addtofavorite" method="post">
       <button>Add to favorites</button>
