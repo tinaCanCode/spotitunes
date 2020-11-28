@@ -111,6 +111,7 @@ app.use("/", listenNotes);
 const spotify = require("./routes/spotify");
 app.use("/spotify", spotify);
 
-
+const podcasts = require("./routes/podcasts");
+app.use("/", podcasts);
 
 module.exports = app;
