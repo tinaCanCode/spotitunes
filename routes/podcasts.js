@@ -30,16 +30,56 @@ router.get('/search-results', (req, res) => {
   const listenNotesSearch = unirest.get(`https://listen-api.listennotes.com/api/v2/search?q=${req.query.podcast}&type=podcast`)
     .header('X-ListenAPI-Key', '92deae50310140ab877e8f1d4e4c8fcd')
   const spotifySearch = spotifyApi
-    //.search(req.query.podcast, ["track", "artist", "playlist", "show"])
     .searchShows(req.query.podcast, { market: "DE", limit: 6 })
-    //.searchEpisodes(req.query.podcast)
 
     Promise.all([listenNotesSearch,spotifySearch]).then((response) => {
-      console.log("THIS IS THE SEARCH RESULT: " + response);
-      console.log("THIS IS THE SEARCH RESULT NUMBER 1 LN: " + response[0].toJSON().body.results[0].title_original);
-      console.log("THIS IS THE SEARCH RESULT SPTFY: " + response[1]);
-      response[0].toJSON()
-      res.render('search-results', { listenNotesResults: response[0].toJSON().body.results , spotifyResults: response[1].body.shows.items })
+      // console.log("THIS IS THE SEARCH RESULT: " + response);
+      // console.log("THIS IS THE SEARCH RESULT NUMBER 1 LN: " + response[0].toJSON().body.results[0].title_original);
+      // console.log("THIS IS THE SEARCH RESULT SPTFY: " + response[1]);
+      
+
+      // Values stored into variables
+      let allResults = []
+      let listenNotesResults = response[0].toJSON().body.results
+      let spotifyResults = response[1].body.shows.items 
+      
+      // Create smaller ListenNotes podcasts object
+      for (let i = 0; i < listenNotesResults.length; i++) {
+        let resultSummary = {
+          id : listenNotesResults[i].id,
+          title : listenNotesResults[i].title_original,
+          imageURL : listenNotesResults[i].image,
+          description : listenNotesResults[i].description_original,
+          origin : "listenNotes"
+        }
+        allResults.push(resultSummary)
+      }
+
+      // Create smaller ListenNotes podcasts object
+      for (let i = 0; i < spotifyResults.length; i++) {
+        let resultSummary = {
+          id : spotifyResults[i].id,
+          title : spotifyResults[i].name,
+          imageURL : spotifyResults[i].images[0].url,
+          description : spotifyResults[i].description,
+          origin : "spotify"
+        }
+        allResults.push(resultSummary)
+      }
+
+      // sort function for array of object 
+      function compare(a, b) {
+        if (a.title < b.title){
+          return -1;
+        }
+        if (a.title > b.title){
+          return 1;
+        }
+        return 0;
+      }
+
+      //console.log("TEST FOR MERGED RESULTS 1: " + allResults[0].title)
+      res.render('search-results', {allResults : allResults.sort(compare)})
     })
     .catch(err => console.log('The error while searching artists occurred: ', err))
 })
