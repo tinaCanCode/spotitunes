@@ -32,63 +32,63 @@ router.get('/search-results', (req, res) => {
   const spotifySearch = spotifyApi
     .searchShows(req.query.podcast, { market: "DE", limit: 6 })
 
-    Promise.all([listenNotesSearch,spotifySearch]).then((response) => {
-      // console.log("THIS IS THE SEARCH RESULT: " + response);
-      // console.log("THIS IS THE SEARCH RESULT NUMBER 1 LN: " + response[0].toJSON().body.results[0].title_original);
-      // console.log("THIS IS THE SEARCH RESULT SPTFY: " + response[1]);
-      
+  Promise.all([listenNotesSearch, spotifySearch]).then((response) => {
+    // console.log("THIS IS THE SEARCH RESULT: " + response);
+    // console.log("THIS IS THE SEARCH RESULT NUMBER 1 LN: " + response[0].toJSON().body.results[0].title_original);
+    // console.log("THIS IS THE SEARCH RESULT SPTFY: " + response[1]);
 
-      // Values stored into variables
-      let allResults = []
-      let listenNotesResults = response[0].toJSON().body.results
-      let spotifyResults = response[1].body.shows.items 
-      
-      // Create smaller and uniformised ListenNotes podcasts object
-      for (let i = 0; i < listenNotesResults.length; i++) {
-        let resultSummary = {
-          id : listenNotesResults[i].id,
-          title : listenNotesResults[i].title_original,
-          imageURL : listenNotesResults[i].image,
-          description : listenNotesResults[i].description_original,
-          origin : "listenNotes"
-        }
-        allResults.push(resultSummary)
+
+    // Values stored into variables
+    let allResults = []
+    let listenNotesResults = response[0].toJSON().body.results
+    let spotifyResults = response[1].body.shows.items
+
+    // Create smaller and uniformised ListenNotes podcasts object
+    for (let i = 0; i < listenNotesResults.length; i++) {
+      let resultSummary = {
+        id: listenNotesResults[i].id,
+        title: listenNotesResults[i].title_original,
+        imageURL: listenNotesResults[i].image,
+        description: listenNotesResults[i].description_original,
+        origin: "listenNotes"
       }
+      allResults.push(resultSummary)
+    }
 
-      // Create smaller and uniformised Spotify podcasts object
-      for (let i = 0; i < spotifyResults.length; i++) {
-        let resultSummary = {
-          id : spotifyResults[i].id,
-          title : spotifyResults[i].name,
-          imageURL : spotifyResults[i].images[0].url,
-          description : spotifyResults[i].description,
-          origin : "spotify"
-        }
-        allResults.push(resultSummary)
+    // Create smaller and uniformised Spotify podcasts object
+    for (let i = 0; i < spotifyResults.length; i++) {
+      let resultSummary = {
+        id: spotifyResults[i].id,
+        title: spotifyResults[i].name,
+        imageURL: spotifyResults[i].images[0].url,
+        description: spotifyResults[i].description,
+        origin: "spotify"
       }
+      allResults.push(resultSummary)
+    }
 
-      // sort function for array of object 
-      function compare(a, b) {
-        if (a.title < b.title){
-          return -1;
-        }
-        if (a.title > b.title){
-          return 1;
-        }
-        return 0;
+    // sort function for array of object 
+    function compare(a, b) {
+      if (a.title < b.title) {
+        return -1;
       }
+      if (a.title > b.title) {
+        return 1;
+      }
+      return 0;
+    }
 
-      // Delete duplicates from allResults
-      var uniqueResults = allResults.reduce((unique, o) => {
-        if (!unique.some(obj => obj.title === o.title)) {
-          unique.push(o);
-        }
-        return unique;
-    },[]);
+    // Delete duplicates from allResults
+    let uniqueResults = []
+    allResults.forEach((o) => {
+      if (!uniqueResults.some(obj => obj.title === o.title)) {
+        uniqueResults.push(o);
+      }
+    });
 
-      //console.log("TEST FOR MERGED RESULTS 1: " + allResults[0].title)
-      res.render('search-results', {allResults : uniqueResults.sort(compare)})
-    })
+    //console.log("TEST FOR MERGED RESULTS 1: " + allResults[0].title)
+    res.render('search-results', { allResults: uniqueResults.sort(compare) })
+  })
     .catch(err => console.log('The error while searching artists occurred: ', err))
 })
 
