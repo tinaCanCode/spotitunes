@@ -34,21 +34,14 @@ router.get('/search-results', (req, res) => {
     .searchShows(req.query.podcast, { market: "DE", limit: 6 })
     //.searchEpisodes(req.query.podcast)
 
-    Promise.all([listenNotesSearch,spotifySearch]).then((values) => {
-      console.log("THIS IS THE SEARCH RESULT: " + values);
-    });
-    res.send("i searched")
-    // .then((response) => {
-    //   //console.log("the response: " + response.toJSON().body.results)
-    //   response.toJSON()
-    //   res.render('listenNotes/search-results-ln', { searchResults: response.toJSON().body.results })
-    // })
-    // .then(data => {
-    //   // console.log('The received data from the API about shows: ', data.body.shows.items);
-    //   res.render("spotify/search-result", { podcasts: data.body.shows.items })
-    // })
-    // .catch(err => console.log('The error while searching artists occurred: ', err));
-
+    Promise.all([listenNotesSearch,spotifySearch]).then((response) => {
+      console.log("THIS IS THE SEARCH RESULT: " + response);
+      console.log("THIS IS THE SEARCH RESULT NUMBER 1 LN: " + response[0].toJSON().body.results[0].title_original);
+      console.log("THIS IS THE SEARCH RESULT SPTFY: " + response[1]);
+      response[0].toJSON()
+      res.render('search-results', { listenNotesResults: response[0].toJSON().body.results , spotifyResults: response[1].body.shows.items })
+    })
+    .catch(err => console.log('The error while searching artists occurred: ', err))
 })
 
 
