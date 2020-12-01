@@ -4,6 +4,7 @@ const unirest = require('unirest');
 const { exists } = require('../models/Podcast');
 const Podcast = require('../models/Podcast');
 const User = require('../models/User');
+const Playlist = require('../models/Playlist');
 
 // /* GET search page */
 // router.get('/listennotes', (req, res, next) => {
@@ -28,7 +29,7 @@ const User = require('../models/User');
 router.get("/listennotes/details/:showId", (req, res) => {
   console.log(req.params.showId)
   unirest.get(`https://listen-api.listennotes.com/api/v2/podcasts/${req.params.showId}?sort=recent_first`)
-    .header('X-ListenAPI-Key', '92deae50310140ab877e8f1d4e4c8fcd')
+    .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
     .then(response => {
       console.log("Response from LN: ", response.toJSON().body);
       //console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
@@ -39,7 +40,13 @@ router.get("/listennotes/details/:showId", (req, res) => {
 })
 
 
-
+// Add episode to bookmarked playlist
+router.post("/listennotes/details/:id/addtoplaylist", (req, res) => {
+  Playlist.findOneAndUpdate(
+          {$and: [{ownerID : req.session.currentUser._id}, {playlistName : "Bookmarked"} ] },
+          {$push: {listenNotesEpisodes : req.params.id }})
+  .catch(err => console.log('The error while searching show occurred: ', err));
+});
 
 
 // Add Listen Notes Podcast to database
@@ -48,28 +55,26 @@ router.post('/listennotes/details/:showId/newcomment', (req, res, next) => {
   const { showId } = req.params;
   const { content } = req.body;
 
-
   const newComment = { content: content, author: req.session.currentUser._id }
-
 
   console.log(showId)
   // check if podcast with id is already in db
-  Podcast.exists({podcastId: showId})
-  .then(podcastExists => {
-    if (!podcastExists) {
-      return Podcast.create({podcastId: showId, origin: "listennotes"})
-    } else {
-      return Podcast.findOne({podcastId: showId})
-    }
-  })
-  // Add ObjectId of newly created Podcast 
-  .then(respond => {
-    console.log("Response from mongo:", respond)
-    return Podcast.findByIdAndUpdate(respond._id, { $push: { comments: newComment} })
-  // Redirect to Homepage
-  .then(() => res.redirect(`/listennotes/details/${showId}`))
-  .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
-})
+  Podcast.exists({ podcastId: showId })
+    .then(podcastExists => {
+      if (!podcastExists) {
+        return Podcast.create({ podcastId: showId, origin: "listennotes" })
+      } else {
+        return Podcast.findOne({ podcastId: showId })
+      }
+    })
+    // Add ObjectId of newly created Podcast 
+    .then(respond => {
+      //console.log("Response from mongo:", respond)
+      return Podcast.findByIdAndUpdate(respond._id, { $push: { comments: newComment } })
+        // Redirect to Homepage
+        .then(() => res.redirect(`/listennotes/details/${showId}`))
+        .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
+    })
 });
 
 
@@ -87,7 +92,7 @@ router.post('/listennotes/:id/addtofavorite', (req, res) => {
   Podcast.exists({ podcastId: req.params.id })
     .then(podcastExists => {
       if (!podcastExists) {
-        return Podcast.create({ podcastId: req.params.id , origin: "listennotes"})
+        return Podcast.create({ podcastId: req.params.id, origin: "listennotes" })
       } else {
         return Podcast.findOne({ podcastId: req.params.id })
       }

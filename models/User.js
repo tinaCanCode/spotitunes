@@ -8,8 +8,8 @@ const userSchema = new Schema ({
   unique:true, trim: true, lowercase: true},
   // authToken: { type: String, required:true, unique:true },
   // isAuthenticated: { type: Boolean, required:true },
-  favoritePodcasts: [{ type: Schema.Types.ObjectId, ref: 'Podcast' }]
-})
+  favoritePodcasts: [{ type: Schema.Types.ObjectId, ref: 'Podcast' }],
+ })
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;
