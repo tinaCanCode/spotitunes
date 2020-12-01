@@ -9,17 +9,36 @@
   integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" 
   crossorigin="anonymous">
   <link rel="stylesheet" href="/stylesheets/style.css" />
+  <script src="https://kit.fontawesome.com/337ab9b90d.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<nav class="navbar sticky-top navbar-dark" style="background-color: #19181a;">
+<nav class="navbar sticky-top navbar-dark navbar-expand-md" style="background-color: #19181a;">
+  {{!-- <div class='container-fluid'> --}}
   <a class="navbar-brand" href="/">Spotitunes</a>
-  <form class="form-inline my-2 my-lg-0">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+  aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class='nav ml-auto'>
+        <li class='nav-item active'>
+          <a class='nav-link' href="signup">Signup</a>
+          </li> 
+          <li class='nav-item'>
+          <a class='nav-link' href="login">Login</a>
+          </li>
+          <li class='nav-item'>
+          <a class='nav-link' href="userProfile">User Profile</a>
+        </li>
+      </ul>
+    </div>
+  {{!-- <form class="form-inline my-2 my-lg-0">
      <a href="userProfile" class="btn btn-sm btn-outline-secondary" role="button">My Profile</a>
   <a href="signup" class="btn btn-sm btn-outline-secondary" role="button">Signup</a>
    <a href="login" class="btn btn-sm btn-outline-secondary" role="button">Login</a>
-  </form>
+  </form> --}}
+  </div> 
 </nav>
-
   {{{body}}}
   
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>

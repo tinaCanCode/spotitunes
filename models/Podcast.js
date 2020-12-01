@@ -5,7 +5,7 @@ const podcastSchema = new Schema({
     title: String,
     description: String,
     podcastId: { type: String, unique: true, require: true },
-    rating: Number,
+    rating: [String],
     comments: [{
         author: { type: Schema.Types.ObjectId, ref: 'User' },
         content: String

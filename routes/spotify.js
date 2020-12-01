@@ -5,7 +5,7 @@ const Podcast = require('../models/Podcast');
 const User = require('../models/User');
 //require spotify Web api
 const SpotifyWebApi = require('spotify-web-api-node');
-const Podcast = require('../models/Podcast');
+
 
 // setting the spotify-api goes here:
 const spotifyApi = new SpotifyWebApi({
@@ -43,7 +43,7 @@ spotifyApi
 // DETAILS
 
 router.get("/details/:showId", (req, res) => {
-  console.log(req.params.showId)
+  // console.log(req.params.showId)
   spotifyApi
     .getShow(req.params.showId
       , { market: "DE" }
@@ -58,16 +58,7 @@ router.get("/details/:showId", (req, res) => {
 
 //  *********************COMMENTS SECTION***************************
 
-// GET route to display the form to create a new comment
 
-// router.get('/details/:showId', (req, res) => {
-//   const { showId } = req.params;
-//   Podcast.findById(showId)
-//     .then(foundShow => res.render('spotify/details', foundShow))
-//     .catch(err => console.log(`Err while getting a single show from the  DB: ${err}`));
-// });
-
-// ***************************************************
 
 // Add Spotify Podcast to database
 router.post('/details/:showId/newcomment', (req, res, next) => {
@@ -91,9 +82,9 @@ router.post('/details/:showId/newcomment', (req, res, next) => {
   })
   // Add ObjectId of newly created Podcast 
   .then(resp => {
-    console.log("Response from mongo:", resp)
+    // console.log("Response from mongo:", resp)
     return Podcast.findByIdAndUpdate(resp._id, { $push: { comments: newComment} })
-  // Redirect to Homepage
+  // Redirect to Detailpage
   .then(() => res.redirect(`/spotify/details/${showId}`))
   .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
 })
@@ -101,21 +92,38 @@ router.post('/details/:showId/newcomment', (req, res, next) => {
 
 
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++
+// +++++++++++++++++++++++++RATING SECTION++++++++++++++++++++++++++++
 
-// router.post('/details/:showId', (req, res) => {
-//   const { showId } = req.params;
-//   const { content } = req.body;
+router.post('/details/:showId/newrating', (req, res, next) => {
 
-  
+  const { showId } = req.params;
+  const { content } = req.body;
 
-//   const newComment = { content: content, author: req.session.user._id }
 
-//   Podcast.findByIdAndUpdate(showId, { comments: { $push: newComment} })
-//   .then(() => res.redirect(`/details/${showId}`))
-// });
-  
+  // const newRating = { rating : content}
 
+
+  console.log(showId)
+  // check if podcast with id is already in db
+  Podcast.exists({podcastId: showId})
+  .then(podcastExists => {
+    if (!podcastExists) {
+      return Podcast.create({podcastId: showId})
+    } else {
+      return Podcast.findOne({podcastId: showId})
+    }
+  })
+  // Add rating to Podcast 
+  .then(respond => {
+    console.log("Response from mongo:", respond)
+    return Podcast.findByIdAndUpdate(respond._id, { $push: { rating: content } })
+  // Redirect to Detailpage
+  .then(() => res.redirect(`/spotify/details/${showId}`))
+  .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
+})
+});
+
+// ********************************************************
 
 // Add Spotify Podcasts as favorites
 

@@ -1,14 +1,21 @@
-body {
-  
+body {  
   background-color: #19181A ;
   color: white;
   font: "Lucida Grande", Helvetica, Arial, sans-serif; 
   font-size: 1rem;
-  
+  height: 100%;
 }
 
 
-.backgroundImage{
+.view {
+  height: 100vh;
+} 
+
+.anita{
+  margin-top: 20%;
+}
+
+/* .backgroundImage{
   height: 1000px;
   background-image: url("/images/1_1-2.jpg");
   background-position: 0 0;
@@ -18,7 +25,7 @@ body {
 position: relative;
 text-align: center;
 padding: 5%;
-} */
+} */ 
 
 h1{
 
@@ -31,17 +38,25 @@ p{
 
 }
 
+a{
+  color: white;
+}
+
 .btn{
   color: #b19f9e;
   border-color: #b19f9e;
   
 }
 
+.nav-link{
+  color: #b19f9e;
+}
+
 .btn-lg{
-  color: white;
-  border-color: white;
-  margin-top: 20%;
-  margin-bottom: 20%;
+  color:#b19f9e;
+  border-color: #b19f9e;
+  /* margin-top: 20%;
+  margin-bottom: 20%; */
 }
 
 #signup{
@@ -52,8 +67,12 @@ p{
   margin-right: 5px;
 }
 
-.btn-sm{
+/* .btn-sm{
   margin-left: 10px;
+} */
+
+.btn-lg{
+  margin-top: 5%;
 }
 
 .one-podcast {
@@ -70,16 +89,16 @@ p{
   flex-wrap: wrap;
 }
 
-.podcastImg {
+/* .podcastImg {
   height : 100px;
   margin : 10px;
 }
 
 .podcast-title {
   font-size: 15px;;
-}
+} */
 
-@media (max-width: 575.98px) { 
+/* @media (max-width: 575.98px) { 
   h1{
     font-size: 20px;
   }
@@ -89,8 +108,51 @@ p{
   h1{
     font-size: 30 px;
   }
+ } */
+
+ .rating
+ {
+   height:50px;
+   width:200px;
+   margin:auto;
+   margin-top:10px;
  }
 
+ .fa
+ {
+   font-size:30px !important;
+   cursor:pointer;
+ }
+ .checked
+ {
+   color:#cebc81;
+ }
+ .unchecked
+ {
+   color:#414141;
+ }
+
+ .form-check-label{
+   margin-right: 10px;
+ }
+
+.card{
+  background-color: #19181A;
+  border-color: #b19f9e;
+  margin-bottom: 5%;
+}
+
+.row{
+  margin-bottom: 3%;
+  /* margin-top: 3%; */
+}
+
+hr{
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+  border: 0;
+  border-top: 0.5px solid white;
+}
 /* @media (max-width: 991.98px) { ... }
 
 @media (max-width: 1199.98px) { ... } */

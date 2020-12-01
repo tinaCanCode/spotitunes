@@ -1,7 +1,7 @@
-<h1>Podcast Search Results</h1>
+{{!-- <h1>Podcast Search Results</h1> --}}
 
 
-<div id="podcast-search-results">
+{{!-- <div id="podcast-search-results">
   {{#each allResults}}
   <div class="one-podcast">
     <h2 class="podcast-title"><a href="{{this.origin}}/details/{{this.id}}">{{this.title}}</a></h2>
@@ -11,6 +11,50 @@
     </form>
   </div>
   {{/each}}
+</div> --}}
+
+{{!-- **********+CARDS************** --}}
+
+{{!-- <div id="podcast-search-results"> --}}
+
+  <div class='container-fluid padding'>
+    <div class='row welcome text-center'>
+      <div class='col-12'>
+<h3 class='display-4'>Podcast Search Resuls</h3>
+ <hr class="my-4 wow">
+      </div>    
+      
+    </div>
+    </div>
+
+ 
+
+<div class='container-fluid padding'>
+  
+<div class='row padding'>
+   {{#each allResults}}
+  <div class='col-md-3'>
+    <div class='card'>
+      <img class='card-img-top' src="{{this.imageURL}}">
+      <div class='card-body'>
+        <p class="card-text"><a href="{{this.origin}}/details/{{this.id}}">{{this.title}}</a></p>
+        <form action="/{{this.origin}}/{{this.id}}/addtofavorite" method="post">
+      <button class="btn btn-outline-secondary btn-sm">Add to favorites</button>
+    </form>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</div>
+
+</div>
+
+{{!-- </div> --}}
+
+
+
+
+
 </div>
 {{!-- {{#each resultsOverviewSPotify}}
   <div>
@@ -22,3 +66,4 @@
 
   </div>
   {{/each}} --}}
+
