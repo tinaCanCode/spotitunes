@@ -1,13 +1,47 @@
-<div class="backgroundImage">
-      <h1>Welcome to {{title}}{{#if user}}, {{user.username}} {{/if}}
+{{!-- <div class="bg">
+
+      <h1 class="py-5 text-center">Welcome to {{title}}{{#if user}}, {{user.username}} {{/if}}
       </h1>
-      <p>Find your favourite podcasts in one app</p>
-      {{#if user}}
-      <form action="/logout" method="post"><button type="submit">Logout</button></form>
-      <div class="container">
+      <p class="py-5 text-center">Find your favourite podcasts in one app</p>
+      {{#if user}}  
+      <form action="/logout" method="post"><button type="submit" class="btn btn-outline-secondary btn-lg">Logout</button></form>
             <a href="search" class="btn btn-outline-secondary btn-lg" role="button">Search for Podcasts</a>
-      </div>
-      {{else}}
-      <p>Use the buttons in the navigation to signup or login</p>
+             {{else}}
+      <p class="py-5 text-center">Use the navigation to signup or login</p>
       {{/if}}
+           
+</div> --}}
+
+<div class="view"
+      style="background-image: url('/images/1_1-2.jpg'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+      <!-- Mask & flexbox options-->
+      <div class="mask rgba-black-light align-items-center">
+            <!-- Content -->
+            <div class="container">
+                  <!--Grid row-->
+                  <div class="row">
+                        <!--Grid column-->
+                        <div class="col-md-12 mb-4 white-text text-center">
+                              <h1 class="h1-reponsive white-text  font-weight-bold mb-0 pt-md-5 pt-5 wow fadeInDown"
+                                    data-wow-delay="0.3s">Welcome to {{title}}{{#if user}}, {{user.username}} {{/if}}
+                              </h1>
+                              <hr class="my-4 wow">
+                              <h5 class=" mb-4 white-text wow fadeInDown" >Find your favourite
+                                    podcasts in one app</h5>
+                                    {{#if user}}
+                              <a class="btn btn-outline-secondary btn-lg" href="search">Search
+                                    for Podcasts</a>
+                              
+                              <a class="btn btn-outline-secondary btn-lg" href="/logout">Logout</a>
+                              {{else}}
+                              <p class="mb-4 white-text wow fadeInDown">Use the navigation to signup or login</p>
+                              {{/if}}
+                        </div>
+                        <!--Grid column-->
+                  </div>
+                  <!--Grid row-->
+            </div>
+            <!-- Content -->
+      </div>
+      <!-- Mask & flexbox options-->
 </div>

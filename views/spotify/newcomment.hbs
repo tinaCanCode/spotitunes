@@ -1,0 +1,11 @@
+<h3>Add comment</h3>
+ 
+<form action="/details/{{_id}}/newcomment" method="POST">
+  <label for="comment-author-username">Your username:</label>
+  <input type="text" name="author" id="comment-author-username" />
+  <input type="text" name="postAuthor" id="post-author" value="{{author.username}}" hidden />
+  <textarea name="content" id="comment-content-input" cols="30" rows="10"></textarea>
+  <button type="submit">Comment the podcast</button>
+</form>
+ 
+<br>
