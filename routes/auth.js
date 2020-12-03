@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User')
+const Playlist = require('../models/Playlist')
 const saltRounds = 10;
 const bcryptjs = require('bcryptjs');
 const mongoose = require('mongoose');
@@ -65,8 +66,19 @@ router.post('/signup', (req, res) => {
     })
     .then(createdUser => {
       console.log('Newly created user is: ', createdUser);
-      res.redirect('/login');
+      //Create a bookmark playlist 
+      return Playlist.create({
+        ownerID: createdUser._id, 
+        userName : createdUser.username,
+        playlistName : "Bookmarked",
+        listenNotesEpisodes: [],
+        SpotifyEpisodes: []
+      })
     })
+    .then(() => {
+      res.redirect('/login')
+    })
+
     .catch(error => {
       if (error instanceof mongoose.Error.ValidationError) {
         res.status(500).render('auth/signup', { errorMessage: error.message });
@@ -138,7 +150,7 @@ router.get('/userProfile', (req, res) => {
           }
           else if (podcast.origin === "listennotes") {
             const lnResponse = await unirest.get(`https://listen-api.listennotes.com/api/v2/podcasts/${podcast.podcastId}?sort=recent_first`)
-            .header('X-ListenAPI-Key', '92deae50310140ab877e8f1d4e4c8fcd')
+              .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
             return lnResponse.toJSON();
           }
         }))

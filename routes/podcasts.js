@@ -28,7 +28,7 @@ router.get('/search', (req, res, next) => {
 router.get('/search-results', (req, res) => {
   //console.log("HERE IS THE QUERY: " + req.query.podcast)
   const listenNotesSearch = unirest.get(`https://listen-api.listennotes.com/api/v2/search?q=${req.query.podcast}&type=podcast`)
-    .header('X-ListenAPI-Key', '92deae50310140ab877e8f1d4e4c8fcd')
+    .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
   const spotifySearch = spotifyApi
     .searchShows(req.query.podcast, { market: "DE", limit: 6 })
 
@@ -80,9 +80,9 @@ router.get('/search-results', (req, res) => {
 
     // Delete duplicates from allResults
     let uniqueResults = []
-    allResults.forEach((o) => {
-      if (!uniqueResults.some(obj => obj.title === o.title)) {
-        uniqueResults.push(o);
+    allResults.forEach((result) => {
+      if (!uniqueResults.some(obj => obj.title === result.title)) {
+        uniqueResults.push(result);
       }
     });
 
