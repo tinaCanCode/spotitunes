@@ -153,6 +153,10 @@ hr{
   border: 0;
   border-top: 0.5px solid white;
 }
+
+#rating-content-input{
+  display: none;
+}
 /* @media (max-width: 991.98px) { ... }
 
 @media (max-width: 1199.98px) { ... } */

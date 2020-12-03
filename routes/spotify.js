@@ -40,20 +40,33 @@ spotifyApi
 
 // })
 
-// DETAILS
 
 router.get("/details/:showId", (req, res) => {
   // console.log(req.params.showId)
-  spotifyApi
+  const fromSpotify = spotifyApi
     .getShow(req.params.showId
       , { market: "DE" }
     )
-    .then(data => {
-      console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
-      res.render("spotify/details", { podcasts: data.body })
-    })
     .catch(err => console.log('The error while searching show occurred: ', err));
+    
+    const fromOurDb = Podcast.exists({podcastId: req.params.showId})
+    .then(podcastExists => {
+            if (podcastExists) {
+              return Podcast.findOne({podcastId: req.params.showId})
+            }else{
+                console.log('there is no such podcast in DB')
+              }
+    })
+        .catch(err => console.log('The error while searching show occurred: ', err));
+            
+    Promise.all([fromSpotify, fromOurDb]).then(values => {
+      console.log(values[0].body);
+      
+      res.render("spotify/details", {podcasts:values[0].body, ourpodcasts:values[1]})
+    })
 })
+
+
 
 
 //  *********************COMMENTS SECTION***************************
@@ -100,7 +113,7 @@ router.post('/details/:showId/newrating', (req, res, next) => {
   const { content } = req.body;
 
 
-  // const newRating = { rating : content}
+  const newRating = { content : content, author: req.session.currentUser._id }
 
 
   console.log(showId)
@@ -116,7 +129,7 @@ router.post('/details/:showId/newrating', (req, res, next) => {
   // Add rating to Podcast 
   .then(respond => {
     console.log("Response from mongo:", respond)
-    return Podcast.findByIdAndUpdate(respond._id, { $push: { rating: content } })
+    return Podcast.findByIdAndUpdate(respond._id, { $push: { rating: newRating} })
   // Redirect to Detailpage
   .then(() => res.redirect(`/spotify/details/${showId}`))
   .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
