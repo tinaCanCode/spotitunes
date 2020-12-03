@@ -1,5 +1,5 @@
 // DOM Elements
-const axios = require('axios');
+//const axios = require('axios');
 
 const favoriteBtn = document.querySelector("#favorite-btn");
 

@@ -28,9 +28,11 @@ router.get('/search', (req, res, next) => {
 router.get('/search-results', (req, res) => {
   //console.log("HERE IS THE QUERY: " + req.query.podcast)
   const listenNotesSearch = unirest.get(`https://listen-api.listennotes.com/api/v2/search?q=${req.query.podcast}&type=podcast`)
-    .header('X-ListenAPI-Key', '92deae50310140ab877e8f1d4e4c8fcd')
+    .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
   const spotifySearch = spotifyApi
     .searchShows(req.query.podcast, { market: "DE", limit: 6 })
+
+    console.log("LN: ", listenNotesSearch)
 
   Promise.all([listenNotesSearch, spotifySearch]).then((response) => {
     // console.log("THIS IS THE SEARCH RESULT: " + response);
@@ -89,7 +91,7 @@ router.get('/search-results', (req, res) => {
     //console.log("TEST FOR MERGED RESULTS 1: " + allResults[0].title)
     res.render('search-results', { allResults: uniqueResults.sort(compare) })
   })
-    .catch(err => console.log('The error while searching artists occurred: ', err))
+    .catch(err => console.log('The error while searching podcasts occurred: ', err))
 })
 
 

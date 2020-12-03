@@ -1,3 +1,4 @@
+{{> navbar }}
 {{!-- <h1>Podcast Search Results</h1> --}}
 
 
@@ -35,12 +36,14 @@
    {{#each allResults}}
   <div class='col-md-3'>
     <div class='card'>
-      <img class='card-img-top' src="{{this.imageURL}}">
+      <a href="{{this.origin}}/details/{{this.id}}"><img class='card-img-top' src="{{this.imageURL}}"></a>
       <div class='card-body'>
         <p class="card-text"><a href="{{this.origin}}/details/{{this.id}}">{{this.title}}</a></p>
         <form action="/{{this.origin}}/{{this.id}}/addtofavorite" method="post">
       <button class="btn btn-outline-secondary btn-sm">Add to favorites</button>
-    </form>
+      </form>
+      <a class="btn btn-outline-secondary btn-sm" href="{{this.origin}}/details/{{this.id}}">Show details</a>
+    
       </div>
     </div>
   </div>

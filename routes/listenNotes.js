@@ -28,12 +28,12 @@ const User = require('../models/User');
 router.get("/listennotes/details/:showId", (req, res) => {
   console.log(req.params.showId)
   unirest.get(`https://listen-api.listennotes.com/api/v2/podcasts/${req.params.showId}?sort=recent_first`)
-    .header('X-ListenAPI-Key', '92deae50310140ab877e8f1d4e4c8fcd')
+    .header('X-ListenAPI-Key', "eca50a3f8a6b4c6e96b837681be6bd3f")
     .then(response => {
       console.log("Response from LN: ", response.toJSON().body);
       //console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
       //res.send("checked for details")
-      res.render("listennotes/details", { podcasts: response.toJSON().body })
+      res.render("listennotes/details", { podcasts: response.toJSON().body, user: req.session.currentUser })
     })
     .catch(err => console.log('The error while searching show occurred: ', err));
 })
