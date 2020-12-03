@@ -32,6 +32,8 @@ router.get('/search-results', (req, res) => {
   const spotifySearch = spotifyApi
     .searchShows(req.query.podcast, { market: "DE", limit: 6 })
 
+    console.log("LN: ", listenNotesSearch)
+
   Promise.all([listenNotesSearch, spotifySearch]).then((response) => {
     // console.log("THIS IS THE SEARCH RESULT: " + response);
     // console.log("THIS IS THE SEARCH RESULT NUMBER 1 LN: " + response[0].toJSON().body.results[0].title_original);
@@ -89,7 +91,7 @@ router.get('/search-results', (req, res) => {
     //console.log("TEST FOR MERGED RESULTS 1: " + allResults[0].title)
     res.render('search-results', { allResults: uniqueResults.sort(compare) })
   })
-    .catch(err => console.log('The error while searching artists occurred: ', err))
+    .catch(err => console.log('The error while searching podcasts occurred: ', err))
 })
 
 

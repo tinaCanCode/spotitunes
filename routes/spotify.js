@@ -47,6 +47,10 @@ router.get("/details/:showId", (req, res) => {
     .getShow(req.params.showId
       , { market: "DE" }
     )
+    .then(data => {
+      console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
+      res.render("spotify/details", { podcasts: data.body, user: req.session.currentUser })
+    })
     .catch(err => console.log('The error while searching show occurred: ', err));
     
     const fromOurDb = Podcast.exists({podcastId: req.params.showId})
@@ -88,7 +92,7 @@ router.post('/details/:showId/newcomment', (req, res, next) => {
   Podcast.exists({podcastId: showId})
   .then(podcastExists => {
     if (!podcastExists) {
-      return Podcast.create({podcastId: showId})
+      return Podcast.create({podcastId: showId,  origin: "spotify"})
     } else {
       return Podcast.findOne({podcastId: showId})
     }
@@ -144,6 +148,7 @@ router.post('/:id/addtofavorite', (req, res) => {
   // create new object in database
   // push this ID to user "favorites" array
   console.log("THE PARAMS: " + req.params.id)
+
   Podcast.exists({ podcastId: req.params.id })
     .then(podcastExists => {
       if (!podcastExists) {
@@ -155,10 +160,14 @@ router.post('/:id/addtofavorite', (req, res) => {
     // Add ObjectId of newly created Podcast to Users favorite podcasts
     .then(resp => {
       console.log("Podcast you want to add:", resp)
+      // Check if podcast is already part of favorite podcasts
+
+
+
       return User.findOneAndUpdate({ _id: req.session.currentUser._id }, { $push: { favoritePodcasts: resp._id } }, { new: true })
     })
     // Redirect to Homepage
-    .then(() => res.redirect("/userProfile")) //res.send("added"))
+    .then(() => res.redirect("/userProfile"))
     .catch(err => console.log(`Err while creating the post in the DB: ${err}`));
 })
 

@@ -1,18 +1,23 @@
+{{> navbar }}
+
 <form action="/details/:showId" , method="GET"></form>
 <section class="podcastDetails">
 
-<div>
-  <h2>{{podcasts.title}}</h2>
-  <img class="podcastImg" src="{{podcasts.image}}">
-  <h4>Description</h4>
-  <p>{{podcasts.description}}</p>
-  
-  <form action="/listennotes/details/{{podcasts.id}}/newcomment" method="POST">
-         <textarea name="content" id="comment-content-input" cols="60" rows="1"></textarea>
-         {{!-- <br>
+  <div>
+    <h2>{{podcasts.title}}</h2>
+    <img class="podcastImg" src="{{podcasts.image}}">
+    <form action="/listennotes/{{podcasts.id}}/addtofavorite" method="post">
+      <button class="btn btn-outline-secondary btn-sm">Add to favorites</button>
+    </form>
+    <h4>Description</h4>
+    <p>{{podcasts.description}}</p>
+
+    <form action="/listennotes/details/{{podcasts.id}}/newcomment" method="POST">
+      <textarea name="content" id="comment-content-input" cols="60" rows="1"></textarea>
+      {{!-- <br>
         <label for="author">Author: {{user.username}}</label>
         </br> --}}
-        <input  class="btn btn-outline-secondary btn-sm" type="submit" value="Comment a Podcast">
+      <input class="btn btn-outline-secondary btn-sm" type="submit" value="Comment a Podcast">
     </form>
     
     
@@ -25,7 +30,7 @@
   <img class="podcastDetailImg" src="{{this.thumbnail}}">
   <p>Release date: {{this.pub_date_ms}}</p>
   <p>{{this.description}}</p>
-  <p><a href="{{this.listennotes_url}}">Play on Listen Notes</a></p>
+  <p><a href="{{this.listennotes_url}}" target="_blank">Play on Listen Notes</a></p>
   <form action="/listennotes/details/{{this.podcast.id}}/{{this.id}}/addtoplaylist" method="POST">
         <input  class="btn btn-outline-secondary btn-sm" type="submit" value="Bookmark this episode">
   </form>

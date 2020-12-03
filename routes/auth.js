@@ -133,37 +133,40 @@ router.post('/login', (req, res, next) => {
 // Get user profile page and display favorite podcasts
 
 router.get('/userProfile', (req, res) => {
-  console.log(req.session.currentUser.favoritePodcasts)
+  console.log(req.session.currentUser)
+  console.log("Calling the user profile GET route")
   if (req.session.currentUser.favoritePodcasts !== null) {
-    const podcastDbIds = req.session.currentUser.favoritePodcasts; // Array of ObjectIds
 
-    // take id and find spotifyId in db
-    const podcasts = Promise.all(podcastDbIds.map(async (id) => {
-      return await Podcast.findOne({ _id: id })
-    }))
-      .then(podcasts => {
-        console.log("After map: ", podcasts) // Array of podcast objects in Mongobd incl. origin
-        const podcastDetails = Promise.all(podcasts.map(async (podcast) => {
-          console.log(podcast.podcastId)
-          if (podcast.origin === "spotify") {
-            return await spotifyApi.getShow(podcast.podcastId, { market: "DE" })
-          }
-          else if (podcast.origin === "listennotes") {
-            const lnResponse = await unirest.get(`https://listen-api.listennotes.com/api/v2/podcasts/${podcast.podcastId}?sort=recent_first`)
-              .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
-            return lnResponse.toJSON();
-          }
+    User.findOne({ _id: req.session.currentUser._id })
+      .then(user => {
+        const podcastDbIds = user.favoritePodcasts
+        //console.log("DatabaseIDs: ", podcastDbIds)
+        return Promise.all(podcastDbIds.map(async (id) => {
+          return await Podcast.findOne({ _id: id })
         }))
-        return podcastDetails
-      })
-      .then(allPodcasts => {
-        console.log("After 2nd map: ", allPodcasts)
-        res.render('users/user-profile', { user: req.session.currentUser, podcasts: allPodcasts })
-      })
-  }
+      }).then(podcasts => {
+            console.log("After map: ", podcasts) // Array of podcast objects in Mongobd incl. origin
+            const podcastDetails = Promise.all(podcasts.map(async (podcast) => {
+              //console.log(podcast.podcastId)
+              if (podcast.origin === "spotify") {
+                return await spotifyApi.getShow(podcast.podcastId, { market: "DE" })
+              }
+              else if (podcast.origin === "listennotes") {
+                const lnResponse = await unirest.get(`https://listen-api.listennotes.com/api/v2/podcasts/${podcast.podcastId}?sort=recent_first`)
+                  .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
+                return lnResponse.toJSON();
+              }
+            }))
+            return podcastDetails
+          })
+          .then(allPodcasts => {
+            //console.log("After 2nd map: ", allPodcasts)
+            res.render('users/user-profile', { user: req.session.currentUser, podcasts: allPodcasts })
+          })
+      }
   else {
-    res.render('users/user-profile', { user: req.session.currentUser })
-  }
+          res.render('users/user-profile', { user: req.session.currentUser })
+        }
 
 });
 

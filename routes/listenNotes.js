@@ -34,7 +34,7 @@ router.get("/listennotes/details/:showId", (req, res) => {
       //console.log("Response from LN: ", response.toJSON().body);
       //console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
       //res.send("checked for details")
-      res.render("listennotes/details", { podcasts: response.toJSON().body })
+      res.render("listennotes/details", { podcasts: response.toJSON().body, user: req.session.currentUser })
     })
     .catch(err => console.log('The error while searching show occurred: ', err));
 })

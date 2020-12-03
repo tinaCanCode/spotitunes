@@ -1,6 +1,5 @@
 // DOM Elements
 
-
 const favoriteBtn = document.querySelector("#favorite-btn");
 
 document.addEventListener('DOMContentLoaded', () => {
