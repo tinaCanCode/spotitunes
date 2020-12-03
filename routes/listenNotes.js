@@ -6,10 +6,10 @@ const Podcast = require('../models/Podcast');
 const User = require('../models/User');
 const Playlist = require('../models/Playlist');
 
-// /* GET search page */
-// router.get('/listennotes', (req, res, next) => {
-//   res.render('listenNotes/search');
-// });
+/* GET search page */
+router.get('/listennotes', (req, res, next) => {
+  res.render('listenNotes/search');
+});
 
 
 
@@ -27,11 +27,11 @@ const Playlist = require('../models/Playlist');
 // Listen Notes DETAILS page
 
 router.get("/listennotes/details/:showId", (req, res) => {
-  console.log(req.params.showId)
+  //console.log(req.params.showId)
   unirest.get(`https://listen-api.listennotes.com/api/v2/podcasts/${req.params.showId}?sort=recent_first`)
     .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
     .then(response => {
-      console.log("Response from LN: ", response.toJSON().body);
+      //console.log("Response from LN: ", response.toJSON().body);
       //console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
       //res.send("checked for details")
       res.render("listennotes/details", { podcasts: response.toJSON().body })
@@ -41,10 +41,16 @@ router.get("/listennotes/details/:showId", (req, res) => {
 
 
 // Add episode to bookmarked playlist
-router.post("/listennotes/details/:id/addtoplaylist", (req, res) => {
+// WORK IN PROGRESS
+router.post("/listennotes/details/:podcastid/:id/addtoplaylist", (req, res) => {
   Playlist.findOneAndUpdate(
           {$and: [{ownerID : req.session.currentUser._id}, {playlistName : "Bookmarked"} ] },
           {$push: {listenNotesEpisodes : req.params.id }})
+  console.log(req.params)
+  console.log("THIS IS PODCAST ID :" + req.params.podcastid)
+  .then(() => {
+    res.redirect(`/listennotes/details/${req.params.podcastid}`)
+  })
   .catch(err => console.log('The error while searching show occurred: ', err));
 });
 
@@ -57,7 +63,7 @@ router.post('/listennotes/details/:showId/newcomment', (req, res, next) => {
 
   const newComment = { content: content, author: req.session.currentUser._id }
 
-  console.log(showId)
+  //console.log(showId)
   // check if podcast with id is already in db
   Podcast.exists({ podcastId: showId })
     .then(podcastExists => {

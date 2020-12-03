@@ -150,7 +150,7 @@ router.get('/userProfile', (req, res) => {
           }
           else if (podcast.origin === "listennotes") {
             const lnResponse = await unirest.get(`https://listen-api.listennotes.com/api/v2/podcasts/${podcast.podcastId}?sort=recent_first`)
-              .header('X-ListenAPI-Key', '92deae50310140ab877e8f1d4e4c8fcd')
+              .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
             return lnResponse.toJSON();
           }
         }))
