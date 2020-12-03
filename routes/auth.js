@@ -12,6 +12,7 @@ const unirest = require('unirest');
 
 //require spotify Web api
 const SpotifyWebApi = require('spotify-web-api-node');
+const { findById } = require('../models/Podcast');
 
 // setting the spotify-api goes here:
 const spotifyApi = new SpotifyWebApi({
@@ -68,9 +69,9 @@ router.post('/signup', (req, res) => {
       console.log('Newly created user is: ', createdUser);
       //Create a bookmark playlist 
       return Playlist.create({
-        ownerID: createdUser._id, 
-        userName : createdUser.username,
-        playlistName : "Bookmarked",
+        ownerID: createdUser._id,
+        userName: createdUser.username,
+        playlistName: "Bookmarked",
         listenNotesEpisodes: [],
         SpotifyEpisodes: []
       })
@@ -145,30 +146,38 @@ router.get('/userProfile', (req, res) => {
           return await Podcast.findOne({ _id: id })
         }))
       }).then(podcasts => {
-            console.log("After map: ", podcasts) // Array of podcast objects in Mongobd incl. origin
-            const podcastDetails = Promise.all(podcasts.map(async (podcast) => {
-              //console.log(podcast.podcastId)
-              if (podcast.origin === "spotify") {
-                return await spotifyApi.getShow(podcast.podcastId, { market: "DE" })
-              }
-              else if (podcast.origin === "listennotes") {
-                const lnResponse = await unirest.get(`https://listen-api.listennotes.com/api/v2/podcasts/${podcast.podcastId}?sort=recent_first`)
-                  .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
-                return lnResponse.toJSON();
-              }
-            }))
-            return podcastDetails
-          })
-          .then(allPodcasts => {
-            //console.log("After 2nd map: ", allPodcasts)
-            res.render('users/user-profile', { user: req.session.currentUser, podcasts: allPodcasts })
-          })
-      }
+        console.log("After map: ", podcasts) // Array of podcast objects in Mongobd incl. origin
+        const podcastDetails = Promise.all(podcasts.map(async (podcast) => {
+          //console.log(podcast.podcastId)
+          if (podcast.origin === "spotify") {
+            return await spotifyApi.getShow(podcast.podcastId, { market: "DE" })
+          }
+          else if (podcast.origin === "listennotes") {
+            const lnResponse = await unirest.get(`https://listen-api.listennotes.com/api/v2/podcasts/${podcast.podcastId}?sort=recent_first`)
+              .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
+            return lnResponse.toJSON();
+          }
+        }))
+        return podcastDetails
+      })
+      .then(allPodcasts => {
+        //console.log("After 2nd map: ", allPodcasts)
+        res.render('users/user-profile', { user: req.session.currentUser, podcasts: allPodcasts })
+      })
+  }
   else {
-          res.render('users/user-profile', { user: req.session.currentUser })
-        }
+    res.render('users/user-profile', { user: req.session.currentUser })
+  }
 
 });
+
+// display playlist
+
+router.get('/myplaylists', (req, res) => {
+  Playlist.find({ ownerID: req.session.currentUser._id })
+  .then((playlists) => {
+    res.render('users/playlists', { playlists: playlists })})
+})
 
 module.exports = router;
 
