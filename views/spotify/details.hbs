@@ -11,38 +11,26 @@
         <h4>Description</h4>
         <p>{{podcasts.description}}</p>
         <h5>Publisher: {{podcasts.publisher}}</h5>
-        <h5>Rate: {{Podcast.rating.[0]}} </h5>
-        {{!-- <form action="/spotify/details/{{podcasts.id}}/newrating" method="POST">
-        <textarea type='text' name="content" id="rating-content-input" cols="1" rows="1"></textarea>
-        <input class="btn btn-outline-secondary btn-sm" type="submit" value="Rate a Podcast">
-         </form> --}}
+        <h5>Comments:</h5>
+        {{#each ourpodcasts.comments}}
+        <li>{{this.content}}</li>
+        {{/each}}
+        <h5>Rate:</h5>
+        {{#each ourpodcasts.rating}}
+        <li>{{this.content}}</li>
+        {{/each}}
+        <form action="/spotify/details/{{podcasts.id}}/newrating" method="POST">
+            <textarea type='text' name="content" id="rating-content-input" cols="1" rows="1"></textarea>
+            <input class="btn btn-outline-secondary btn-sm" type="submit" value="Rate a Podcast">
 
-
-<form action="/spotify/details/{{podcasts.id}}/newrating" method="POST">
-<div class="form-check form-check-inline">
-  <input class="form-check-input" name="content" type="checkbox" id="inlineCheckbox1" value="1">
-  <label class="form-check-label" for="inlineCheckbox1">1</label>
-  <input class="form-check-input" name="content" type="checkbox" id="inlineCheckbox2" value="2">
-  <label class="form-check-label" for="inlineCheckbox1">2</label>
-   <input class="form-check-input" name="content" type="checkbox" id="inlineCheckbox3" value="3">
-  <label class="form-check-label" for="inlineCheckbox1">3</label>
-  <input class="form-check-input" name="content" type="checkbox" id="inlineCheckbox4" value="4">
-  <label class="form-check-label" for="inlineCheckbox1">4</label>
-   <input class="form-check-input" name="content" type="checkbox" id="inlineCheckbox5" value="5">
-  <label class="form-check-label" for="inlineCheckbox1">5</label>
-</div>
-{{!-- <div class="rating">
-            <i class="fa fa-star unchecked" id="one" name="content"</i>
-            <i class="fa fa-star unchecked" id="two" name="content"</i>
-            <i class="fa fa-star unchecked" id="three" name="content"></i>
-            <i class="fa fa-star unchecked" id="four" name="content"></i>
-            <i class="fa fa-star unchecked" id="five" name="content"></i>
-        </div> --}}
-
-        {{!-- <textarea type='text' name="content" id="rating-content-input" cols="1" rows="1"></textarea> --}}
-        <input class="btn btn-outline-secondary btn-sm" type="submit" value="Rate a Podcast">
-         </form>
-
+            <div class="rating">
+                <i class="fa fa-star unchecked" id="one" name="content"></i>
+                <i class="fa fa-star unchecked" id="two" name="content"></i>
+                <i class="fa fa-star unchecked" id="three" name="content"></i>
+                <i class="fa fa-star unchecked" id="four" name="content"></i>
+                <i class="fa fa-star unchecked" id="five" name="content"></i>
+            </div>
+        </form>
 
         <h5>Number of episodes: {{podcasts.total_episodes}}</h5>
         <h5>Last episodes: </h5>
@@ -61,4 +49,3 @@
 
 
 </section>
-
