@@ -5,16 +5,12 @@ const playlistSchema = new Schema({
   ownerID: { type: String, required: true },
   userName : String,
   playlistName : String,
-  listenNotesEpisodes: [{
+  episodes: [{
     id : String,
     title : String,
-    link : String
+    link : String,
+    source : String
   }],
-  spotifyEpisodes: [{
-    id : String,
-    title : String,
-    link : String
-  }]
 })
 
 const Playlist = mongoose.model("Playlist", playlistSchema);

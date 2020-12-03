@@ -48,7 +48,7 @@ router.post("/listennotes/details/:podcastid/:id/addtoplaylist", (req, res) => {
       console.log(episode)
       Playlist.findOneAndUpdate(
         { $and: [{ ownerID: req.session.currentUser._id }, { playlistName: "Bookmarked" }] },
-        { $push: { listenNotesEpisodes: { id: episode.body.id, title: episode.body.title, link: episode.body.link } } })
+        { $push: { episodes: { id: episode.body.id, title: episode.body.title, link: episode.body.link, source: "listennotes" } } })
         //console.log(req.params)
         //console.log("THIS IS PODCAST ID :" + req.params.podcastid)
         .then(() => {

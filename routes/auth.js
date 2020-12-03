@@ -72,8 +72,7 @@ router.post('/signup', (req, res) => {
         ownerID: createdUser._id,
         userName: createdUser.username,
         playlistName: "Bookmarked",
-        listenNotesEpisodes: [],
-        SpotifyEpisodes: []
+        episodes: [],
       })
     })
     .then(() => {
