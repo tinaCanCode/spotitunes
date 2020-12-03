@@ -121,8 +121,8 @@ router.post('/login', (req, res, next) => {
 // Get user profile page and display favorite podcasts
 
 router.get('/userProfile', (req, res) => {
-  console.log(req.session.currentUser)
-  console.log("Calling the user profile GET route")
+  //console.log(req.session.currentUser)
+  //console.log("Calling the user profile GET route")
   if (req.session.currentUser.favoritePodcasts !== null) {
 
     User.findOne({ _id: req.session.currentUser._id })
@@ -133,7 +133,7 @@ router.get('/userProfile', (req, res) => {
           return await Podcast.findOne({ _id: id })
         }))
       }).then(podcasts => {
-            console.log("After map: ", podcasts) // Array of podcast objects in Mongobd incl. origin
+            //console.log("After map: ", podcasts) // Array of podcast objects in Mongobd incl. origin
             const podcastDetails = Promise.all(podcasts.map(async (podcast) => {
               //console.log(podcast.podcastId)
               if (podcast.origin === "spotify") {

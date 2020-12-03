@@ -130,7 +130,7 @@ router.post('/details/:showId/newrating', (req, res, next) => {
 router.post('/:id/addtofavorite', (req, res) => {
   // create new object in database
   // push this ID to user "favorites" array
-  console.log("THE PARAMS: " + req.params.id)
+  //console.log("THE PARAMS: " + req.params.id)
 
   Podcast.exists({ podcastId: req.params.id })
     .then(podcastExists => {
@@ -143,11 +143,14 @@ router.post('/:id/addtofavorite', (req, res) => {
     // Add ObjectId of newly created Podcast to Users favorite podcasts
     .then(resp => {
       console.log("Podcast you want to add:", resp)
+      console.log("current user: ", req.session.currentUser)
       // Check if podcast is already part of favorite podcasts
-
-
-
+      if(req.session.currentUser.favoritePodcasts.includes(resp._id.toString())) {
+        res.send("You can't add podcasts twice")
+      } else {
       return User.findOneAndUpdate({ _id: req.session.currentUser._id }, { $push: { favoritePodcasts: resp._id } }, { new: true })
+    }
+
     })
     // Redirect to Homepage
     .then(() => res.redirect("/userProfile"))
