@@ -41,13 +41,12 @@ router.get("/listennotes/details/:showId", (req, res) => {
 
 
 // Add episode to bookmarked playlist
-// WORK IN PROGRESS
 router.post("/listennotes/details/:podcastid/:id/addtoplaylist", (req, res) => {
   Playlist.findOneAndUpdate(
           {$and: [{ownerID : req.session.currentUser._id}, {playlistName : "Bookmarked"} ] },
           {$push: {listenNotesEpisodes : req.params.id }})
-  console.log(req.params)
-  console.log("THIS IS PODCAST ID :" + req.params.podcastid)
+  //console.log(req.params)
+  //console.log("THIS IS PODCAST ID :" + req.params.podcastid)
   .then(() => {
     res.redirect(`/listennotes/details/${req.params.podcastid}`)
   })
@@ -112,9 +111,6 @@ router.post('/listennotes/:id/addtofavorite', (req, res) => {
     .then(() => res.redirect("/userProfile"))
     .catch(err => console.log(`Err while creating the post in the DB: ${err}`))
 })
-
-
-
 
 
 module.exports = router;

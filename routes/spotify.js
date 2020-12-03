@@ -5,6 +5,7 @@ const Podcast = require('../models/Podcast');
 const User = require('../models/User');
 //require spotify Web api
 const SpotifyWebApi = require('spotify-web-api-node');
+const Playlist = require('../models/Playlist');
 
 
 // setting the spotify-api goes here:
@@ -48,7 +49,7 @@ router.get("/details/:showId", (req, res) => {
       , { market: "DE" }
     )
     .then(data => {
-      console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
+      //console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
       res.render("spotify/details", { podcasts: data.body, user: req.session.currentUser })
     })
     .catch(err => console.log('The error while searching show occurred: ', err));
@@ -64,7 +65,7 @@ router.get("/details/:showId", (req, res) => {
         .catch(err => console.log('The error while searching show occurred: ', err));
             
     Promise.all([fromSpotify, fromOurDb]).then(values => {
-      console.log(values[0].body);
+      console.log("CHECK THE VALUES :" + values);
       
       res.render("spotify/details", {podcasts:values[0].body, ourpodcasts:values[1]})
     })
@@ -132,7 +133,7 @@ router.post('/details/:showId/newrating', (req, res, next) => {
   })
   // Add rating to Podcast 
   .then(respond => {
-    console.log("Response from mongo:", respond)
+    //console.log("Response from mongo:", respond)
     return Podcast.findByIdAndUpdate(respond._id, { $push: { rating: newRating} })
   // Redirect to Detailpage
   .then(() => res.redirect(`/spotify/details/${showId}`))
@@ -147,7 +148,7 @@ router.post('/details/:showId/newrating', (req, res, next) => {
 router.post('/:id/addtofavorite', (req, res) => {
   // create new object in database
   // push this ID to user "favorites" array
-  console.log("THE PARAMS: " + req.params.id)
+  //console.log("THE PARAMS: " + req.params.id)
 
   Podcast.exists({ podcastId: req.params.id })
     .then(podcastExists => {
@@ -159,7 +160,7 @@ router.post('/:id/addtofavorite', (req, res) => {
     })
     // Add ObjectId of newly created Podcast to Users favorite podcasts
     .then(resp => {
-      console.log("Podcast you want to add:", resp)
+      //console.log("Podcast you want to add:", resp)
       // Check if podcast is already part of favorite podcasts
 
 
@@ -170,5 +171,16 @@ router.post('/:id/addtofavorite', (req, res) => {
     .then(() => res.redirect("/userProfile"))
     .catch(err => console.log(`Err while creating the post in the DB: ${err}`));
 })
+
+//addtoplaylist
+router.post("/spotify/details/:podcastid/:id/addtoplaylist", (req, res) => {
+  Playlist.findOneAndUpdate(
+          {$and: [{ownerID : req.session.currentUser._id}, {playlistName : "Bookmarked"} ] },
+          {$push: {spotifyEpisodes : req.params.id }})
+   .then(() => {
+    res.redirect(`/spotify/details/${req.params.podcastid}`)
+  })
+  .catch(err => console.log('The error while searching show occurred: ', err));
+});
 
 module.exports = router;

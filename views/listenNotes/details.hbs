@@ -31,9 +31,8 @@
   <p>Release date: {{this.pub_date_ms}}</p>
   <p>{{this.description}}</p>
   <p><a href="{{this.listennotes_url}}" target="_blank">Play on Listen Notes</a></p>
-  <form action="/listennotes/details/{{this.podcast.id}}/{{this.id}}/addtoplaylist" method="POST">
+  <form action="/listennotes/details/{{../podcasts.id}}/{{this.id}}/addtoplaylist" method="POST">
         <input  class="btn btn-outline-secondary btn-sm" type="submit" value="Bookmark this episode">
   </form>
   {{/each}}
-</div>
 </section>
