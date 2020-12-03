@@ -48,27 +48,27 @@ router.get("/details/:showId", (req, res) => {
     .getShow(req.params.showId
       , { market: "DE" }
     )
-    // .then(data => {
-    //   //console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
-    //   res.render("spotify/details", { podcasts: data.body, user: req.session.currentUser })
-    // })
-    // .catch(err => console.log('The error while searching show occurred: ', err));
-    
-    const fromOurDb = Podcast.exists({podcastId: req.params.showId})
+  // .then(data => {
+  //   //console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
+  //   res.render("spotify/details", { podcasts: data.body, user: req.session.currentUser })
+  // })
+  // .catch(err => console.log('The error while searching show occurred: ', err));
+
+  const fromOurDb = Podcast.exists({ podcastId: req.params.showId })
     .then(podcastExists => {
-            if (podcastExists) {
-              return Podcast.findOne({podcastId: req.params.showId})
-            }else{
-                console.log('there is no such podcast in DB')
-              }
+      if (podcastExists) {
+        return Podcast.findOne({ podcastId: req.params.showId })
+      } else {
+        console.log('there is no such podcast in DB')
+      }
     })
-        .catch(err => console.log('The error while searching show occurred: ', err));
-            
-    Promise.all([fromSpotify, fromOurDb]).then(values => {
-      console.log("CHECK THE VALUES :" + values);
-      
-      res.render("spotify/details", {podcasts:values[0].body, ourpodcasts:values[1]})
-    })
+    .catch(err => console.log('The error while searching show occurred: ', err));
+
+  Promise.all([fromSpotify, fromOurDb]).then(values => {
+    console.log("CHECK THE VALUES :" + values);
+
+    res.render("spotify/details", { podcasts: values[0].body, ourpodcasts: values[1] })
+  })
 })
 
 
@@ -90,22 +90,22 @@ router.post('/details/:showId/newcomment', (req, res, next) => {
 
   console.log(showId)
   // check if podcast with id is already in db
-  Podcast.exists({podcastId: showId})
-  .then(podcastExists => {
-    if (!podcastExists) {
-      return Podcast.create({podcastId: showId,  origin: "spotify"})
-    } else {
-      return Podcast.findOne({podcastId: showId})
-    }
-  })
-  // Add ObjectId of newly created Podcast 
-  .then(resp => {
-    // console.log("Response from mongo:", resp)
-    return Podcast.findByIdAndUpdate(resp._id, { $push: { comments: newComment} })
-  // Redirect to Detailpage
-  .then(() => res.redirect(`/spotify/details/${showId}`))
-  .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
-})
+  Podcast.exists({ podcastId: showId })
+    .then(podcastExists => {
+      if (!podcastExists) {
+        return Podcast.create({ podcastId: showId, origin: "spotify" })
+      } else {
+        return Podcast.findOne({ podcastId: showId })
+      }
+    })
+    // Add ObjectId of newly created Podcast 
+    .then(resp => {
+      // console.log("Response from mongo:", resp)
+      return Podcast.findByIdAndUpdate(resp._id, { $push: { comments: newComment } })
+        // Redirect to Detailpage
+        .then(() => res.redirect(`/spotify/details/${showId}`))
+        .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
+    })
 });
 
 
@@ -118,27 +118,27 @@ router.post('/details/:showId/newrating', (req, res, next) => {
   const { content } = req.body;
 
 
-  const newRating = { content : content, author: req.session.currentUser._id }
+  const newRating = { content: content, author: req.session.currentUser._id }
 
 
   console.log(showId)
   // check if podcast with id is already in db
-  Podcast.exists({podcastId: showId})
-  .then(podcastExists => {
-    if (!podcastExists) {
-      return Podcast.create({podcastId: showId})
-    } else {
-      return Podcast.findOne({podcastId: showId})
-    }
-  })
-  // Add rating to Podcast 
-  .then(respond => {
-    //console.log("Response from mongo:", respond)
-    return Podcast.findByIdAndUpdate(respond._id, { $push: { rating: newRating} })
-  // Redirect to Detailpage
-  .then(() => res.redirect(`/spotify/details/${showId}`))
-  .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
-})
+  Podcast.exists({ podcastId: showId })
+    .then(podcastExists => {
+      if (!podcastExists) {
+        return Podcast.create({ podcastId: showId })
+      } else {
+        return Podcast.findOne({ podcastId: showId })
+      }
+    })
+    // Add rating to Podcast 
+    .then(respond => {
+      //console.log("Response from mongo:", respond)
+      return Podcast.findByIdAndUpdate(respond._id, { $push: { rating: newRating } })
+        // Redirect to Detailpage
+        .then(() => res.redirect(`/spotify/details/${showId}`))
+        .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
+    })
 });
 
 // ********************************************************
@@ -174,13 +174,18 @@ router.post('/:id/addtofavorite', (req, res) => {
 
 //addtoplaylist
 router.post("/details/:podcastid/:id/addtoplaylist", (req, res) => {
-  Playlist.findOneAndUpdate(
-          {$and: [{ownerID : req.session.currentUser._id}, {playlistName : "Bookmarked"} ] },
-          {$push: {spotifyEpisodes : req.params.id }})
-   .then(() => {
-    res.redirect(`/spotify/details/${req.params.podcastid}`)
-  })
-  .catch(err => console.log('The error while searching show occurred: ', err));
-});
+  spotifyApi
+    .getEpisode(req.params.id, { market: "DE" })
+    .then((episode) => {
+      console.log("THE ID OF THE EISODEEE: " + episode.body.id)
+      Playlist.findOneAndUpdate(
+        { $and: [{ ownerID: req.session.currentUser._id }, { playlistName: "Bookmarked" }] },
+        { $push: { spotifyEpisodes: {id: episode.body.id, title: episode.body.name, link: episode.body.external_urls.spotify }}})
+        .then(() => {
+          res.redirect(`/spotify/details/${req.params.podcastid}`)
+        })
+        .catch(err => console.log('The error while searching show occurred: ', err));
+    })
+})
 
 module.exports = router;
