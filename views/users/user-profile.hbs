@@ -5,6 +5,7 @@
 <form action="/logout" method="post">
   <button type="submit">Logout</button>
 </form>
+<a href="/myplaylists"><button>My playlists</button></a>
 
 <h3>My favorite Podcasts</h3>
 {{#each podcasts}}
@@ -24,5 +25,5 @@
 
 
 {{else}}
-<p>Still no logged in user, sorry!</p>
+<p>You are logged out. Please log in or sign up to continue.</p>
 {{/if}}

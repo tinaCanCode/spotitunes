@@ -157,6 +157,34 @@ hr{
 #rating-content-input{
   display: none;
 }
+
+/*playlists*/
+.playlist-box {
+    display: flex;
+    flex-direction: column;
+    width : 600px
+}
+
+.one-episode {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.play-button {
+  width : 250px;
+}
+
+.episode-title {
+  width : 350px;
+  overflow:hidden;
+  display:inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+
 /* @media (max-width: 991.98px) { ... }
 
 @media (max-width: 1199.98px) { ... } */
