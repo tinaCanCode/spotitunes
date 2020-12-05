@@ -20,28 +20,6 @@ spotifyApi
   .then(data => spotifyApi.setAccessToken(data.body['access_token']))
   .catch(error => console.log('Something went wrong when retrieving an access token', error));
 
-// /* GET search page */
-// router.get('/', (req, res, next) => {
-//   res.render('spotify/search');
-// });
-
-// router.get("/search-results", (req, res) => {
-
-//   //console.log(req.query.podcast); // {podcast: "Testsearch"}
-
-//   spotifyApi
-//     //.search(req.query.podcast, ["track", "artist", "playlist", "show"])
-//     .searchShows(req.query.podcast, { market: "DE", limit: 6 })
-//     //.searchEpisodes(req.query.podcast)
-//     .then(data => {
-//       // console.log('The received data from the API about shows: ', data.body.shows.items);
-//       res.render("spotify/search-result", { podcasts: data.body.shows.items })
-//     })
-//     .catch(err => console.log('The error while searching artists occurred: ', err));
-
-// })
-
-
 router.get("/details/:showId", (req, res) => {
   // console.log(req.params.showId)
   const fromSpotify = spotifyApi
@@ -54,55 +32,34 @@ router.get("/details/:showId", (req, res) => {
       if (podcastExists) {
         return Podcast.findOne({ podcastId: req.params.showId })
       } else {
-        console.log('there is no such podcast in DB')
+        return Podcast.create({ podcastId: req.params.showId })
       }
     })
     .catch(err => console.log('The error while searching show occurred: ', err));
 
   Promise.all([fromSpotify, fromOurDb]).then(values => {
     // console.log(values[1]);
-
+    let valForComments = values[1].comments;
     let valForRating = values[1].rating;
-    // counting the rating value
+    let userToCheckGet = req.session.currentUser._id
+
+    let beingUser = valForRating.some(valForRating => valForRating['author'] == `${userToCheckGet}`)
+    let beingCommentingUser = valForComments.some(valForComments => valForComments['author'] == `${userToCheckGet}`)
+    
     const sumRatings = (valForRating.reduce((sum, item) => sum + item.content, 0) / valForRating.length).toFixed(1)
     console.log(sumRatings);
-
-
-    res.render("spotify/details", { podcasts: values[0].body, ourpodcasts: values[1], ratingResults: sumRatings })
+    res.render("spotify/details", { podcasts: values[0].body, ourpodcasts: values[1], ratingResults: sumRatings, beingUser: beingUser, beingCommentingUser: beingCommentingUser })
   })
 })
 
 
-
-// Promise.all([fromSpotify, fromOurDb]).then(values => {
-//   console.log(values[1]);
-
-// let valForRating = values[1];
-
-// const sumRatings = valForRating.reduce((acc, rating)=>{
-// acc[rating.content]=rating.content.reduce((acc, b) => acc+b, 0);
-
-// return acc 
-// // devide later through the length
-
-// }, {});
-
-//   res.render("spotify/details", {podcasts:values[0].body, ourpodcasts:values[1]})
-// })
-
 //  *********************COMMENTS SECTION***************************
-
-
 
 // Add Spotify Podcast to database
 router.post('/details/:showId/newcomment', (req, res, next) => {
-
   const { showId } = req.params;
   const { content } = req.body;
-
-
   const newComment = { content: content, author: req.session.currentUser._id }
-
 
   console.log(showId)
   // check if podcast with id is already in db
@@ -116,11 +73,24 @@ router.post('/details/:showId/newcomment', (req, res, next) => {
     })
     // Add ObjectId of newly created Podcast 
     .then(resp => {
-      // console.log("Response from mongo:", resp)
-      return Podcast.findByIdAndUpdate(resp._id, { $push: { comments: newComment } })
-        // Redirect to Detailpage
-        .then(() => res.redirect(`/spotify/details/${showId}`))
-        .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
+      let commentsArrToCheck = resp.comments
+      let userToCheckCom = req.session.currentUser._id
+      let hasCommented = commentsArrToCheck.some(commentsArrToCheck => commentsArrToCheck['author'] == `${userToCheckCom}`)
+      console.log("=========>", hasCommented)
+
+      if (!hasCommented) {
+        return Podcast.findByIdAndUpdate(resp._id, { $push: { comments: newComment } })
+          // Redirect to Detailpage
+          .then(() => res.redirect(`/spotify/details/${showId}`))
+          .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
+      } else {
+        let newCommentArr = commentsArrToCheck.filter(commentsArrToCheck => commentsArrToCheck['author'] != `${userToCheckCom}`)
+        console.log("=========>", newCommentArr)
+        newCommentArr.push(newComment);
+        return Podcast.findByIdAndUpdate(resp._id, { comments: newCommentArr })
+          .then(() => res.redirect(`/spotify/details/${showId}`))
+          .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
+      }
     })
 });
 
@@ -148,10 +118,6 @@ router.post('/details/:showId/newrating', (req, res, next) => {
       let arrayToCheck = respond.rating
       let userToCheck = req.session.currentUser._id
 
-      // arrayToCheck.map(e=>{
-      //   console.log("eee=======>",e.author == userToCheck )
-      // })
-
       let hasUser = arrayToCheck.some(arrayToCheck => arrayToCheck['author'] == `${userToCheck}`)
       console.log("=========>", hasUser)
 
@@ -160,9 +126,15 @@ router.post('/details/:showId/newrating', (req, res, next) => {
           // Redirect to Detailpage
           .then(() => res.redirect(`/spotify/details/${showId}`))
           .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
-      } else {             // console.log("Response from mongo:", respond)
-        console.log('This user have already rated')
-        res.redirect(`/spotify/details/${showId}`)
+      } else {
+
+        let newRatingArr = arrayToCheck.filter(arrayToCheck => arrayToCheck['author'] != `${userToCheck}`)
+        console.log("=========>", newRatingArr)
+        newRatingArr.push(newRating);
+        return Podcast.findByIdAndUpdate(respond._id, { rating: newRatingArr })
+          // Redirect to Detailpage
+          .then(() => res.redirect(`/spotify/details/${showId}`))
+          .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
       }
     })
 })
@@ -224,6 +196,15 @@ router.post("/details/:podcastid/:id/addtoplaylist", (req, res) => {
     })
 })
 
+router.post('/delete/:id', (req, res) => {
+  Podcast.findOne({ podcastId: req.params.id })
+    .then(podcast => {
+      console.log("Podcast we want to delete", podcast)
+      User.findOneAndUpdate({ _id: req.session.currentUser._id }, { $pull: { favoritePodcasts: podcast._id } }, { new: true })
+    })
+  res.redirect("/userProfile");
+  
+})
 
 
 module.exports = router;
