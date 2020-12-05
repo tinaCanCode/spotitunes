@@ -10,6 +10,7 @@ router.get('/', (req, res, next) => {
   res.render('index', {user: req.session.currentUser});
 });
 
+//logout
 router.post('/logout', (req, res) => {
   req.session.destroy();
   res.redirect('/');

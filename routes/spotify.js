@@ -47,11 +47,11 @@ router.get("/details/:showId", (req, res) => {
     .getShow(req.params.showId
       , { market: "DE" }
     )
-    .then(data => {
-      console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
-      res.render("spotify/details", { podcasts: data.body, user: req.session.currentUser })
-    })
-    .catch(err => console.log('The error while searching show occurred: ', err));
+    // .then(data => {
+    //   console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
+    //   res.render("spotify/details", { podcasts: data.body, user: req.session.currentUser })
+    // })
+    // .catch(err => console.log('The error while searching show occurred: ', err));
     
     const fromOurDb = Podcast.exists({podcastId: req.params.showId})
     .then(podcastExists => {
@@ -169,6 +169,17 @@ router.post('/:id/addtofavorite', (req, res) => {
     // Redirect to Homepage
     .then(() => res.redirect("/userProfile"))
     .catch(err => console.log(`Err while creating the post in the DB: ${err}`));
+})
+
+// remove a podcast from the favorites Podcast array
+
+router.post('/delete/:id', (req, res) => {
+  Podcast.findOne({ podcastId: req.params.id })
+  .then(podcast => {
+    console.log("Podcast we want to delete", podcast)
+    User.findOneAndUpdate({ _id: req.session.currentUser._id }, { $pull: { favoritePodcasts: podcast._id } }, { new: true })
+  })
+  res.redirect("/userProfile");
 })
 
 module.exports = router;
