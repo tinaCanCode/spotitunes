@@ -213,7 +213,7 @@ router.get('/myplaylists', (req, res) => {
                 id: episode.body.id,
                 title: episode.body.name,
                 link: episode.body.external_urls.spotify,
-                image: episode.body.images[0],
+                image: episode.body.images[0].url,
                 description: episode.body.description,
                 podcast: episode.body.show.name,
                 podcastID: episode.body.show.id,
