@@ -45,33 +45,49 @@ router.get("/details/:showId", (req, res) => {
   // console.log(req.params.showId)
   const fromSpotify = spotifyApi
     .getShow(req.params.showId
-      , { market: "DE" }
-    )
-    .then(data => {
-      console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
-      res.render("spotify/details", { podcasts: data.body, user: req.session.currentUser })
+      , { market: "DE" })
+  // .catch(err => console.log('The error while searching show occurred: ', err));
+
+  const fromOurDb = Podcast.exists({ podcastId: req.params.showId })
+    .then(podcastExists => {
+      if (podcastExists) {
+        return Podcast.findOne({ podcastId: req.params.showId })
+      } else {
+        console.log('there is no such podcast in DB')
+      }
     })
     .catch(err => console.log('The error while searching show occurred: ', err));
-    
-    const fromOurDb = Podcast.exists({podcastId: req.params.showId})
-    .then(podcastExists => {
-            if (podcastExists) {
-              return Podcast.findOne({podcastId: req.params.showId})
-            }else{
-                console.log('there is no such podcast in DB')
-              }
-    })
-        .catch(err => console.log('The error while searching show occurred: ', err));
-            
-    Promise.all([fromSpotify, fromOurDb]).then(values => {
-      console.log(values[0].body);
-      
-      res.render("spotify/details", {podcasts:values[0].body, ourpodcasts:values[1]})
-    })
+
+  Promise.all([fromSpotify, fromOurDb]).then(values => {
+    // console.log(values[1]);
+
+    let valForRating = values[1].rating;
+    // counting the rating value
+    const sumRatings = (valForRating.reduce((sum, item) => sum + item.content, 0) / valForRating.length).toFixed(1)
+    console.log(sumRatings);
+
+
+    res.render("spotify/details", { podcasts: values[0].body, ourpodcasts: values[1], ratingResults: sumRatings })
+  })
 })
 
 
 
+// Promise.all([fromSpotify, fromOurDb]).then(values => {
+//   console.log(values[1]);
+
+// let valForRating = values[1];
+
+// const sumRatings = valForRating.reduce((acc, rating)=>{
+// acc[rating.content]=rating.content.reduce((acc, b) => acc+b, 0);
+
+// return acc 
+// // devide later through the length
+
+// }, {});
+
+//   res.render("spotify/details", {podcasts:values[0].body, ourpodcasts:values[1]})
+// })
 
 //  *********************COMMENTS SECTION***************************
 
@@ -89,22 +105,22 @@ router.post('/details/:showId/newcomment', (req, res, next) => {
 
   console.log(showId)
   // check if podcast with id is already in db
-  Podcast.exists({podcastId: showId})
-  .then(podcastExists => {
-    if (!podcastExists) {
-      return Podcast.create({podcastId: showId,  origin: "spotify"})
-    } else {
-      return Podcast.findOne({podcastId: showId})
-    }
-  })
-  // Add ObjectId of newly created Podcast 
-  .then(resp => {
-    // console.log("Response from mongo:", resp)
-    return Podcast.findByIdAndUpdate(resp._id, { $push: { comments: newComment} })
-  // Redirect to Detailpage
-  .then(() => res.redirect(`/spotify/details/${showId}`))
-  .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
-})
+  Podcast.exists({ podcastId: showId })
+    .then(podcastExists => {
+      if (!podcastExists) {
+        return Podcast.create({ podcastId: showId, origin: "spotify" })
+      } else {
+        return Podcast.findOne({ podcastId: showId })
+      }
+    })
+    // Add ObjectId of newly created Podcast 
+    .then(resp => {
+      // console.log("Response from mongo:", resp)
+      return Podcast.findByIdAndUpdate(resp._id, { $push: { comments: newComment } })
+        // Redirect to Detailpage
+        .then(() => res.redirect(`/spotify/details/${showId}`))
+        .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
+    })
 });
 
 
@@ -112,33 +128,44 @@ router.post('/details/:showId/newcomment', (req, res, next) => {
 // +++++++++++++++++++++++++RATING SECTION++++++++++++++++++++++++++++
 
 router.post('/details/:showId/newrating', (req, res, next) => {
-
   const { showId } = req.params;
   const { content } = req.body;
-
-
-  const newRating = { content : content, author: req.session.currentUser._id }
-
+  const newRating = { content: content, author: req.session.currentUser._id }
 
   console.log(showId)
   // check if podcast with id is already in db
-  Podcast.exists({podcastId: showId})
-  .then(podcastExists => {
-    if (!podcastExists) {
-      return Podcast.create({podcastId: showId})
-    } else {
-      return Podcast.findOne({podcastId: showId})
-    }
-  })
-  // Add rating to Podcast 
-  .then(respond => {
-    console.log("Response from mongo:", respond)
-    return Podcast.findByIdAndUpdate(respond._id, { $push: { rating: newRating} })
-  // Redirect to Detailpage
-  .then(() => res.redirect(`/spotify/details/${showId}`))
-  .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
+  Podcast.exists({ podcastId: showId })
+    .then(podcastExists => {
+      if (!podcastExists) {
+        return Podcast.create({ podcastId: showId })
+      } else {
+        return Podcast.findOne({ podcastId: showId })
+      }
+    })
+    // Add rating to Podcast 
+    .then(respond => {
+      let arrayToCheck = respond.rating
+      let userToCheck = req.session.currentUser._id
+
+      // arrayToCheck.map(e=>{
+      //   console.log("eee=======>",e.author == userToCheck )
+      // })
+
+      let hasUser = arrayToCheck.some(arrayToCheck => arrayToCheck['author'] == `${userToCheck}`)
+      console.log("=========>",hasUser)
+
+      if (!hasUser) {
+        return Podcast.findByIdAndUpdate(respond._id, { $push: { rating: newRating } })
+          // Redirect to Detailpage
+          .then(() => res.redirect(`/spotify/details/${showId}`))
+          .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
+      } else {             // console.log("Response from mongo:", respond)
+        console.log('This user have already rated')
+        res.redirect(`/spotify/details/${showId}`)
+      }
+    })
 })
-});
+
 
 // ********************************************************
 
@@ -161,9 +188,6 @@ router.post('/:id/addtofavorite', (req, res) => {
     .then(resp => {
       console.log("Podcast you want to add:", resp)
       // Check if podcast is already part of favorite podcasts
-
-
-
       return User.findOneAndUpdate({ _id: req.session.currentUser._id }, { $push: { favoritePodcasts: resp._id } }, { new: true })
     })
     // Redirect to Homepage
