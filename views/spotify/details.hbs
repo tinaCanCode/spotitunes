@@ -11,7 +11,13 @@
         </form>
         <form action="/spotify/details/{{podcasts.id}}/newcomment" method="POST">
             <textarea name="content" id="comment-content-input" cols="60" rows="1"></textarea>
+
+
+{{#if beingCommentingUser}}
+<input class="btn btn-outline-secondary btn-sm" type="submit" value="Change your comment">
+{{else}}
             <input class="btn btn-outline-secondary btn-sm" type="submit" value="Comment a Podcast">
+            {{/if}}
         </form>
         <h4>Description</h4>
         <p>{{podcasts.description}}</p>
@@ -21,10 +27,19 @@
         <li>{{this.content}}</li>
         {{/each}}
         <h5>Rate: {{ratingResults}}</h5>
+        {{!-- {{#if beingUser}}
+        
+        {{#else}}
+        
+         {{/else}} --}}
         <form action="/spotify/details/{{podcasts.id}}/newrating" method="POST">
             <textarea type='text' name="content" id="rating-content-input" cols="1" rows="1"></textarea>
-            <input class="btn btn-outline-secondary btn-sm" type="submit" value="Rate a Podcast">
 
+            {{#if beingUser}}
+            <input class="btn btn-outline-secondary btn-sm" type="submit" value="Change your rating">
+            {{else}}
+             <input class="btn btn-outline-secondary btn-sm" type="submit" value="Rate a Podcast">
+            {{/if}}
             <div class="rating">
                 <i class="fa fa-star unchecked" id="one" name="content"></i>
                 <i class="fa fa-star unchecked" id="two" name="content"></i>
@@ -33,7 +48,7 @@
                 <i class="fa fa-star unchecked" id="five" name="content"></i>
             </div>
         </form>
-
+    
         <h5>Number of episodes: {{podcasts.total_episodes}}</h5>
         <h5>Last episodes: </h5>
         {{#each podcasts.episodes.items}}
