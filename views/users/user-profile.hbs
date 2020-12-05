@@ -1,4 +1,4 @@
-{{> navbar }}
+{{> navbarprofile }}
 
 {{#if user}}
 <h2>{{ user.username }} - Profile page</h2>
@@ -14,7 +14,7 @@
 <p>{{this.body.title}} - {{this.body.publisher}}</p>
 <img class="podcastImg" src="{{this.body.image}}">
 <p><a href="/listennotes/details/{{this.body.id}}">Show Details</a></p>
-<form action="/listennotes/delete/{{this.body.id}}" method="post">
+<form action="/delete/{{this.body.id}}" method="post">
   <button class="btn btn-outline-secondary btn-sm">Remove from favorites</button>
 </form>
 
@@ -22,7 +22,7 @@
 <p>{{this.body.name}} - {{this.body.publisher}}</p>
 <img class="podcastImg" src="{{this.body.images.[1].url}}">
 <p><a href="/spotify/details/{{this.body.id}}">Show Details</a></p>
-<form action="/spotify/delete/{{this.body.id}}" method="post">
+<form action="/delete/{{this.body.id}}" method="post">
   <button class="btn btn-outline-secondary btn-sm">Remove from favorites</button>
 </form>
 

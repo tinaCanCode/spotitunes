@@ -153,7 +153,7 @@ router.post('/details/:showId/newrating', (req, res, next) => {
       // })
 
       let hasUser = arrayToCheck.some(arrayToCheck => arrayToCheck['author'] == `${userToCheck}`)
-      console.log("=========>",hasUser)
+      console.log("=========>", hasUser)
 
       if (!hasUser) {
         return Podcast.findByIdAndUpdate(respond._id, { $push: { rating: newRating } })
@@ -186,31 +186,28 @@ router.post('/:id/addtofavorite', (req, res) => {
       }
     })
     // Add ObjectId of newly created Podcast to Users favorite podcasts
-    .then(resp => {
-      console.log("Podcast you want to add:", resp)
+    .then(podcastToAdd => {
+      console.log("Podcast you want to add:", podcastToAdd)
       console.log("current user: ", req.session.currentUser)
       // Check if podcast is already part of favorite podcasts
-      if(req.session.currentUser.favoritePodcasts.includes(resp._id.toString())) {
-        res.send("You can't add podcasts twice")
-      } else {
-      return User.findOneAndUpdate({ _id: req.session.currentUser._id }, { $push: { favoritePodcasts: resp._id } }, { new: true })
-    }
+      User.findOne({ _id: req.session.currentUser._id })
+        .then(user => {
+          const userFavoritePodcasts = user.favoritePodcasts
 
+          if (userFavoritePodcasts.includes(podcastToAdd._id.toString())) {
+            res.send("You can't add podcasts twice")
+          } else {
+            return User.findOneAndUpdate({ _id: req.session.currentUser._id }, { $push: { favoritePodcasts: podcastToAdd._id } }, { new: true })
+          }
+
+        })
+        // Redirect to Homepage
+        .then(() => res.redirect("/userProfile"))
+        .catch(err => console.log(`Err while creating the post in the DB: ${err}`));
     })
-    // Redirect to Homepage
-    .then(() => res.redirect("/userProfile"))
-    .catch(err => console.log(`Err while creating the post in the DB: ${err}`));
 })
 
-// remove a podcast from the favorites Podcast array
 
-router.post('/delete/:id', (req, res) => {
-  Podcast.findOne({ podcastId: req.params.id })
-  .then(podcast => {
-    console.log("Podcast we want to delete", podcast)
-    User.findOneAndUpdate({ _id: req.session.currentUser._id }, { $pull: { favoritePodcasts: podcast._id } }, { new: true })
-  })
-  res.redirect("/userProfile");
 //addtoplaylist
 router.post("/details/:podcastid/:id/addtoplaylist", (req, res) => {
   spotifyApi
@@ -219,14 +216,14 @@ router.post("/details/:podcastid/:id/addtoplaylist", (req, res) => {
       console.log("THE ID OF THE EISODEEE: " + episode.body.id)
       Playlist.findOneAndUpdate(
         { $and: [{ ownerID: req.session.currentUser._id }, { playlistName: "Bookmarked" }] },
-        { $push: { episodes: {id: episode.body.id, title: episode.body.name, link: episode.body.external_urls.spotify, source: "spotify" }}})
+        { $push: { episodes: { id: episode.body.id, title: episode.body.name, link: episode.body.external_urls.spotify, source: "spotify" } } })
         .then(() => {
           res.redirect(`/spotify/details/${req.params.podcastid}`)
         })
         .catch(err => console.log('The error while searching show occurred: ', err));
     })
 })
-})
+
 
 
 module.exports = router;

@@ -22,7 +22,7 @@ spotifyApi
 
 /* GET search page */
 router.get('/search', (req, res, next) => {
-  res.render('search');
+  res.render('search', {user: req.session.currentUser});
 });
 
 router.get('/search-results', (req, res) => {
@@ -89,7 +89,7 @@ router.get('/search-results', (req, res) => {
     });
 
     //console.log("TEST FOR MERGED RESULTS 1: " + allResults[0].title)
-    res.render('search-results', { allResults: uniqueResults.sort(compare) })
+    res.render('search-results', { allResults: uniqueResults.sort(compare) , user: req.session.currentUser })
   })
     .catch(err => console.log('The error while searching podcasts occurred: ', err))
 })

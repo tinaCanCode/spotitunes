@@ -13,26 +13,17 @@
       <li class='nav-item'>
         <a class='nav-link' href="/userProfile">User Profile</a>
       </li>
+      <li class='nav-item'>
+        <form action="/logout" method="post">
+  <button class="btn btn-outline-secondary btn-sm">Logout</button>
+</form>
+      </li>
       {{else}}
       <li class='nav-item active'>
         <a class='nav-link' href="signup">Signup</a>
       </li>
       <li class='nav-item'>
         <a class='nav-link' href="login">Log in</a>
-      </li>
-      {{/if}}
-      <li class="nav-item">
-        <form action="/search-results" method="get">
-        <input id="podcast-navbar" class="form-control" type="text" name="podcast"></li>
-        <li class="nav-item">
-        <button style="display:inline" class="btn btn-sm btn-outline-secondary">Search</button>
-      </form>
-      </li>
-      {{#if user}}
-      <li class='nav-item'>
-        <form action="/logout" method="post">
-  <button class="btn btn-outline-secondary btn-sm">Logout</button>
-</form>
       </li>
       {{/if}}
       
