@@ -1,24 +1,40 @@
 {{> navbar }}
-
-<h3>My bookmarks</h3>
-<p>Explore and bookmark some podcast episodes you want to listen to later ! </p>
-<div id="container">
-  <h4>{{playlistObject.name}}</h4>
-  {{#each playlistObject.content}}
-  <div class="row justify-content-md-center">
-    <div class="col-sm-6">
-      <img class="img-fluid" src="{{this.image}}">
+<div class="playlist-box container col vertical-center">
+  <div class="bookmarks-pg-title">
+    <h3 class="text-center">My bookmarks</h3>
+  </div>
+  <p class="text-center">Explore and bookmark some podcast episodes you want to listen to later ! </p>
+  <div class="container border border-secondary rounded p-3">
+    <div class="list-title vertical-center">
+      <h4 class="text-center">{{playlistObject.name}}</h4>
     </div>
-    <div class="col-sm-4">
-      <h4>{{this.title}}</h4>
-      <p>{{this.podcast}}</p>
-      <p class="description">{{this.description}}</p>
-      <a href="{{this.link}}" target="blank"><button>Listen now</button></a>
-      <form action="/bookmarks/{{../playlistObject.name}}/{{this.id}}/delete" type="submit" method="POST">
-        <button>Remove</button>
-      </form>
+    {{#each playlistObject.content}}
+    {{!-- <div class="col-sm-6">
+      <img class="img-fluid" src="{{this.image}}">
+    </div> --}}
+    <div class="col align-self-center vertical-center border border-secondary rounded p-3">
+      <div>
+        <h5>{{this.title}}</h5>
+      </div>
+      <div>
+        <p>{{this.podcast}}</p>
+      </div>
+      {{!-- <p class="description">{{this.description}}</p> --}}
+      <div class="row">
+        <div class="col">
+          <a href="{{this.link}}" target="blank"><button class="btn btn-lg btn-outline-secondary">Listen now</button></a>
+        </div>
+        <div class="col">
+          <form action="/bookmarks/{{../playlistObject.name}}/{{this.id}}/delete" type="submit" method="POST">
+            <button class="btn btn-lg btn-outline-secondary">Remove</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+    {{/each}}
+    <div>
+      <a href="/search"><button class="btn btn-lg btn-outline-secondary">Bookmark new episodes</button></a>
     </div>
   </div>
-  {{/each}}
-<a href="/search"><button class="btn btn-lg btn-outline-secondary">Bookmark new episodes</button></a>
 </div>
