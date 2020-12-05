@@ -107,8 +107,6 @@ router.post('/playlists/:name/:id/delete', (req, res) => {
     console.log(playlist)
     res.redirect('/myplaylists')
   })
-  .then(() => {
-  })
 })
   
 
