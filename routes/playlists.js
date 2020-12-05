@@ -35,7 +35,7 @@ router.get('/signup', (req, res) => {
 
 // display playlist
 
-router.get('/myplaylists', (req, res) => {
+router.get('/mybookmarks', (req, res) => {
   Playlist.find({ ownerID: req.session.currentUser._id })
     .then((playlists) => {
       let playlistEpisodes = []
@@ -91,13 +91,12 @@ router.get('/myplaylists', (req, res) => {
       }
 
       Promise.all(requestPromises).then(() => {
-        //console.log("THIS IS THE PLAYLIST TOTAL : " + playlistObject)
         res.render('users/playlists', { playlistObject: playlistObject} )
       })
     })
 })
 
-router.post('/playlists/:name/:id/delete', (req, res) => {
+router.post('/bookmarks/:name/:id/delete', (req, res) => {
   console.log("THIS IS THE PARAMS : " + req.params.id)
 
   Playlist.findOneAndUpdate(
@@ -105,7 +104,7 @@ router.post('/playlists/:name/:id/delete', (req, res) => {
     { $pull: { episodes: {episodeID: req.params.id }}})
   .then((playlist) => {
     console.log(playlist)
-    res.redirect('/myplaylists')
+    res.redirect('/mybookmarks')
   })
 })
   
