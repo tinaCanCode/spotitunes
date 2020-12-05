@@ -170,15 +170,7 @@ router.get('/userProfile', (req, res) => {
 
 });
 
-// display playlist
 
-router.get('/myplaylists', (req, res) => {
-  Playlist.find({ ownerID: req.session.currentUser._id })
-    .then((playlists) => {
-      console.log(playlists)
-      res.render('users/playlists', {playlists : playlists})
-  })
-})
 
 module.exports = router;
 
