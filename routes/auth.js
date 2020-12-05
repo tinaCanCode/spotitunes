@@ -13,6 +13,7 @@ const unirest = require('unirest');
 //require spotify Web api
 const SpotifyWebApi = require('spotify-web-api-node');
 const { findById } = require('../models/Podcast');
+const actions = require('../modules/actions');
 
 // setting the spotify-api goes here:
 const spotifyApi = new SpotifyWebApi({
@@ -121,7 +122,24 @@ router.post('/login', (req, res, next) => {
       } else if (bcryptjs.compareSync(password, user.password)) {
         //res.render("users/user-profile", {user});
         req.session.currentUser = user;
-        res.redirect("/userProfile");
+
+        if (req.session.pendingRequest) {
+          if(req.session.pendingRequest.action === "addtofavorite") {
+            // Create a POST request to add a favorite podcast
+            actions.addToFavorites(req.session.postRequest.podcastId, req.session.currentUser._id)
+            .then(() => res.redirect("/userProfile"));
+          } else if(req.session.pendingRequest.action === "comment") {
+
+          } else {
+            console.log("This action is not defined")
+          }
+
+        } else {
+          res.redirect("/userProfile");
+        }
+
+
+
       } else {
         res.render('auth/login', { errorMessage: 'Incorrect password.' });
       }

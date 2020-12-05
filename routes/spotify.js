@@ -6,6 +6,7 @@ const User = require('../models/User');
 //require spotify Web api
 const SpotifyWebApi = require('spotify-web-api-node');
 const Playlist = require('../models/Playlist');
+const actions = require('../modules/actions');
 
 
 // setting the spotify-api goes here:
@@ -94,8 +95,37 @@ router.get("/details/:showId", (req, res) => {
 
 
 
-// Add Spotify Podcast to database
+// Add new comment to podcast
 router.post('/details/:showId/newcomment', (req, res, next) => {
+
+  if(!req.session.currentUser) {
+
+    const requestedAction = {
+      action: "comment",
+      podcastId: req.params.showId,
+      commentContent: req.body.content,
+      origin: "spotify",
+      message: "You need to login to add a comment"
+    }
+
+    req.session.pendingRequest = requestedAction
+
+    res.render("auth/login", {pendingRequest: requestedAction})
+
+  } else {
+
+  actions.addToFavorites(req.params.id, req.session.currentUser._id)
+  .then(() => res.redirect("/userProfile"));
+
+  }
+
+  if(!req.session.currentUser) {
+
+    res.render("auth/login", {message: "You need to login to add a comment"})
+
+  } else {
+
+  
 
   const { showId } = req.params;
   const { content } = req.body;
@@ -122,6 +152,7 @@ router.post('/details/:showId/newcomment', (req, res, next) => {
         .then(() => res.redirect(`/spotify/details/${showId}`))
         .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
     })
+  }
 });
 
 
@@ -129,6 +160,15 @@ router.post('/details/:showId/newcomment', (req, res, next) => {
 // +++++++++++++++++++++++++RATING SECTION++++++++++++++++++++++++++++
 
 router.post('/details/:showId/newrating', (req, res, next) => {
+
+  if(!req.session.currentUser) {
+
+    res.render("auth/login", {message: "You need to login to add rate podcasts"})
+
+  } else {
+
+  
+
   const { showId } = req.params;
   const { content } = req.body;
   const newRating = { content: content, author: req.session.currentUser._id }
@@ -138,7 +178,7 @@ router.post('/details/:showId/newrating', (req, res, next) => {
   Podcast.exists({ podcastId: showId })
     .then(podcastExists => {
       if (!podcastExists) {
-        return Podcast.create({ podcastId: showId })
+        return Podcast.create({ podcastId: showId, origin: "spotify" })
       } else {
         return Podcast.findOne({ podcastId: showId })
       }
@@ -165,6 +205,7 @@ router.post('/details/:showId/newrating', (req, res, next) => {
         res.redirect(`/spotify/details/${showId}`)
       }
     })
+  }
 })
 
 
@@ -173,43 +214,42 @@ router.post('/details/:showId/newrating', (req, res, next) => {
 // Add Spotify Podcasts as favorites
 
 router.post('/:id/addtofavorite', (req, res) => {
-  // create new object in database
-  // push this ID to user "favorites" array
-  //console.log("THE PARAMS: " + req.params.id)
 
-  Podcast.exists({ podcastId: req.params.id })
-    .then(podcastExists => {
-      if (!podcastExists) {
-        return Podcast.create({ podcastId: req.params.id, origin: "spotify" })
-      } else {
-        return Podcast.findOne({ podcastId: req.params.id })
-      }
-    })
-    // Add ObjectId of newly created Podcast to Users favorite podcasts
-    .then(podcastToAdd => {
-      console.log("Podcast you want to add:", podcastToAdd)
-      console.log("current user: ", req.session.currentUser)
-      // Check if podcast is already part of favorite podcasts
-      User.findOne({ _id: req.session.currentUser._id })
-        .then(user => {
-          const userFavoritePodcasts = user.favoritePodcasts
+  //console.log("USER: ", req.session.currentUser)
 
-          if (userFavoritePodcasts.includes(podcastToAdd._id.toString())) {
-            res.send("You can't add podcasts twice")
-          } else {
-            return User.findOneAndUpdate({ _id: req.session.currentUser._id }, { $push: { favoritePodcasts: podcastToAdd._id } }, { new: true })
-          }
+  if(!req.session.currentUser) {
 
-        })
-        // Redirect to Homepage
-        .then(() => res.redirect("/userProfile"))
-        .catch(err => console.log(`Err while creating the post in the DB: ${err}`));
-    })
+    const requestedAction = {
+      action: "addtofavorite",
+      podcastId: req.params.id,
+      origin: "spotify",
+      message: "You need to login to add a favorite podcast"
+    }
+
+    req.session.pendingRequest = requestedAction
+
+    console.log("SESSION: ", req.session)
+
+    res.render("auth/login", {pendingRequest: requestedAction})
+
+  } else {
+
+  actions.addToFavorites(req.params.id, req.session.currentUser._id)
+  .then(() => res.redirect("/userProfile"));
+
+  }
 })
 
 
 //addtoplaylist
 router.post("/details/:podcastid/:id/addtoplaylist", (req, res) => {
+
+  if(!req.session.currentUser) {
+
+    res.render("auth/login", {message: "You need to login to add episodes to your playlist"})
+
+  } else {
+
   spotifyApi
     .getEpisode(req.params.id, { market: "DE" })
     .then((episode) => {
@@ -222,6 +262,7 @@ router.post("/details/:podcastid/:id/addtoplaylist", (req, res) => {
         })
         .catch(err => console.log('The error while searching show occurred: ', err));
     })
+  }
 })
 
 
