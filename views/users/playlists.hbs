@@ -1,12 +1,15 @@
 {{> navbar }}
 <div class="playlist-box container col vertical-center">
-  <div class="bookmarks-pg-title">
+  {{!-- <div class="bookmarks-pg-title">
     <h3 class="text-center">My bookmarks</h3>
   </div>
-  <p class="text-center">Explore and bookmark some podcast episodes you want to listen to later ! </p>
+  <p class="text-center">Explore and bookmark some podcast episodes you want to listen to later! </p> --}}
   <div class="container border border-secondary rounded p-3">
     <div class="list-title vertical-center">
       <h4 class="text-center">{{playlistObject.name}}</h4>
+      <p class="text-center">Here are the eepisodes you bookmarked so far. <br><em>Click on the search button to explore and add.</em></p>
+              <a href="/search"><button class="btn btn-lg btn-outline-secondary col vertical-center">Search and bookmark new episodes</button></a>
+
     </div>
     {{#each playlistObject.content}}
     {{!-- <div class="col-sm-6">
@@ -33,8 +36,5 @@
 
     </div>
     {{/each}}
-    <div>
-      <a href="/search"><button class="btn btn-lg btn-outline-secondary">Bookmark new episodes</button></a>
-    </div>
   </div>
 </div>
