@@ -41,17 +41,21 @@ router.get("/listennotes/details/:showId", (req, res) => {
 
 
 // Add episode to bookmarked playlist
-// WORK IN PROGRESS
 router.post("/listennotes/details/:podcastid/:id/addtoplaylist", (req, res) => {
-  Playlist.findOneAndUpdate(
-          {$and: [{ownerID : req.session.currentUser._id}, {playlistName : "Bookmarked"} ] },
-          {$push: {listenNotesEpisodes : req.params.id }})
-  console.log(req.params)
-  console.log("THIS IS PODCAST ID :" + req.params.podcastid)
-  .then(() => {
-    res.redirect(`/listennotes/details/${req.params.podcastid}`)
-  })
-  .catch(err => console.log('The error while searching show occurred: ', err));
+  unirest.get(`https://listen-api.listennotes.com/api/v2/episodes/${req.params.id}`)
+    .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
+    .then((episode) => {
+      console.log(episode)
+      Playlist.findOneAndUpdate(
+        { $and: [{ ownerID: req.session.currentUser._id }, { playlistName: "Bookmarked" }] },
+        { $push: { episodes: { id: episode.body.id, title: episode.body.title, link: episode.body.link, source: "listennotes" } } })
+        //console.log(req.params)
+        //console.log("THIS IS PODCAST ID :" + req.params.podcastid)
+        .then(() => {
+          res.redirect(`/listennotes/details/${req.params.podcastid}`)
+        })
+        .catch(err => console.log('The error while searching show occurred: ', err));
+    })
 });
 
 
@@ -112,9 +116,6 @@ router.post('/listennotes/:id/addtofavorite', (req, res) => {
     .then(() => res.redirect("/userProfile"))
     .catch(err => console.log(`Err while creating the post in the DB: ${err}`))
 })
-
-
-
 
 
 module.exports = router;

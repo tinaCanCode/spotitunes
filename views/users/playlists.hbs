@@ -1,3 +1,22 @@
-
-
 <h3>My playlists</h3>
+<div id="playlists-container">
+{{#each playlists}}
+<div class="playlist-box">
+  <div class="playlist-title">
+    <h4>{{this.playlistName}}</h4>
+  </div>
+  
+    {{#each this.episodes}}
+    <div class="one-episode">
+    <div class="episode-title">
+      <p>{{title}}<p>
+    </div>
+    <div class="play-button">
+      <a href={{link}} target="blank"><button>Play now</button></a>
+    </div>
+    </div>
+    {{/each}}
+  
+</div>
+{{/each}}
+</div>
