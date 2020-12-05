@@ -1,4 +1,7 @@
-<h3>My playlists</h3>
+{{> navbar }}
+
+<h3>My bookmarks</h3>
+<p>Explore and bookmark some podcast episodes you want to listen to later ! </p>
 <div id="container">
   <h4>{{playlistObject.name}}</h4>
   {{#each playlistObject.content}}
@@ -11,11 +14,11 @@
       <p>{{this.podcast}}</p>
       <p class="description">{{this.description}}</p>
       <a href="{{this.link}}" target="blank"><button>Listen now</button></a>
-      <form action="/playlists/{{../playlistObject.name}}/{{this.id}}/delete" type="submit" method="POST">
+      <form action="/bookmarks/{{../playlistObject.name}}/{{this.id}}/delete" type="submit" method="POST">
         <button>Remove</button>
       </form>
     </div>
   </div>
   {{/each}}
+<a href="/search"><button class="btn btn-lg btn-outline-secondary">Bookmark new episodes</button></a>
 </div>
-
