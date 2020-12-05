@@ -228,11 +228,28 @@ router.get('/myplaylists', (req, res) => {
       }
 
       Promise.all(requestPromises).then(() => {
-        console.log("THIS IS THE PLAYLIST TOTAL : " + playlistObject)
+        //console.log("THIS IS THE PLAYLIST TOTAL : " + playlistObject)
         res.render('users/playlists', { playlistObject: playlistObject} )
       })
     })
 })
+
+router.post('/playlists/:name/:id/delete', (req, res) => {
+  console.log("THIS IS THE PARAMS : " + req.params.id)
+
+  Playlist.findOneAndUpdate(
+    { $and: [{ ownerID: req.session.currentUser._id }, { playlistName: req.params.name }] },
+    { $pull: { episodes: {episodeID: req.params.id }}})
+  .then((playlist) => {
+    console.log(playlist)
+    res.redirect('/myplaylists')
+  })
+  .then(() => {
+  })
+})
+  
+    
+  
 
 module.exports = router;
 

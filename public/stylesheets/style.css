@@ -160,10 +160,13 @@ hr{
 
 /*playlists*/
 
-.episode-container {
-  display : flex;
-  flex-direction: row;
+.description {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
+
 
 
 /* @media (max-width: 991.98px) { ... }

@@ -1,17 +1,21 @@
 <h3>My playlists</h3>
-<div id="playlists-container">
+<div id="container">
   <h4>{{playlistObject.name}}</h4>
   {{#each playlistObject.content}}
-  <div class="episode-container">
-    <div class="episode-image">
-      <img src="{{this.image}}">
+  <div class="row justify-content-md-center">
+    <div class="col-sm-6">
+      <img class="img-fluid" src="{{this.image}}">
     </div>
-    <div>
-      <p>{{this.title}}</p>
-      <p>{{this.description}}</p>
+    <div class="col-sm-4">
+      <h4>{{this.title}}</h4>
+      <p>{{this.podcast}}</p>
+      <p class="description">{{this.description}}</p>
       <a href="{{this.link}}" target="blank"><button>Listen now</button></a>
+      <form action="/playlists/{{../playlistObject.name}}/{{this.id}}/delete" type="submit" method="POST">
+        <button>Remove</button>
+      </form>
     </div>
   </div>
-
   {{/each}}
 </div>
+
