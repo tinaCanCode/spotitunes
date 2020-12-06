@@ -35,12 +35,20 @@ router.get('/signup', (req, res) => {
 // process form data
 
 router.post('/signup', (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, repeatpassword } = req.body;
   // const salt = bcrypt.genSaltSync(10);
   // const pwHash = bcrypt.hashSync(password, salt);
 
-  if (!username || !email || !password) {
-    res.render('auth/signup', { errorMessage: 'All fields are mandatory. Please provide your username, email and password.' });
+  if (!username || !email || !password || !repeatpassword) {
+    let preusername = username
+    let preemail = email
+    res.render('auth/signup', { errorMessage: 'All fields are mandatory. Please provide your username, email and password.', preusername: preusername, preemail:preemail});
+    return;
+  }
+  else if (password != repeatpassword) {
+    let preusername = username
+    let preemail = email
+    res.render('auth/signup', { errorMessage: 'The repeated password is not the same. Provide the password one more time', preusername: preusername, preemail:preemail });
     return;
   }
 
@@ -48,9 +56,11 @@ router.post('/signup', (req, res) => {
 
   const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
   if (!regex.test(password)) {
+    let preusername = username
+    let preemail = email
     res
       .status(500)
-      .render('auth/signup', { errorMessage: 'Password needs to have at least 6 chars and must contain at least one number, one lowercase and one uppercase letter.' });
+      .render('auth/signup', { errorMessage: 'Password needs to have at least 6 chars and must contain at least one number, one lowercase and one uppercase letter.' , preusername: preusername, preemail:preemail});
     return;
   }
 
