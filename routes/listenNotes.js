@@ -5,6 +5,7 @@ const { exists } = require('../models/Podcast');
 const Podcast = require('../models/Podcast');
 const User = require('../models/User');
 const Playlist = require('../models/Playlist');
+const actions = require('../modules/actions');
 
 /* GET search page */
 router.get('/listennotes', (req, res, next) => {
@@ -86,31 +87,32 @@ router.post("/listennotes/details/:podcastid/:id/addtoplaylist", (req, res) => {
 // Add Listen Notes Podcasts as favorites
 
 router.post('/listennotes/:id/addtofavorite', (req, res) => {
-  // create new object in database
-  // push this ID to user "favorites" array
-  console.log("THE PARAMS: " + req.params.id)
-  Podcast.exists({ podcastId: req.params.id })
-    .then(podcastExists => {
-      if (!podcastExists) {
-        return Podcast.create({ podcastId: req.params.id, origin: "listennotes" })
-      } else {
-        return Podcast.findOne({ podcastId: req.params.id })
-      }
-    })
-    // Add ObjectId of newly created Podcast to Users favorite podcasts
-    .then(resp => {
-      console.log("Response from mongo:", resp)
-      return User.findOneAndUpdate({ _id: req.session.currentUser._id }, 
-        { $push: { favoritePodcasts: resp._id } }, { new: true })
-    })
-    // Redirect to Homepage
-    .then(() => res.redirect("/userProfile"))
-    .catch(err => console.log(`Err while creating the post in the DB: ${err}`))
+
+  if (!req.session.currentUser) {
+
+    const requestedAction = {
+      action: "addtofavorite",
+      podcastId: req.params.id,
+      origin: "listennotes",
+      message: "You need to login to add a favorite podcast"
+    }
+
+    req.session.pendingRequest = requestedAction
+
+    res.render("auth/login", { pendingRequest: requestedAction })
+
+  } else {
+
+    actions.addToFavoritesLN(req.params.id, req.session.currentUser._id)
+      .then(() => res.redirect("/userProfile"));
+
+  }
+
 })
 
 //  *********************COMMENTS SECTION***************************
 
-// Add Spotify Podcast to database
+// Add Podcast to database
 router.post('/listennotes/details/:showId/newcomment', (req, res, next) => {
   const { showId } = req.params;
   const { content } = req.body;

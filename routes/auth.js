@@ -123,22 +123,83 @@ router.post('/login', (req, res, next) => {
         //res.render("users/user-profile", {user});
         req.session.currentUser = user;
 
+        // Checking if there is a pending request before the user logged in
         if (req.session.pendingRequest) {
-          if(req.session.pendingRequest.action === "addtofavorite") {
-            // Create a POST request to add a favorite podcast
-            actions.addToFavorites(req.session.postRequest.podcastId, req.session.currentUser._id)
-            .then(() => res.redirect("/userProfile"));
-          } else if(req.session.pendingRequest.action === "comment") {
-
+          if (req.session.pendingRequest.origin === "spotify") {
+            // user tried to add podcast to favorite without being logged in
+            if (req.session.pendingRequest.action === "addtofavorite") {
+              actions.addToFavorites(req.session.pendingRequest.podcastId, req.session.currentUser._id)
+                .then(() => {
+                  req.session.pendingRequest = null;
+                  res.redirect("/userProfile")
+                });
+              // user tried to add a comment without being logged in
+            } else if (req.session.pendingRequest.action === "comment") {
+              actions.addComment(req.session.pendingRequest.podcastId, req.session.pendingRequest.commentContent, req.session.currentUser._id)
+                .then(() => {
+                  const showId = req.session.pendingRequest.podcastId
+                  req.session.pendingRequest = null;
+                  res.redirect(`/spotify/details/${showId}`)
+                });
+              // user tried to rate podcast without being logged in
+            } else if (req.session.pendingRequest.action === "rate") {
+              actions.ratePodcast(req.session.pendingRequest.podcastId, req.session.pendingRequest.ratingContent, req.session.currentUser._id)
+                .then(() => {
+                  const showId = req.session.pendingRequest.podcastId
+                  req.session.pendingRequest = null;
+                  res.redirect(`/spotify/details/${showId}`)
+                });
+              //user tried to add an episode without being logged in
+            } else if (req.session.pendingRequest.action === "addtoplaylist") {
+              actions.addToPlaylist(req.session.pendingRequest.episodeId, req.session.pendingRequest.podcastId, req.session.currentUser._id)
+                .then(() => {
+                  const showId = req.session.pendingRequest.podcastId;
+                  req.session.pendingRequest = null;
+                  res.redirect(`/spotify/details/${showId}`)
+                })
+            }
+            else {
+              console.log("This action is not defined for spotify")
+            }
           } else {
-            console.log("This action is not defined")
+            // user tried to add podcast to favorite without being logged in
+            if (req.session.pendingRequest.action === "addtofavorite") {
+              actions.addToFavoritesLN(req.session.pendingRequest.podcastId, req.session.currentUser._id)
+                .then(() => {
+                  req.session.pendingRequest = null;
+                  res.redirect("/userProfile")
+                });
+              // user tried to add a comment without being logged in
+            } else if (req.session.pendingRequest.action === "comment") {
+              actions.addCommentLN(req.session.pendingRequest.podcastId, req.session.pendingRequest.commentContent, req.session.currentUser._id)
+                .then(() => {
+                  const showId = req.session.pendingRequest.podcastId
+                  req.session.pendingRequest = null;
+                  res.redirect(`/spotify/details/${showId}`)
+                });
+              // user tried to rate podcast without being logged in
+            } else if (req.session.pendingRequest.action === "rate") {
+              actions.ratePodcastLN(req.session.pendingRequest.podcastId, req.session.pendingRequest.ratingContent, req.session.currentUser._id)
+                .then(() => {
+                  const showId = req.session.pendingRequest.podcastId
+                  req.session.pendingRequest = null;
+                  res.redirect(`/spotify/details/${showId}`)
+                });
+              //user tried to add an episode without being logged in
+            } else if (req.session.pendingRequest.action === "addtoplaylist") {
+              actions.addToPlaylistLN(req.session.pendingRequest.episodeId, req.session.pendingRequest.podcastId, req.session.currentUser._id)
+                .then(() => {
+                  const showId = req.session.pendingRequest.podcastId;
+                  req.session.pendingRequest = null;
+                  res.redirect(`/spotify/details/${showId}`)
+                })
+            } else {
+              console.log("This action is not defined for Listen Notes")
+            }
           }
-
         } else {
           res.redirect("/userProfile");
         }
-
-
 
       } else {
         res.render('auth/login', { errorMessage: 'Incorrect password.' });
@@ -146,7 +207,6 @@ router.post('/login', (req, res, next) => {
     })
     .catch(error => next(error));
 });
-
 
 // Get user profile page and display favorite podcasts
 
@@ -163,25 +223,25 @@ router.get('/userProfile', (req, res) => {
           return await Podcast.findOne({ _id: id })
         }))
       }).then(podcasts => {
-            //console.log("After map: ", podcasts) // Array of podcast objects in Mongobd incl. origin
-            const podcastDetails = Promise.all(podcasts.map(async (podcast) => {
-              //console.log(podcast.podcastId)
-              if (podcast.origin === "spotify") {
-                return await spotifyApi.getShow(podcast.podcastId, { market: "DE" })
-              }
-              else if (podcast.origin === "listennotes") {
-                const lnResponse = await unirest.get(`https://listen-api.listennotes.com/api/v2/podcasts/${podcast.podcastId}?sort=recent_first`)
-                  .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
-                return lnResponse.toJSON();
-              }
-            }))
-            return podcastDetails
-          })
-          .then(allPodcasts => {
-            //console.log("After 2nd map: ", allPodcasts)
-            res.render('users/user-profile', { user: req.session.currentUser, podcasts: allPodcasts })
-          })
-      }
+        //console.log("After map: ", podcasts) // Array of podcast objects in Mongobd incl. origin
+        const podcastDetails = Promise.all(podcasts.map(async (podcast) => {
+          //console.log(podcast.podcastId)
+          if (podcast.origin === "spotify") {
+            return await spotifyApi.getShow(podcast.podcastId, { market: "DE" })
+          }
+          else if (podcast.origin === "listennotes") {
+            const lnResponse = await unirest.get(`https://listen-api.listennotes.com/api/v2/podcasts/${podcast.podcastId}?sort=recent_first`)
+              .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
+            return lnResponse.toJSON();
+          }
+        }))
+        return podcastDetails
+      })
+      .then(allPodcasts => {
+        //console.log("After 2nd map: ", allPodcasts)
+        res.render('users/user-profile', { user: req.session.currentUser, podcasts: allPodcasts })
+      })
+  }
   else {
     res.render('users/user-profile', { user: req.session.currentUser })
   }
