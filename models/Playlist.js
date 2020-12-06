@@ -6,9 +6,7 @@ const playlistSchema = new Schema({
   userName : String,
   playlistName : String,
   episodes: [{
-    id : String,
-    title : String,
-    link : String,
+    episodeID : String,
     source : String
   }],
 })
