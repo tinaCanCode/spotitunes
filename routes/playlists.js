@@ -91,7 +91,7 @@ router.get('/mybookmarks', (req, res) => {
       }
 
       Promise.all(requestPromises).then(() => {
-        res.render('users/playlists', { playlistObject: playlistObject} )
+        res.render('users/playlists', { playlistObject: playlistObject, user: req.session.currentUser} )
       })
     })
 })

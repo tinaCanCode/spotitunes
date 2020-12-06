@@ -32,16 +32,18 @@
                               <hr class="my-4 wow">
                               <h5 class="mb-4 white-text wow fadeInDown">Find your favourite
                                     podcasts in one app</h5>
-                              {{#if user}}
-                              <a class="btn btn-outline-secondary btn-lg" href="search">Search
-                                    for Podcasts</a>
-
-                              <form action="/logout" method="post">
-                                    <button class="btn btn-outline-secondary btn-lg">Logout</button>
-                              </form>
-                              {{else}}
-                              <p class="mb-4 white-text wow fadeInDown">Use the navigation to signup or login</p>
-                              {{/if}}
+                              <div class="col-md-12 mb-4  text-center anita">
+                    <h2 class="h1-reponsive font-weight-bold mb-0 pt-md-5 pt-5 wow fadeInDown">
+                        Find your favourite Podcast
+                    </h2>
+                    <hr class="hr-light my-4 wow fadeInDown">
+                    <div class="form-group">
+                        <form action="/search-results" method="get">
+                            <input id="podcast" class="form-control" type="text" name="podcast">
+                    </div>
+                    <button class="btn btn-lg btn-outline-secondary">Search</button>
+                    </form>
+                </div> 
                         </div>
                         <!--Grid column-->
                   </div>
