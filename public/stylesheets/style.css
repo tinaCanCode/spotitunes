@@ -164,7 +164,20 @@ hr{
   width : 450px
 }
 
+.favorite-box {
+  width : 450px
+}
 
+.podcast-title-profile-page {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+a {
+  text-decoration: none;
+}
 
 /* @media (max-width: 991.98px) { ... }
 

@@ -1,23 +1,18 @@
 {{> navbar }}
 <div class="playlist-box container col vertical-center">
-  {{!-- <div class="bookmarks-pg-title">
-    <h3 class="text-center">My bookmarks</h3>
-  </div>
-  <p class="text-center">Explore and bookmark some podcast episodes you want to listen to later! </p> --}}
+
   <div class="container">
     <div class="list-title vertical-center">
       <h4 class="text-center">{{playlistObject.name}}</h4>
-      <p class="text-center">Here are the episodes you bookmarked so far. <br><em>Click on the search button to explore
+      <p class="text-center">Here are the episodes you've bookmarked so far. <br><em>Click on the search button to explore
           and add.</em></p>
       <a href="/search"><button class="btn btn-lg btn-outline-secondary col vertical-center">Search and bookmark
           episodes</button></a>
 
     </div>
     <hr class="mb-3">
+
     {{#each playlistObject.content}}
-    {{!-- <div class="col-sm-6">
-      <img class="img-fluid" src="{{this.image}}">
-    </div> --}}
     <div class="col align-self-center vertical-center">
       <div>
         <h5>{{this.title}}</h5>
@@ -25,7 +20,6 @@
       <div>
         <p>{{this.podcast}}</p>
       </div>
-      {{!-- <p class="description">{{this.description}}</p> --}}
       <div class="row">
         <div class="col">
           <a href="{{this.link}}" target="blank"><button class="btn btn-outline-secondary">Listen
@@ -37,9 +31,8 @@
           </form>
         </div>
       </div>
-
     </div>
-    <hr  class="mb-3">
+    <hr class="mb-3">
     {{/each}}
   </div>
 </div>

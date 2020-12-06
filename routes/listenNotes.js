@@ -94,7 +94,7 @@ router.post('/listennotes/:id/addtofavorite', (req, res) => {
       if (!podcastExists) {
         return Podcast.create({ podcastId: req.params.id, origin: "listennotes" })
       } else {
-        return Podcast.findOne({ podcastId: req.params.id })
+        return Podcast.findOneAndUpdate({ podcastId: req.params.id}, {origin: "listennotes" })
       }
     })
     // Add ObjectId of newly created Podcast to Users favorite podcasts
