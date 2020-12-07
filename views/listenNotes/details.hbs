@@ -9,40 +9,42 @@
     <form action="/listennotes/{{podcasts.id}}/addtofavorite" method="post">
       <button class="btn btn-outline-secondary btn-sm">Add to favorites</button>
     </form>
-     <form action="/listennotes/details/{{podcasts.id}}/newcomment" method="POST">
-            <textarea name="content" id="comment-content-input" cols="60" rows="1"></textarea>
-{{#if beingCommentingUser}}
-<input class="btn btn-outline-secondary btn-sm" type="submit" value="Change your comment">
-{{else}}
-            <input class="btn btn-outline-secondary btn-sm" type="submit" value="Comment a Podcast">
-            {{/if}}
-
-
-            {{!-- <input class="btn btn-outline-secondary btn-sm" type="submit" value="Comment a Podcast"> --}}
-        </form>
     <h4>Description</h4>
     <p>{{podcasts.description}}</p>
-  <h5>Comments:</h5>
-        {{#each ourpodcasts.comments}}
-        <li>{{this.content}}</li>
-        {{/each}}
-        <h5>Rate: {{ratingResults}}</h5>
-        <form action="/listennotes/details/{{podcasts.id}}/newrating" method="POST">
-            <textarea type='text' name="content" id="rating-content-input" cols="1" rows="1"></textarea>
+    <h5>Publisher: {{podcasts.publisher}}</h5>
 
-            {{#if beingUser}}
-            <input class="btn btn-outline-secondary btn-sm" type="submit" value="Change your rating">
-            {{else}}
-             <input class="btn btn-outline-secondary btn-sm" type="submit" value="Rate a Podcast">
-            {{/if}}
-            <div class="rating">
-                <i class="fa fa-star unchecked" id="one" name="content"></i>
-                <i class="fa fa-star unchecked" id="two" name="content"></i>
-                <i class="fa fa-star unchecked" id="three" name="content"></i>
-                <i class="fa fa-star unchecked" id="four" name="content"></i>
-                <i class="fa fa-star unchecked" id="five" name="content"></i>
-            </div>
-        </form>
+    {{#if usersCommentToPrint}}
+    <h5>Your Comment:</h5>
+    {{!-- <p>{{usersCommentToPrint.content}}</p> --}}
+    {{/if}}
+    <form action="/listennotes/details/{{podcasts.id}}/newcomment" method="POST">
+
+      {{#if usersCommentToPrint}}
+      <textarea name="content" id="comment-content" cols="60" rows="1">{{usersCommentToPrint.content}}</textarea>
+      <input class="btn btn-outline-secondary btn-sm" type="submit" value="Edit your comment">
+      {{else}}
+      <textarea name="content" id="comment-content-input" cols="60" rows="1"></textarea>
+      <input class="btn btn-outline-secondary btn-sm" type="submit" value="Comment a Podcast">
+      {{/if}}
+    </form>
+    <h5>Comments:</h5>
+    {{#each ourpodcasts.comments}}
+    <p>{{this.content}}</p>
+    {{/each}}
+    <h5>Rating: {{ratingResults}}</h5>
+    {{#if usersRatingToPrint}}
+    <h5>Your Rating: {{usersRatingToPrint.content}}</h5>
+    {{/if}}
+    <form id="starButton" action="/listennotes/details/{{podcasts.id}}/newrating" method="POST">
+      <textarea type='text' name="content" id="rating-content-input" cols="1" rows="1"></textarea>
+      <div class="rating">
+        <i class="fa fa-star unchecked" id="one" name="content"></i>
+        <i class="fa fa-star unchecked" id="two" name="content"></i>
+        <i class="fa fa-star unchecked" id="three" name="content"></i>
+        <i class="fa fa-star unchecked" id="four" name="content"></i>
+        <i class="fa fa-star unchecked" id="five" name="content"></i>
+      </div>
+    </form>
 
 
   <h5>Publisher: {{podcasts.publisher}}</h5>
@@ -54,9 +56,10 @@
   <img class="podcastDetailImg" src="{{this.thumbnail}}">
   <p>Release date: {{this.pub_date_ms}}</p>
   <p>{{this.description}}</p>
-  <p><a href="{{this.listennotes_url}}" target="_blank">Play on Listen Notes</a></p>
+  <p><a href="{{this.link}}" target="_blank">Listen now</a></p>
   <form action="/listennotes/details/{{../podcasts.id}}/{{this.id}}/addtoplaylist" method="POST">
         <input  class="btn btn-outline-secondary btn-sm" type="submit" value="Bookmark this episode">
   </form>
   {{/each}}
 </section>
+ <script src="/javascripts/script.js"></script>

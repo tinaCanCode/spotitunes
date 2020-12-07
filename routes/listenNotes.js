@@ -49,16 +49,41 @@ router.get("/listennotes/details/:showId", (req, res) => {
       let valForRating = values[1].rating;
       let userToCheckGet = req.session.currentUser._id
 
+     
+
       let beingUser = valForRating.some(valForRating => valForRating['author'] == `${userToCheckGet}`)
       let beingCommentingUser = valForComments.some(valForComments => valForComments['author'] == `${userToCheckGet}`)
+      
+      let usersComment = valForComments.find((com) => {
+        return com.author == userToCheckGet
+      });
+      console.log('hereeeeeeeeeee' + usersComment);
+      
       const sumRatings = (valForRating.reduce((sum, item) => sum + item.content, 0) / valForRating.length).toFixed(1)
       console.log(sumRatings);
 
-      console.log("Response from LN: ", values[0]);
+      let usersRating = valForRating.find((rat)=>{
+        return rat.author == userToCheckGet
+      })
+
+let lookingForDate = values[0].toJSON().body.episodes
+let firstDate = lookingForDate[0].pub_date_ms
+
+
+new Date(firstDate).toLocaleDateString("en-US")
+
+
+// var s = new Date(firstDate).toLocaleDateString("en-US")
+// console.log(s + 'new method!!!!!!!!!')
+
+console.log('Lookig for this date here:' + lookingForDate[0].pub_date_ms)
+      // console.log('Lookig for date here:' + values[0].toJSON().body.episodes[0].pub_date_ms)
+      // console.log("Response from LN: ", values[0]);
       //console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
       //res.send("checked for details")
       res.render("listennotes/details", { podcasts: values[0].toJSON().body, user: req.session.currentUser, 
-      ourpodcasts: values[1], ratingResults: sumRatings, beingUser: beingUser, beingCommentingUser: beingCommentingUser })
+      ourpodcasts: values[1], ratingResults: sumRatings, beingUser: beingUser, beingCommentingUser: beingCommentingUser, 
+      usersRatingToPrint: usersRating, usersCommentToPrint: usersComment})
     })
     // .catch(err => console.log('The error while searching show occurred: ', err));
 })

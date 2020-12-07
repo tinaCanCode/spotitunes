@@ -1,7 +1,3 @@
-// DOM Elements
-
-const favoriteBtn = document.querySelector("#favorite-btn");
-
 document.addEventListener('DOMContentLoaded', () => {
 
   console.log('IronGenerator JS imported successfully!');
@@ -25,6 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
 //       }
 // });
 // });
+// function myFunction() {
+//   document.getElementById("starButton").submit();
+//   console.log('checking function');
+// }
+
 
 document.getElementById('one').addEventListener("click", function () {
   let checkingclass = document.getElementById('one').className;
@@ -35,6 +36,7 @@ document.getElementById('one').addEventListener("click", function () {
     document.getElementById('three').setAttribute("class", "fa fa-star unchecked");
     document.getElementById('four').setAttribute("class", "fa fa-star unchecked");
     document.getElementById('five').setAttribute("class", "fa fa-star unchecked");
+    document.getElementById("starButton").submit()
   }
   else {
     document.getElementById('one').setAttribute("class", "fa fa-star unchecked");
@@ -42,7 +44,6 @@ document.getElementById('one').addEventListener("click", function () {
     document.getElementById('three').setAttribute("class", "fa fa-star unchecked");
     document.getElementById('four').setAttribute("class", "fa fa-star unchecked");
     document.getElementById('five').setAttribute("class", "fa fa-star unchecked");
-
   }
 });
 
@@ -56,6 +57,7 @@ document.getElementById('two').addEventListener("click", function () {
     document.getElementById('three').setAttribute("class", "fa fa-star unchecked");
     document.getElementById('four').setAttribute("class", "fa fa-star unchecked");
     document.getElementById('five').setAttribute("class", "fa fa-star unchecked");
+    document.getElementById("starButton").submit()
   }
   else {
     document.getElementById('one').setAttribute("class", "fa fa-star unchecked");
@@ -77,6 +79,7 @@ document.getElementById('three').addEventListener("click", function () {
     document.getElementById('three').setAttribute("class", "fa fa-star checked");
     document.getElementById('four').setAttribute("class", "fa fa-star unchecked");
     document.getElementById('five').setAttribute("class", "fa fa-star unchecked");
+    document.getElementById("starButton").submit()
   }
   else {
     document.getElementById('one').setAttribute("class", "fa fa-star unchecked");
@@ -98,6 +101,7 @@ document.getElementById('four').addEventListener("click", function () {
     document.getElementById('three').setAttribute("class", "fa fa-star checked");
     document.getElementById('four').setAttribute("class", "fa fa-star checked");
     document.getElementById('five').setAttribute("class", "fa fa-star unchecked");
+    document.getElementById("starButton").submit()
   }
   else {
     document.getElementById('one').setAttribute("class", "fa fa-star unchecked");
@@ -118,6 +122,7 @@ document.getElementById('five').addEventListener("click", function () {
     document.getElementById('three').setAttribute("class", "fa fa-star checked");
     document.getElementById('four').setAttribute("class", "fa fa-star checked");
     document.getElementById('five').setAttribute("class", "fa fa-star checked");
+    document.getElementById("starButton").submit()
   }
   else {
     document.getElementById('one').setAttribute("class", "fa fa-star unchecked");
@@ -128,13 +133,7 @@ document.getElementById('five').addEventListener("click", function () {
   }
 });
 
+function getContent(){
+  document.getElementById("my-textarea").value = document.getElementById("my-content").innerHTML;
+}
 
-
-
-// if (favoriteBtn != null) {
-//   favoriteBtn.addEventListener("click", () => {
-//     console.log("I was clicked")
-//     const buttonId = favoriteBtn.getAttribute("id");
-//     console.log(buttonId)
-//   })
-//}

@@ -128,6 +128,43 @@ module.exports = {
 
   },
 
+  //Compare to function above
+//   console.log(showId)
+//   // check if podcast with id is already in db
+//   Podcast.exists({ podcastId: showId })
+//     .then(podcastExists => {
+//       if (!podcastExists) {
+//         return Podcast.create({ podcastId: showId })
+//       } else {
+//         return Podcast.findOne({ podcastId: showId })
+//       }
+//     })
+//     // Add rating to Podcast
+//     .then(respond => {
+//       let arrayToCheck = respond.rating
+//       let userToCheck = req.session.currentUser._id
+
+//       let hasUser = arrayToCheck.some(arrayToCheck => arrayToCheck['author'] == `${userToCheck}`)
+//       console.log("=========>", hasUser)
+
+//       if (!hasUser) {
+//         return Podcast.findByIdAndUpdate(respond._id, { $push: { rating: newRating } })
+//           // Redirect to Detailpage
+//           .then(() => res.redirect(`/spotify/details/${showId}`))
+//           .catch(err => console.log(`Err while creating the rating in the DB: ${err}`));
+//       } else {
+
+//         let newRatingArr = arrayToCheck.filter(arrayToCheck => arrayToCheck['author'] != `${userToCheck}`)
+//         console.log("=========>", newRatingArr)
+//         newRatingArr.push(newRating);
+//         return Podcast.findByIdAndUpdate(respond._id, { rating: newRatingArr })
+//           // Redirect to Detailpage
+//           .then(() => res.redirect(`/spotify/details/${showId}`))
+//           .catch(err => console.log(`Err while creating the rating in the DB: ${err}`));
+//       }
+//     })
+// })
+
   addToPlaylist(episodeId, podcastId, userId) {
     return spotifyApi
       .getEpisode(episodeId, { market: "DE" })
@@ -138,6 +175,21 @@ module.exports = {
           { $push: { episodes: { episodeID: episode.body.id, source: "spotify" } } })
       })
   },
+
+  // compare to function above
+//   spotifyApi
+//     .getEpisode(req.params.id, { market: "DE" })
+//     .then((episode) => {
+//       console.log("THE ID OF THE EISODEEE: " + episode.body.id)
+//       Playlist.findOneAndUpdate(
+//         { $and: [{ ownerID: req.session.currentUser._id }, { playlistName: "Bookmarked" }] },
+//         { $push: { episodes: { episodeID: episode.body.id, source: "spotify" } } })
+//         .then(() => {
+//           res.redirect(`/spotify/details/${req.params.podcastid}`)
+//         })
+//         .catch(err => console.log('The error while searching show occurred: ', err));
+//     })
+// })
 
   addToFavoritesLN(podcastId, userId) {
     return Podcast.exists({ podcastId: podcastId })
@@ -157,5 +209,27 @@ module.exports = {
   }
 
 }
+
+// compare with function above
+// create new object in database
+  // push this ID to user "favorites" array
+  // console.log("THE PARAMS: " + req.params.id)
+  // Podcast.exists({ podcastId: req.params.id })
+  //   .then(podcastExists => {
+  //     if (!podcastExists) {
+  //       return Podcast.create({ podcastId: req.params.id, origin: "listennotes" })
+  //     } else {
+  //       return Podcast.findOneAndUpdate({ podcastId: req.params.id}, {origin: "listennotes" })
+  //     }
+  //   })
+  //   // Add ObjectId of newly created Podcast to Users favorite podcasts
+  //   .then(resp => {
+  //     console.log("Response from mongo:", resp)
+  //     return User.findOneAndUpdate({ _id: req.session.currentUser._id }, 
+  //       { $push: { favoritePodcasts: resp._id } }, { new: true })
+  //   })
+  //   // Redirect to Homepage
+  //   .then(() => res.redirect("/userProfile"))
+  //   .catch(err => console.log(`Err while creating the post in the DB: ${err}`))
 
 

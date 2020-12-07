@@ -40,6 +40,9 @@ router.get("/details/:showId", (req, res) => {
 
   Promise.all([fromSpotify, fromOurDb]).then(values => {
     // console.log(values[1]);
+
+
+    ////COMMENTS
     let valForComments = values[1].comments;
     let valForRating = values[1].rating;
     let userToCheckGet
@@ -49,15 +52,40 @@ router.get("/details/:showId", (req, res) => {
     } else {
       userToCheckGet = null;
     }
-
     let beingUser = valForRating.some(valForRating => valForRating['author'] == `${userToCheckGet}`)
     let beingCommentingUser = valForComments.some(valForComments => valForComments['author'] == `${userToCheckGet}`)
 
-    const sumRatings = (valForRating.reduce((sum, item) => sum + item.content, 0) / valForRating.length).toFixed(1)
-    console.log(sumRatings);
-    res.render("spotify/details", { podcasts: values[0].body, ourpodcasts: values[1], ratingResults: sumRatings, beingUser: beingUser, beingCommentingUser: beingCommentingUser, user: req.session.currentUser })
+    let usersComment = valForComments.find((com) => {
+      return com.author == userToCheckGet
+    });
+    console.log('hereeeeeeeeeee' + usersComment);
+
+    //// RATINGS
+    let sumRatings = (valForRating.reduce((sum, item) => sum + item.content, 0) / valForRating.length).toFixed(1)
+    let sumRatingsPrint
+    console.log("sumRatings: ", sumRatings)
+    console.log("Type: ", typeof (sumRatings))
+
+    if (sumRatings === "NaN") {
+      sumRatingsPrint = "No ratings yet"
+    } else {
+      sumRatingsPrint = sumRatings
+    }
+    console.log("sumRatingsPrint: ", sumRatingsPrint)
+    //console.log(sumRatings);
+
+    let usersRating = valForRating.find((rat) => {
+      return rat.author == userToCheckGet
+    });
+
+
+
+    res.render("spotify/details", {
+      podcasts: values[0].body, ourpodcasts: values[1], ratingResults: sumRatingsPrint, beingUser: beingUser,
+      beingCommentingUser: beingCommentingUser, user: req.session.currentUser, usersRatingToPrint: usersRating, usersCommentToPrint: usersComment
+    })
   })
-})
+});
 
 
 //  *********************COMMENTS SECTION***************************
