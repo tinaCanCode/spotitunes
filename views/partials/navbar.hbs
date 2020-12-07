@@ -5,7 +5,7 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class='nav ml-auto'>
+    <ul class='nav ml-auto justify-content-end'>
       <li class="nav-item">
         <a class='nav-link' href="/search"><i class="fas fa-search"> Search</i></a>
       </li>
@@ -14,11 +14,13 @@
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-user"></i>  {{user.username}} </i>
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="/userProfile">My favorite Podcasts</a>
-          <a class="dropdown-item" href="/mybookmarks">My bookmarked Episodes</a>
+          <a class="dropdown-item" href="playlists/bookmarked">My bookmarked Episodes</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Logout</a>
+          <form action="/logout" method="post">
+          <button class="dropdown-item" type="submit">Logout</button>
+          </form>
         </div>
       </li>
       {{else}}
