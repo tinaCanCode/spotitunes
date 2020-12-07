@@ -161,7 +161,7 @@ router.post('/login', (req, res, next) => {
                 });
               //user tried to add an episode without being logged in
             } else if (req.session.pendingRequest.action === "addtoplaylist") {
-              actions.addToPlaylist(req.session.pendingRequest.episodeId, req.session.pendingRequest.podcastId, req.session.currentUser._id)
+              actions.addToPlaylist(req.session.pendingRequest.episodeId, req.session.currentUser._id)
                 .then(() => {
                   const showId = req.session.pendingRequest.podcastId;
                   req.session.pendingRequest = null;
@@ -172,6 +172,7 @@ router.post('/login', (req, res, next) => {
               console.log("This action is not defined for spotify")
             }
           } else {
+            // executed when the origin in the pendingRequest is listennotes
             // user tried to add podcast to favorite without being logged in
             if (req.session.pendingRequest.action === "addtofavorite") {
               actions.addToFavoritesLN(req.session.pendingRequest.podcastId, req.session.currentUser._id)
@@ -185,7 +186,7 @@ router.post('/login', (req, res, next) => {
                 .then(() => {
                   const showId = req.session.pendingRequest.podcastId
                   req.session.pendingRequest = null;
-                  res.redirect(`/spotify/details/${showId}`)
+                  res.redirect(`/listennotes/details/${showId}`)
                 });
               // user tried to rate podcast without being logged in
             } else if (req.session.pendingRequest.action === "rate") {
@@ -193,15 +194,15 @@ router.post('/login', (req, res, next) => {
                 .then(() => {
                   const showId = req.session.pendingRequest.podcastId
                   req.session.pendingRequest = null;
-                  res.redirect(`/spotify/details/${showId}`)
+                  res.redirect(`/listennotes/details/${showId}`)
                 });
               //user tried to add an episode without being logged in
             } else if (req.session.pendingRequest.action === "addtoplaylist") {
-              actions.addToPlaylistLN(req.session.pendingRequest.episodeId, req.session.pendingRequest.podcastId, req.session.currentUser._id)
+              actions.addToPlaylistLN(req.session.pendingRequest.episodeId, req.session.currentUser._id)
                 .then(() => {
                   const showId = req.session.pendingRequest.podcastId;
                   req.session.pendingRequest = null;
-                  res.redirect(`/spotify/details/${showId}`)
+                  res.redirect(`/listennotes/details/${showId}`)
                 })
             } else {
               console.log("This action is not defined for Listen Notes")
@@ -257,8 +258,6 @@ router.get('/userProfile', (req, res) => {
   }
 
 });
-
-
 
 module.exports = router;
 

@@ -2,6 +2,7 @@ const Podcast = require("../models/Podcast")
 const User = require("../models/User")
 const SpotifyWebApi = require('spotify-web-api-node');
 const Playlist = require('../models/Playlist');
+const unirest = require('unirest');
 
 // setting the spotify-api goes here:
 const spotifyApi = new SpotifyWebApi({
@@ -90,82 +91,45 @@ module.exports = {
 
   ratePodcast(showId, content, userId) {
 
-  // const { showId } = req.params;
-  //const { content } = req.body;
+    // const { showId } = req.params;
+    //const { content } = req.body;
 
-  const newRating = { content: content, author: userId }
+    const newRating = { content: content, author: userId }
 
-  //console.log(showId)
-  // check if podcast with id is already in db
-  return Podcast.exists({ podcastId: showId })
-    .then(podcastExists => {
-      if (!podcastExists) {
-        return Podcast.create({ podcastId: showId, origin: "spotify" })
-      } else {
-        return Podcast.findOne({ podcastId: showId })
-      }
-    })
-    // Add rating to Podcast 
-    .then(respond => {
-      let arrayToCheck = respond.rating
-      let userToCheck = userId
+    //console.log(showId)
+    // check if podcast with id is already in db
+    return Podcast.exists({ podcastId: showId })
+      .then(podcastExists => {
+        if (!podcastExists) {
+          return Podcast.create({ podcastId: showId, origin: "spotify" })
+        } else {
+          return Podcast.findOne({ podcastId: showId })
+        }
+      })
+      // Add rating to Podcast 
+      .then(respond => {
+        let arrayToCheck = respond.rating
+        let userToCheck = userId
 
-      let hasUser = arrayToCheck.some(arrayToCheck => arrayToCheck['author'] == `${userToCheck}`)
-      console.log("=========>", hasUser)
+        let hasUser = arrayToCheck.some(arrayToCheck => arrayToCheck['author'] == `${userToCheck}`)
+        console.log("=========>", hasUser)
 
-      if (!hasUser) {
-        return Podcast.findByIdAndUpdate(respond._id, { $push: { rating: newRating } })
-          
-      } else {
+        if (!hasUser) {
+          return Podcast.findByIdAndUpdate(respond._id, { $push: { rating: newRating } })
 
-        let newRatingArr = arrayToCheck.filter(arrayToCheck => arrayToCheck['author'] != `${userToCheck}`)
-        console.log("=========>", newRatingArr)
-        newRatingArr.push(newRating);
-        return Podcast.findByIdAndUpdate(respond._id, { rating: newRatingArr })
-      }
-    })
+        } else {
+
+          let newRatingArr = arrayToCheck.filter(arrayToCheck => arrayToCheck['author'] != `${userToCheck}`)
+          console.log("=========>", newRatingArr)
+          newRatingArr.push(newRating);
+          return Podcast.findByIdAndUpdate(respond._id, { rating: newRatingArr })
+        }
+      })
 
 
   },
 
-  //Compare to function above
-//   console.log(showId)
-//   // check if podcast with id is already in db
-//   Podcast.exists({ podcastId: showId })
-//     .then(podcastExists => {
-//       if (!podcastExists) {
-//         return Podcast.create({ podcastId: showId })
-//       } else {
-//         return Podcast.findOne({ podcastId: showId })
-//       }
-//     })
-//     // Add rating to Podcast
-//     .then(respond => {
-//       let arrayToCheck = respond.rating
-//       let userToCheck = req.session.currentUser._id
-
-//       let hasUser = arrayToCheck.some(arrayToCheck => arrayToCheck['author'] == `${userToCheck}`)
-//       console.log("=========>", hasUser)
-
-//       if (!hasUser) {
-//         return Podcast.findByIdAndUpdate(respond._id, { $push: { rating: newRating } })
-//           // Redirect to Detailpage
-//           .then(() => res.redirect(`/spotify/details/${showId}`))
-//           .catch(err => console.log(`Err while creating the rating in the DB: ${err}`));
-//       } else {
-
-//         let newRatingArr = arrayToCheck.filter(arrayToCheck => arrayToCheck['author'] != `${userToCheck}`)
-//         console.log("=========>", newRatingArr)
-//         newRatingArr.push(newRating);
-//         return Podcast.findByIdAndUpdate(respond._id, { rating: newRatingArr })
-//           // Redirect to Detailpage
-//           .then(() => res.redirect(`/spotify/details/${showId}`))
-//           .catch(err => console.log(`Err while creating the rating in the DB: ${err}`));
-//       }
-//     })
-// })
-
-  addToPlaylist(episodeId, podcastId, userId) {
+  addToPlaylist(episodeId, userId) {
     return spotifyApi
       .getEpisode(episodeId, { market: "DE" })
       .then((episode) => {
@@ -176,60 +140,96 @@ module.exports = {
       })
   },
 
-  // compare to function above
-//   spotifyApi
-//     .getEpisode(req.params.id, { market: "DE" })
-//     .then((episode) => {
-//       console.log("THE ID OF THE EISODEEE: " + episode.body.id)
-//       Playlist.findOneAndUpdate(
-//         { $and: [{ ownerID: req.session.currentUser._id }, { playlistName: "Bookmarked" }] },
-//         { $push: { episodes: { episodeID: episode.body.id, source: "spotify" } } })
-//         .then(() => {
-//           res.redirect(`/spotify/details/${req.params.podcastid}`)
-//         })
-//         .catch(err => console.log('The error while searching show occurred: ', err));
-//     })
-// })
-
   addToFavoritesLN(podcastId, userId) {
     return Podcast.exists({ podcastId: podcastId })
-    .then(podcastExists => {
-      if (!podcastExists) {
-        return Podcast.create({ podcastId: podcastId, origin: "listennotes" })
-      } else {
-        return Podcast.findOne({ podcastId: podcastId })
-      }
-    })
-    // Add ObjectId of newly created Podcast to Users favorite podcasts
-    .then(resp => {
-      console.log("Response from mongo:", resp)
-      return User.findOneAndUpdate({ _id: userId }, 
-        { $push: { favoritePodcasts: resp._id } }, { new: true })
-    })
+      .then(podcastExists => {
+        if (!podcastExists) {
+          return Podcast.create({ podcastId: podcastId, origin: "listennotes" })
+        } else {
+          return Podcast.findOne({ podcastId: podcastId })
+        }
+      })
+      // Add ObjectId of newly created Podcast to Users favorite podcasts
+      .then(resp => {
+        console.log("Response from mongo:", resp)
+        return User.findOneAndUpdate({ _id: userId },
+          { $push: { favoritePodcasts: resp._id } }, { new: true })
+      })
+  },
+
+  addCommentLN(showId, content, userId) {
+    const newComment = { content: content, author: userId }
+
+    // check if podcast with id is already in db
+    return Podcast.exists({ podcastId: showId })
+      .then(podcastExists => {
+        if (!podcastExists) {
+          return Podcast.create({ podcastId: showId, origin: "listennotes" })
+        } else {
+          return Podcast.findOne({ podcastId: showId })
+        }
+      })
+      // Add ObjectId of newly created Podcast 
+      .then(resp => {
+        let commentsArrToCheck = resp.comments
+        let userToCheckCom = userId
+        let hasCommented = commentsArrToCheck.some(commentsArrToCheck => commentsArrToCheck['author'] == `${userToCheckCom}`)
+        console.log("=========>", hasCommented)
+
+        if (!hasCommented) {
+          return Podcast.findByIdAndUpdate(resp._id, { $push: { comments: newComment } })
+        } else {
+          let newCommentArr = commentsArrToCheck.filter(commentsArrToCheck => commentsArrToCheck['author'] != `${userToCheckCom}`)
+          // console.log("=========>", newCommentArr)
+          newCommentArr.push(newComment);
+          return Podcast.findByIdAndUpdate(resp._id, { comments: newCommentArr })
+        }
+      })
+  },
+
+  ratePodcastLN(showId, content, userId) {
+
+    const newRating = { content: content, author: userId }
+
+    // check if podcast with id is already in db
+    return Podcast.exists({ podcastId: showId })
+      .then(podcastExists => {
+        if (!podcastExists) {
+          return Podcast.create({ podcastId: showId })
+        } else {
+          return Podcast.findOne({ podcastId: showId })
+        }
+      })
+      // Add rating to Podcast 
+      .then(respond => {
+        let arrayToCheck = respond.rating
+        let userToCheck = userId
+
+        let hasUser = arrayToCheck.some(arrayToCheck => arrayToCheck['author'] == `${userToCheck}`)
+        console.log("=========>", hasUser)
+
+        if (!hasUser) {
+          return Podcast.findByIdAndUpdate(respond._id, { $push: { rating: newRating } })
+        } else {
+
+          let newRatingArr = arrayToCheck.filter(arrayToCheck => arrayToCheck['author'] != `${userToCheck}`)
+          console.log("=========>", newRatingArr)
+          newRatingArr.push(newRating);
+          return Podcast.findByIdAndUpdate(respond._id, { rating: newRatingArr })
+        }
+      })
+  },
+
+  addToPlaylistLN(episodeId, userId) {
+    return unirest
+      .get(`https://listen-api.listennotes.com/api/v2/episodes/${episodeId}`)
+      .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
+      .then((episode) => {
+        console.log(episode)
+        return Playlist.findOneAndUpdate(
+          { $and: [{ ownerID: userId }, { playlistName: "Bookmarked" }] },
+          { $push: { episodes: { episodeID: episode.body.id, source: "listennotes" } } })
+      })
   }
 
 }
-
-// compare with function above
-// create new object in database
-  // push this ID to user "favorites" array
-  // console.log("THE PARAMS: " + req.params.id)
-  // Podcast.exists({ podcastId: req.params.id })
-  //   .then(podcastExists => {
-  //     if (!podcastExists) {
-  //       return Podcast.create({ podcastId: req.params.id, origin: "listennotes" })
-  //     } else {
-  //       return Podcast.findOneAndUpdate({ podcastId: req.params.id}, {origin: "listennotes" })
-  //     }
-  //   })
-  //   // Add ObjectId of newly created Podcast to Users favorite podcasts
-  //   .then(resp => {
-  //     console.log("Response from mongo:", resp)
-  //     return User.findOneAndUpdate({ _id: req.session.currentUser._id }, 
-  //       { $push: { favoritePodcasts: resp._id } }, { new: true })
-  //   })
-  //   // Redirect to Homepage
-  //   .then(() => res.redirect("/userProfile"))
-  //   .catch(err => console.log(`Err while creating the post in the DB: ${err}`))
-
-

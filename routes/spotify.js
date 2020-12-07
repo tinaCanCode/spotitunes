@@ -194,7 +194,7 @@ router.post("/details/:podcastid/:id/addtoplaylist", (req, res) => {
 
   } else {
 
-    actions.addToPlaylist(req.params.id, req.params.podcastid, req.session.currentUser._id)
+    actions.addToPlaylist(req.params.id, req.session.currentUser._id)
       .then(() => res.redirect(`/spotify/details/${req.params.podcastid}`));
   }
 });
