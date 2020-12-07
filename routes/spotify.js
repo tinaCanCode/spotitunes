@@ -55,14 +55,26 @@ router.get("/details/:showId", (req, res) => {
 
     //// RATINGS
     let sumRatings = (valForRating.reduce((sum, item) => sum + item.content, 0) / valForRating.length).toFixed(1)
+    let sumRatingsPrint
+    console.log("sumRatings: ", sumRatings)
+    console.log("Type: ", typeof(sumRatings))
 
-
-    console.log(sumRatings);
+    if (sumRatings === "NaN") {
+      sumRatingsPrint = "No ratings yet"
+    } else {
+      sumRatingsPrint = sumRatings
+    }
+    console.log("sumRatingsPrint: ", sumRatingsPrint)
+    //console.log(sumRatings);
+    
     let usersRating = valForRating.find((rat) => {
       return rat.author == userToCheckGet
     });
+    
+
+
     res.render("spotify/details", {
-      podcasts: values[0].body, ourpodcasts: values[1], ratingResults: sumRatings, beingUser: beingUser,
+      podcasts: values[0].body, ourpodcasts: values[1], ratingResults: sumRatingsPrint, beingUser: beingUser,
       beingCommentingUser: beingCommentingUser, user: req.session.currentUser, usersRatingToPrint: usersRating, usersCommentToPrint: usersComment
     })
   })
