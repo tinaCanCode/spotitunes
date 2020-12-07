@@ -5,6 +5,9 @@ const { exists } = require('../models/Podcast');
 const Podcast = require('../models/Podcast');
 const User = require('../models/User');
 const Playlist = require('../models/Playlist');
+const { default: Axios } = require('axios');
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
 
 /* GET search page */
 router.get('/listennotes', (req, res, next) => {
@@ -28,7 +31,7 @@ router.get('/listennotes', (req, res, next) => {
 
 router.get("/listennotes/details/:showId", (req, res) => {
   //console.log(req.params.showId)
-  const fromListennotes =unirest
+  const fromListennotes = unirest
   .get(`https://listen-api.listennotes.com/api/v2/podcasts/${req.params.showId}?sort=recent_first`)
     .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
 
@@ -53,9 +56,10 @@ router.get("/listennotes/details/:showId", (req, res) => {
       const sumRatings = (valForRating.reduce((sum, item) => sum + item.content, 0) / valForRating.length).toFixed(1)
       console.log(sumRatings);
 
-      console.log("Response from LN: ", values[0]);
+      // console.log("Response from LN: ", values[0]);
       //console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
       //res.send("checked for details")
+    
       res.render("listennotes/details", { podcasts: values[0].toJSON().body, user: req.session.currentUser, 
       ourpodcasts: values[1], ratingResults: sumRatings, beingUser: beingUser, beingCommentingUser: beingCommentingUser })
     })
