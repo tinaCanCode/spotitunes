@@ -1,34 +1,72 @@
 {{> navbar }}
 
 {{#if user}}
-<h2>{{ user.username }} - Profile page</h2>
-<form action="/logout" method="post">
-  <button class="btn btn-outline-secondary btn-sm">Logout</button>
-</form>
-<a href="/mybookmarks"><button class="btn btn-outline-secondary btn-sm">My bookmarks</button></a>
 
-<h3>My favorite Podcasts</h3>
-{{#each podcasts}}
+<div class='container-fluid padding'>
+  <div class='row welcome text-center'>
+    <div class='col-12'>
+      <div>
+        <h2>Hey, {{ user.username }}. </h2>
+        <p>All your favorite podcasts are here. Check out "My bookmarks" to find the episodes you bookmarked.</p>
+      </div>
+      {{!-- <div class="row"> --}}
+      {{!-- <div class="col">
+          <form action="/logout" method="post">
+            <button class="btn btn-outline-secondary btn-sm">Logout</button>
+          </form>
+        </div> --}}
+      <a href="/playlists/bookmarked"><button class="btn btn-lg btn-outline-secondary mt-0 mb-2">My bookmarks</button></a>
+      {{!-- </div> --}}
+      <hr class="my-4 wow">
+    </div>
 
-{{#if this.body.listennotes_url}}
-<p>{{this.body.title}} - {{this.body.publisher}}</p>
-<img class="podcastImg" src="{{this.body.image}}">
-<p><a href="/listennotes/details/{{this.body.id}}">Show Details</a></p>
-<form action="/delete/{{this.body.id}}" method="post">
-  <button class="btn btn-outline-secondary btn-sm">Remove from favorites</button>
-</form>
+  </div>
+</div>
 
-{{else}}
-<p>{{this.body.name}} - {{this.body.publisher}}</p>
-<img class="podcastImg" src="{{this.body.images.[1].url}}">
-<p><a href="/spotify/details/{{this.body.id}}">Show Details</a></p>
-<form action="/delete/{{this.body.id}}" method="post">
-  <button class="btn btn-outline-secondary btn-sm">Remove from favorites</button>
-</form>
+<div class='container-fluid padding'>
 
-{{/if}}
-{{/each}}
+  <div class='row padding'>
 
+    {{#each podcasts}}
+
+    {{#if this.body.listennotes_url}}
+
+    <div class='col-md-3'>
+      <div class='card vertical-center'>
+        <a href="{{this.origin}}/details/{{this.id}}"> <img class="card-img-top" src="{{this.body.thumbnail}}">
+        </a>
+        <div class='card-body'>
+          <h4 class="podcast-title-profile-page">{{this.body.title}}</h4>
+          <p>{{this.body.publisher}}</p>
+          <a href="/listennotes/details/{{this.body.id}}"><button class="btn btn-outline-secondary btn-sm">Show Details</button></a>
+          <button class="btn btn-danger btn-sm">Remove from favorites</button>
+        </div>
+      </div>
+    </div>
+
+
+    {{else}}
+
+    <div class='col-md-3'>
+      <div class='card'>
+        <a href="{{this.origin}}/details/{{this.id}}"> <img class="card-img-top" src="{{this.body.images.[1].url}}">
+        </a>
+        <div class='card-body'>
+          <p>{{this.body.title}} - {{this.body.publisher}}</p>
+          <button class="btn btn-outline-secondary btn-sm">
+            <a href="/spotify/details/{{this.body.id}}">Show Details</a>
+          </button>
+          <button class="btn btn-danger btn-sm">Remove from favorites</button>
+        </div>
+      </div>
+    </div>
+
+
+    {{/if}}
+
+    {{/each}}
+  </div>
+</div>
 
 {{else}}
 <p>You are logged out. Please log in or sign up to continue.</p>

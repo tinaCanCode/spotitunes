@@ -27,14 +27,14 @@
         <li>{{this.content}}</li>
         {{/each}}
         <h5>Rate: {{ratingResults}}</h5>
-        <form action="/listennotes/details/{{podcasts.id}}/newrating" method="POST">
+        <form id="starButton" action="/listennotes/details/{{podcasts.id}}/newrating" method="POST">
             <textarea type='text' name="content" id="rating-content-input" cols="1" rows="1"></textarea>
 
-            {{#if beingUser}}
+            {{!-- {{#if beingUser}}
             <input class="btn btn-outline-secondary btn-sm" type="submit" value="Change your rating">
             {{else}}
              <input class="btn btn-outline-secondary btn-sm" type="submit" value="Rate a Podcast">
-            {{/if}}
+            {{/if}} --}}
             <div class="rating">
                 <i class="fa fa-star unchecked" id="one" name="content"></i>
                 <i class="fa fa-star unchecked" id="two" name="content"></i>
@@ -54,7 +54,7 @@
   <img class="podcastDetailImg" src="{{this.thumbnail}}">
   <p>Release date: {{this.pub_date_ms}}</p>
   <p>{{this.description}}</p>
-  <p><a href="{{this.listennotes_url}}" target="_blank">Play on Listen Notes</a></p>
+  <p><a href="{{this.link}}" target="_blank">Listen now</a></p>
   <form action="/listennotes/details/{{../podcasts.id}}/{{this.id}}/addtoplaylist" method="POST">
         <input  class="btn btn-outline-secondary btn-sm" type="submit" value="Bookmark this episode">
   </form>

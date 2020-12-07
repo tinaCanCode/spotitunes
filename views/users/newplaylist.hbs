@@ -1,0 +1,17 @@
+{{> navbar }}
+<div class="playlist-box container col vertical-center">
+
+  <div class="container">
+    <div class="list-title vertical-center col">
+      <h4 class="text-center">Let's create a new playlist!</h4>
+      <hr class="mb-2">
+      <form action="/bookmarks/new" method="POST">
+        <div class="form-group col text-center">
+          <label for="new-playlist-title" class="mb-3">Enter the name of the playlist.<br>We take care of the rest.</label>
+          <input id="new-playlist-title" placeholder="Enter a playlist name" type="text" name="playlistname">
+        </div>
+        <button type="submit" class="btn btn-lg btn-outline-secondary col vertical-center">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>

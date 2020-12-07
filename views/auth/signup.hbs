@@ -6,17 +6,37 @@
 <h3>Signup</h3>
   <div class="form-group">
     <label for="input-username">Username</label>
+    {{#if preusername}}
+    <input type="text" class="form-control" id="input-username" name="username"  value={{preusername}} placeholder="Your username"/>
+{{else}}
     <input type="text" class="form-control" id="input-username" name="username" placeholder="Your username"/>
+    {{/if}}
   </div>
   <div class="form-group">
       <label for="input-email">Email</label>
+      {{#if preemail}}
+    <input type="email" id="input-email" name="email" placeholder="Your email" value={{preemail}} class="form-control" />
+    {{else}}  
     <input type="email" id="input-email" name="email" placeholder="Your email" class="form-control"/>
+     {{/if}}
     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
   </div>
+<div class="form-group">
+  <label for="input-password">Password</label>
+    <input type="password" name="password" class="form-control" id="input-password" placeholder="********"/>
+    <small id="passwordHelpInline" class="text-muted">
+      Must have at least 6 characters long and contain at least one number, one lowercase and one uppercase letter.
+    </small>
+  </div>
   <div class="form-group">
+  <label for="input-password">Repeat password</label>
+    <input type="password" name="repeatpassword" class="form-control" id="input-password" placeholder="********"/>
+  </div>
+
+  {{!-- <div class="form-group">
     <label for="input-password">Password</label>
     <input type="password" name="password" class="form-control" id="input-password" placeholder="********"/>
-  </div>
+  </div> --}}
   <button type="submit" class="btn btn-sm btn-outline-secondary">Create Account</button>
    {{#if errorMessage}}
     <p class="error">{{errorMessage}}</p>
