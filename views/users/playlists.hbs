@@ -3,26 +3,26 @@
 
   <div class="container">
     <div class="list-title vertical-center">
-      <h4 class="text-center">Bookmarked</h4>
+      <h4 class="text-center"><a href="/playlists/bookmarked">Bookmarked</a></h4>
       <p class="text-center">Here are the episodes you've bookmarked so far. <br><em>Click on the search button to
           explore and add.</em></p>
       <a href="/search"><button class="btn btn-lg btn-outline-secondary col vertical-center"
           title="search podcasts">Search and bookmark episodes</button></a>
       <div class="col">
-          <div class="col dropdown">
-            <button class="btn m-2 btn-md btn-outline-secondary col vertical-center">See your playlists</button>
-            <div class="dropdown-content">
-              {{#each playlistsAll}}
-              <a href="/playlists/{{this.playlistName}}">{{this.playlistName}}</a>
-              {{/each}}
-              <a href="/bookmarks/new">Create new</a>
+        <div class="col dropdown">
+          <button class="btn m-2 btn-md btn-outline-secondary col vertical-center">See your playlists</button>
+          <div class="dropdown-content">
+            {{#each playlistsAll}}
+            <a href="/playlists/{{this.playlistName}}">{{this.playlistName}}</a>
+            {{/each}}
+            <a href="/bookmarks/new">Create new</a>
           </div>
         </div>
       </div>
     </div>
     <hr class="mb-3">
     <h4 class="text-center">{{playlistObject.name}}</h4>
-        <hr class="mb-3">
+    <hr class="mb-3">
 
     {{#each playlistObject.content}}
     <div class="col align-self-center vertical-center">
@@ -37,15 +37,14 @@
           <a href="{{this.link}}" target="blank"><button class="btn btn-sm btn-outline-secondary">Listen
               now</button></a>
         </div>
-        <div class="form-group">
+        <div class="form-group col">
           <form action="/bookmarks/{{this.source}}/{{this.id}}" type="submit" method="POST">
-            <select class="form-control form-control-sm" name="selectpicker">
-              <option value="default">Move to a playlist</option>
+            <select class="form-control form-control-sm" name="selectpicker" required aria-invalid="false" onchange="this.form.submit()">
+              <option value="">Move to...</option>
               {{#each ../playlistsAll}}
               <option value="{{playlistName}}" name="playlist">{{playlistName}}</option>
               {{/each}}
             </select>
-            <button class="btn btn-sm btn-success">Move</button>
           </form>
           <div>
           </div>
