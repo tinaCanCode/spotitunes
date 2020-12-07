@@ -1,6 +1,10 @@
 {{> navbar }}
-
-<div id="signup">
+{{#if pendingRequest}}
+<div>
+{{pendingRequest.message}}
+</div>
+{{/if}}
+<div id="login">
 <form action="/login" method="POST">
 <h3>Login</h3>
   <div class="form-group">
@@ -17,4 +21,5 @@
     <p class="error">{{errorMessage}}</p>
   {{/if}}
 </form>
+<p>Not signed up to Spotitunes yet? Click <a href="/signup">here</a> to create an account</p>
 </div>

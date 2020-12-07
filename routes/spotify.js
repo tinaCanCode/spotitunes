@@ -6,6 +6,7 @@ const User = require('../models/User');
 //require spotify Web api
 const SpotifyWebApi = require('spotify-web-api-node');
 const Playlist = require('../models/Playlist');
+const actions = require('../modules/actions');
 
 
 // setting the spotify-api goes here:
@@ -44,7 +45,13 @@ router.get("/details/:showId", (req, res) => {
     ////COMMENTS
     let valForComments = values[1].comments;
     let valForRating = values[1].rating;
-    let userToCheckGet = req.session.currentUser._id
+    let userToCheckGet
+
+    if (req.session.currentUser) {
+      userToCheckGet = req.session.currentUser._id
+    } else {
+      userToCheckGet = null;
+    }
     let beingUser = valForRating.some(valForRating => valForRating['author'] == `${userToCheckGet}`)
     let beingCommentingUser = valForComments.some(valForComments => valForComments['author'] == `${userToCheckGet}`)
 
@@ -57,7 +64,7 @@ router.get("/details/:showId", (req, res) => {
     let sumRatings = (valForRating.reduce((sum, item) => sum + item.content, 0) / valForRating.length).toFixed(1)
     let sumRatingsPrint
     console.log("sumRatings: ", sumRatings)
-    console.log("Type: ", typeof(sumRatings))
+    console.log("Type: ", typeof (sumRatings))
 
     if (sumRatings === "NaN") {
       sumRatingsPrint = "No ratings yet"
@@ -66,11 +73,11 @@ router.get("/details/:showId", (req, res) => {
     }
     console.log("sumRatingsPrint: ", sumRatingsPrint)
     //console.log(sumRatings);
-    
+
     let usersRating = valForRating.find((rat) => {
       return rat.author == userToCheckGet
     });
-    
+
 
 
     res.render("spotify/details", {
@@ -83,146 +90,114 @@ router.get("/details/:showId", (req, res) => {
 
 //  *********************COMMENTS SECTION***************************
 
-// Add Spotify Podcast to database
+
+// Add new comment to podcast
 router.post('/details/:showId/newcomment', (req, res, next) => {
-  const { showId } = req.params;
-  const { content } = req.body;
-  const newComment = { content: content, author: req.session.currentUser._id }
 
-  console.log(showId)
-  // check if podcast with id is already in db
-  Podcast.exists({ podcastId: showId })
-    .then(podcastExists => {
-      if (!podcastExists) {
-        return Podcast.create({ podcastId: showId, origin: "spotify" })
-      } else {
-        return Podcast.findOne({ podcastId: showId })
-      }
-    })
-    // Add ObjectId of newly created Podcast 
-    .then(resp => {
-      let commentsArrToCheck = resp.comments
-      let userToCheckCom = req.session.currentUser._id
-      let hasCommented = commentsArrToCheck.some(commentsArrToCheck => commentsArrToCheck['author'] == `${userToCheckCom}`)
-      console.log("=========>", hasCommented)
+  if (!req.session.currentUser) {
 
-      if (!hasCommented) {
-        return Podcast.findByIdAndUpdate(resp._id, { $push: { comments: newComment } })
-          // Redirect to Detailpage
-          .then(() => res.redirect(`/spotify/details/${showId}`))
-          .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
-      } else {
-        let newCommentArr = commentsArrToCheck.filter(commentsArrToCheck => commentsArrToCheck['author'] != `${userToCheckCom}`)
-        console.log("=========>", newCommentArr)
-        newCommentArr.push(newComment);
-        return Podcast.findByIdAndUpdate(resp._id, { comments: newCommentArr })
-          .then(() => res.redirect(`/spotify/details/${showId}`))
-          .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
-      }
-    })
+    const requestedAction = {
+      action: "comment",
+      podcastId: req.params.showId,
+      commentContent: req.body.content,
+      origin: "spotify",
+      message: "You need to login to add a comment"
+    }
+
+    req.session.pendingRequest = requestedAction
+
+    res.render("auth/login", { pendingRequest: requestedAction })
+
+  } else {
+
+    actions.addComment(req.params.showId, req.body.content, req.session.currentUser._id)
+      .then(() => res.redirect(`/spotify/details/${req.params.showId}`));
+
+  }
+
 });
-
-
 
 // +++++++++++++++++++++++++RATING SECTION++++++++++++++++++++++++++++
 
 router.post('/details/:showId/newrating', (req, res, next) => {
-  const { showId } = req.params;
-  const { content } = req.body;
-  const newRating = { content: content, author: req.session.currentUser._id }
 
-  console.log(showId)
-  // check if podcast with id is already in db
-  Podcast.exists({ podcastId: showId })
-    .then(podcastExists => {
-      if (!podcastExists) {
-        return Podcast.create({ podcastId: showId })
-      } else {
-        return Podcast.findOne({ podcastId: showId })
-      }
-    })
-    // Add rating to Podcast 
-    .then(respond => {
-      let arrayToCheck = respond.rating
-      let userToCheck = req.session.currentUser._id
+  if (!req.session.currentUser) {
 
-      let hasUser = arrayToCheck.some(arrayToCheck => arrayToCheck['author'] == `${userToCheck}`)
-      console.log("=========>", hasUser)
+    const requestedAction = {
+      action: "rate",
+      podcastId: req.params.showId,
+      ratingContent: req.body.content,
+      origin: "spotify",
+      message: "You need to login to rate a podcasts"
+    }
 
-      if (!hasUser) {
-        return Podcast.findByIdAndUpdate(respond._id, { $push: { rating: newRating } })
-          // Redirect to Detailpage
-          .then(() => res.redirect(`/spotify/details/${showId}`))
-          .catch(err => console.log(`Err while creating the rating in the DB: ${err}`));
-      } else {
+    req.session.pendingRequest = requestedAction
 
-        let newRatingArr = arrayToCheck.filter(arrayToCheck => arrayToCheck['author'] != `${userToCheck}`)
-        console.log("=========>", newRatingArr)
-        newRatingArr.push(newRating);
-        return Podcast.findByIdAndUpdate(respond._id, { rating: newRatingArr })
-          // Redirect to Detailpage
-          .then(() => res.redirect(`/spotify/details/${showId}`))
-          .catch(err => console.log(`Err while creating the rating in the DB: ${err}`));
-      }
-    })
-})
+    res.render("auth/login", { pendingRequest: requestedAction })
 
+  } else {
+
+    actions.ratePodcast(req.params.showId, req.body.content, req.session.currentUser._id)
+      .then(() => res.redirect(`/spotify/details/${req.params.showId}`));
+
+  }
+});
 
 // ********************************************************
 
 // Add Spotify Podcasts as favorites
 
 router.post('/:id/addtofavorite', (req, res) => {
-  // create new object in database
-  // push this ID to user "favorites" array
-  //console.log("THE PARAMS: " + req.params.id)
 
-  Podcast.exists({ podcastId: req.params.id })
-    .then(podcastExists => {
-      if (!podcastExists) {
-        return Podcast.create({ podcastId: req.params.id, origin: "spotify" })
-      } else {
-        return Podcast.findOne({ podcastId: req.params.id })
-      }
-    })
-    // Add ObjectId of newly created Podcast to Users favorite podcasts
-    .then(podcastToAdd => {
-      console.log("Podcast you want to add:", podcastToAdd)
-      console.log("current user: ", req.session.currentUser)
-      // Check if podcast is already part of favorite podcasts
-      User.findOne({ _id: req.session.currentUser._id })
-        .then(user => {
-          const userFavoritePodcasts = user.favoritePodcasts
+  //console.log("USER: ", req.session.currentUser)
 
-          if (userFavoritePodcasts.includes(podcastToAdd._id.toString())) {
-            res.send("You can't add podcasts twice")
-          } else {
-            return User.findOneAndUpdate({ _id: req.session.currentUser._id }, { $push: { favoritePodcasts: podcastToAdd._id } }, { new: true })
-          }
+  if (!req.session.currentUser) {
 
-        })
-        // Redirect to Homepage
-        .then(() => res.redirect("/userProfile"))
-        .catch(err => console.log(`Err while creating the post in the DB: ${err}`));
-    })
+    const requestedAction = {
+      action: "addtofavorite",
+      podcastId: req.params.id,
+      origin: "spotify",
+      message: "You need to login to add a favorite podcast"
+    }
+
+    req.session.pendingRequest = requestedAction
+
+    console.log("SESSION: ", req.session)
+
+    res.render("auth/login", { pendingRequest: requestedAction })
+
+  } else {
+
+    actions.addToFavorites(req.params.id, req.session.currentUser._id)
+      .then(() => res.redirect("/userProfile"));
+
+  }
 })
 
 
 //addtoplaylist
 router.post("/details/:podcastid/:id/addtoplaylist", (req, res) => {
-  spotifyApi
-    .getEpisode(req.params.id, { market: "DE" })
-    .then((episode) => {
-      console.log("THE ID OF THE EISODEEE: " + episode.body.id)
-      Playlist.findOneAndUpdate(
-        { $and: [{ ownerID: req.session.currentUser._id }, { playlistName: "Bookmarked" }] },
-        { $push: { episodes: { episodeID: episode.body.id, source: "spotify" } } })
-        .then(() => {
-          res.redirect(`/spotify/details/${req.params.podcastid}`)
-        })
-        .catch(err => console.log('The error while searching show occurred: ', err));
-    })
-})
+
+  if (!req.session.currentUser) {
+
+    const requestedAction = {
+      action: "addtoplaylist",
+      podcastId: req.params.podcastid,
+      episodeId: req.params.id,
+      origin: "spotify",
+      message: "You need to login to bookmark episodes"
+    }
+
+    req.session.pendingRequest = requestedAction
+
+    res.render("auth/login", { pendingRequest: requestedAction })
+
+  } else {
+
+    actions.addToPlaylist(req.params.id, req.session.currentUser._id)
+      .then(() => res.redirect(`/spotify/details/${req.params.podcastid}`));
+  }
+});
 
 router.post('/delete/:id', (req, res) => {
   Podcast.findOne({ podcastId: req.params.id })

@@ -59,7 +59,7 @@ a{
   margin-bottom: 20%; */
 }
 
-#signup{
+#signup, #login{
   display: flex;
   justify-content: space-around;
   align-items: center;
