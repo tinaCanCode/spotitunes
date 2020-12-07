@@ -138,7 +138,9 @@ document.getElementById('five').addEventListener("click", function () {
 });
 
 
-
+function getContent(){
+  document.getElementById("my-textarea").value = document.getElementById("my-content").innerHTML;
+}
 
 // if (favoriteBtn != null) {
 //   favoriteBtn.addEventListener("click", () => {

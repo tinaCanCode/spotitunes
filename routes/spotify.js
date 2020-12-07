@@ -39,18 +39,34 @@ router.get("/details/:showId", (req, res) => {
 
   Promise.all([fromSpotify, fromOurDb]).then(values => {
     // console.log(values[1]);
+
+
+    ////COMMENTS
     let valForComments = values[1].comments;
     let valForRating = values[1].rating;
     let userToCheckGet = req.session.currentUser._id
-
     let beingUser = valForRating.some(valForRating => valForRating['author'] == `${userToCheckGet}`)
     let beingCommentingUser = valForComments.some(valForComments => valForComments['author'] == `${userToCheckGet}`)
-    
-    const sumRatings = (valForRating.reduce((sum, item) => sum + item.content, 0) / valForRating.length).toFixed(1)
+
+    let usersComment = valForComments.find((com) => {
+      return com.author == userToCheckGet
+    });
+    console.log('hereeeeeeeeeee' + usersComment);
+
+    //// RATINGS
+    let sumRatings = (valForRating.reduce((sum, item) => sum + item.content, 0) / valForRating.length).toFixed(1)
+
+
     console.log(sumRatings);
-    res.render("spotify/details", { podcasts: values[0].body, ourpodcasts: values[1], ratingResults: sumRatings, beingUser: beingUser, beingCommentingUser: beingCommentingUser , user: req.session.currentUser})
+    let usersRating = valForRating.find((rat) => {
+      return rat.author == userToCheckGet
+    });
+    res.render("spotify/details", {
+      podcasts: values[0].body, ourpodcasts: values[1], ratingResults: sumRatings, beingUser: beingUser,
+      beingCommentingUser: beingCommentingUser, user: req.session.currentUser, usersRatingToPrint: usersRating, usersCommentToPrint: usersComment
+    })
   })
-})
+});
 
 
 //  *********************COMMENTS SECTION***************************
@@ -188,7 +204,7 @@ router.post("/details/:podcastid/:id/addtoplaylist", (req, res) => {
       console.log("THE ID OF THE EISODEEE: " + episode.body.id)
       Playlist.findOneAndUpdate(
         { $and: [{ ownerID: req.session.currentUser._id }, { playlistName: "Bookmarked" }] },
-        { $push: { episodes: {episodeID: episode.body.id, source: "spotify" }}})
+        { $push: { episodes: { episodeID: episode.body.id, source: "spotify" } } })
         .then(() => {
           res.redirect(`/spotify/details/${req.params.podcastid}`)
         })
@@ -203,7 +219,7 @@ router.post('/delete/:id', (req, res) => {
       User.findOneAndUpdate({ _id: req.session.currentUser._id }, { $pull: { favoritePodcasts: podcast._id } }, { new: true })
     })
   res.redirect("/userProfile");
-  
+
 })
 
 
