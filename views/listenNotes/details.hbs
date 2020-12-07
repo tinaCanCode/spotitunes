@@ -27,14 +27,14 @@
         <li>{{this.content}}</li>
         {{/each}}
         <h5>Rate: {{ratingResults}}</h5>
-        <form action="/listennotes/details/{{podcasts.id}}/newrating" method="POST">
+        <form id="starButton" action="/listennotes/details/{{podcasts.id}}/newrating" method="POST">
             <textarea type='text' name="content" id="rating-content-input" cols="1" rows="1"></textarea>
 
-            {{#if beingUser}}
+            {{!-- {{#if beingUser}}
             <input class="btn btn-outline-secondary btn-sm" type="submit" value="Change your rating">
             {{else}}
              <input class="btn btn-outline-secondary btn-sm" type="submit" value="Rate a Podcast">
-            {{/if}}
+            {{/if}} --}}
             <div class="rating">
                 <i class="fa fa-star unchecked" id="one" name="content"></i>
                 <i class="fa fa-star unchecked" id="two" name="content"></i>

@@ -125,7 +125,7 @@ router.post('/details/:showId/newrating', (req, res, next) => {
         return Podcast.findByIdAndUpdate(respond._id, { $push: { rating: newRating } })
           // Redirect to Detailpage
           .then(() => res.redirect(`/spotify/details/${showId}`))
-          .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
+          .catch(err => console.log(`Err while creating the rating in the DB: ${err}`));
       } else {
 
         let newRatingArr = arrayToCheck.filter(arrayToCheck => arrayToCheck['author'] != `${userToCheck}`)
@@ -134,7 +134,7 @@ router.post('/details/:showId/newrating', (req, res, next) => {
         return Podcast.findByIdAndUpdate(respond._id, { rating: newRatingArr })
           // Redirect to Detailpage
           .then(() => res.redirect(`/spotify/details/${showId}`))
-          .catch(err => console.log(`Err while creating the comment in the DB: ${err}`));
+          .catch(err => console.log(`Err while creating the rating in the DB: ${err}`));
       }
     })
 })
