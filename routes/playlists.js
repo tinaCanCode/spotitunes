@@ -1,4 +1,3 @@
-
 // const { Router } = require('express');
 const express = require('express');
 const router = express.Router();
@@ -35,19 +34,21 @@ router.get('/signup', (req, res) => {
 
 // display playlist
 
-router.get('/mybookmarks', (req, res) => {
+router.get('/playlists/:name', (req, res) => {
   Playlist.find({ ownerID: req.session.currentUser._id })
     .then((playlists) => {
+      let currentPLaylist = playlists.find(playlist => playlist.playlistName.toLowerCase() == req.params.name.toLowerCase())
+      let playlistsAll = playlists
       let playlistEpisodes = []
       let playlistObject = {
-        name : playlists[0].playlistName,
-        content : playlistEpisodes
+        name: currentPLaylist.playlistName,
+        content: playlistEpisodes,
       }
       let requestPromises = []
-      // WORKS console.log("THIS IS THE PLAYLIST: " + playlists[0].episodes[0])
-      for (let i = 0; i < playlists[0].episodes.length; i++) {
-        if (playlists[0].episodes[i].source === "listennotes") {
-          let request = unirest.get(`https://listen-api.listennotes.com/api/v2/episodes/${playlists[0].episodes[i].episodeID}`)
+    //  console.log("THIS IS THE PLAYLIST: " + playlistsAll)
+      for (let i = 0; i < currentPLaylist.episodes.length; i++) {
+        if (currentPLaylist.episodes[i].source === "listennotes") {
+          let request = unirest.get(`https://listen-api.listennotes.com/api/v2/episodes/${currentPLaylist.episodes[i].episodeID}`)
             .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
             .then((episode) => {
               // WORKS console.log("THIS IS THE EPiSODE : " + episode.body.title)
@@ -55,10 +56,9 @@ router.get('/mybookmarks', (req, res) => {
                 id: episode.body.id,
                 title: episode.body.title,
                 link: episode.body.link,
-                image: episode.body.image,
-                description: episode.body.description,
                 podcast: episode.body.title,
                 podcastID: episode.body.podcast.id,
+                source : "listennotes"
               }
               playlistEpisodes.push(episodeSummary)
               //console.log("THIS IS THE PLAYLIST if : " + playlistEpisodes)
@@ -67,19 +67,18 @@ router.get('/mybookmarks', (req, res) => {
           requestPromises.push(request)
 
         }
-        else if (playlists[0].episodes[i].source === "spotify") {
+        else if (currentPLaylist.episodes[i].source === "spotify") {
           let request = spotifyApi
-            .getEpisode(playlists[0].episodes[i].episodeID, { market: "DE" })
+            .getEpisode(currentPLaylist.episodes[i].episodeID, { market: "DE" })
             .then((episode) => {
               // WORKS console.log("THIS IS THE EPiSODE : " + episode.body.name)
               let episodeSummary = {
                 id: episode.body.id,
                 title: episode.body.name,
                 link: episode.body.external_urls.spotify,
-                image: episode.body.images[0].url,
-                description: episode.body.description,
                 podcast: episode.body.show.name,
                 podcastID: episode.body.show.id,
+                source : "spotify"
               }
               //WORKS console.log("THIS is THE EPOSIODE :" + episodeSummary.id)
               playlistEpisodes.push(episodeSummary)
@@ -91,7 +90,7 @@ router.get('/mybookmarks', (req, res) => {
       }
 
       Promise.all(requestPromises).then(() => {
-        res.render('users/playlists', { playlistObject: playlistObject} )
+        res.render('users/playlists', { playlistObject: playlistObject, playlistsAll: playlistsAll })
       })
     })
 })
@@ -101,21 +100,39 @@ router.post('/bookmarks/:name/:id/delete', (req, res) => {
 
   Playlist.findOneAndUpdate(
     { $and: [{ ownerID: req.session.currentUser._id }, { playlistName: req.params.name }] },
-    { $pull: { episodes: {episodeID: req.params.id }}})
-  .then((playlist) => {
-    console.log(playlist)
-    res.redirect('/mybookmarks')
+    { $pull: { episodes: { episodeID: req.params.id } } })
+    .then((playlist) => {
+      console.log(playlist)
+      res.redirect('/playlists/bookmarked')
+    })
+})
+
+router.get("/bookmarks/new", (req, res) => {
+  res.render("users/newplaylist")
+})
+
+router.post("/bookmarks/new", (req, res) => {
+  Playlist.create({ ownerID: req.session.currentUser._id, userName: req.session.currentUser.username, playlistName: req.body.playlistname })
+    .then(() => {
+      res.redirect('/playlists/bookmarked')
+    })
+})
+
+router.post("/bookmarks/:source/:episodeID", (req, res) => {
+  console.log("2CHECKTHID OUTTOTUTOUT" + req.body.source)
+  let addTo = Playlist.findOneAndUpdate(
+    { $and: [{ ownerID: req.session.currentUser._id }, { playlistName: req.body.selectpicker }] },
+    { $push: { episodes: { episodeID: req.params.episodeID, source : req.params.source } } })
+
+
+  let deleteFrom =
+    Playlist.findOneAndUpdate(
+      { $and: [{ ownerID: req.session.currentUser._id }, { playlistName: "Bookmarked" }] },
+      { $pull: { episodes: { episodeID: req.params.episodeID} } })
+
+  Promise.all([addTo, deleteFrom]).then((response) => {
+    res.redirect('/playlists/bookmarked')
   })
 })
-  
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
