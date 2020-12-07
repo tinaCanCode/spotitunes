@@ -222,6 +222,11 @@ a:hover {
   background-color: #3e8e41;
 }
 
+
+#comment-content{
+  background-color: #19181A;
+  color: white
+}
 /* @media (max-width: 991.98px) { ... }
 
 @media (max-width: 1199.98px) { ... } */

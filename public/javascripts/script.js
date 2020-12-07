@@ -132,3 +132,8 @@ document.getElementById('five').addEventListener("click", function () {
     document.getElementById('five').setAttribute("class", "fa fa-star unchecked");
   }
 });
+
+function getContent(){
+  document.getElementById("my-textarea").value = document.getElementById("my-content").innerHTML;
+}
+
