@@ -90,7 +90,7 @@ router.get('/playlists/:name', (req, res) => {
       }
 
       Promise.all(requestPromises).then(() => {
-        res.render('users/playlists', { playlistObject: playlistObject, playlistsAll: playlistsAll })
+        res.render('users/playlists', { playlistObject: playlistObject, playlistsAll: playlistsAll, user: req.session.currentUser })
       })
     })
 })

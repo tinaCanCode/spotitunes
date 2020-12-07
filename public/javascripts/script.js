@@ -1,7 +1,3 @@
-// DOM Elements
-
-const favoriteBtn = document.querySelector("#favorite-btn");
-
 document.addEventListener('DOMContentLoaded', () => {
 
   console.log('IronGenerator JS imported successfully!');
@@ -137,13 +133,7 @@ document.getElementById('five').addEventListener("click", function () {
   }
 });
 
+function getContent(){
+  document.getElementById("my-textarea").value = document.getElementById("my-content").innerHTML;
+}
 
-
-
-// if (favoriteBtn != null) {
-//   favoriteBtn.addEventListener("click", () => {
-//     console.log("I was clicked")
-//     const buttonId = favoriteBtn.getAttribute("id");
-//     console.log(buttonId)
-//   })
-//}
