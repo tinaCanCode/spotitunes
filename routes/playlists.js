@@ -37,18 +37,20 @@ router.get('/signup', (req, res) => {
 router.get('/playlists/:name', (req, res) => {
   Playlist.find({ ownerID: req.session.currentUser._id })
     .then((playlists) => {
-      let currentPLaylist = playlists.find(playlist => playlist.playlistName.toLowerCase() == req.params.name.toLowerCase())
+      let currentPlaylist = playlists.find(playlist => playlist.playlistName.toLowerCase() == req.params.name.toLowerCase())
       let playlistsAll = playlists
       let playlistEpisodes = []
       let playlistObject = {
-        name: currentPLaylist.playlistName,
+        name: currentPlaylist.playlistName,
         content: playlistEpisodes,
+        default: currentPlaylist.default,
+        id: currentPlaylist._id
       }
       let requestPromises = []
     //  console.log("THIS IS THE PLAYLIST: " + playlistsAll)
-      for (let i = 0; i < currentPLaylist.episodes.length; i++) {
-        if (currentPLaylist.episodes[i].source === "listennotes") {
-          let request = unirest.get(`https://listen-api.listennotes.com/api/v2/episodes/${currentPLaylist.episodes[i].episodeID}`)
+      for (let i = 0; i < currentPlaylist.episodes.length; i++) {
+        if (currentPlaylist.episodes[i].source === "listennotes") {
+          let request = unirest.get(`https://listen-api.listennotes.com/api/v2/episodes/${currentPlaylist.episodes[i].episodeID}`)
             .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
             .then((episode) => {
               // WORKS console.log("THIS IS THE EPiSODE : " + episode.body.title)
@@ -67,9 +69,9 @@ router.get('/playlists/:name', (req, res) => {
           requestPromises.push(request)
 
         }
-        else if (currentPLaylist.episodes[i].source === "spotify") {
+        else if (currentPlaylist.episodes[i].source === "spotify") {
           let request = spotifyApi
-            .getEpisode(currentPLaylist.episodes[i].episodeID, { market: "DE" })
+            .getEpisode(currentPlaylist.episodes[i].episodeID, { market: "DE" })
             .then((episode) => {
               // WORKS console.log("THIS IS THE EPiSODE : " + episode.body.name)
               let episodeSummary = {
@@ -112,7 +114,7 @@ router.get("/bookmarks/new", (req, res) => {
 })
 
 router.post("/bookmarks/new", (req, res) => {
-  Playlist.create({ ownerID: req.session.currentUser._id, userName: req.session.currentUser.username, playlistName: req.body.playlistname })
+  Playlist.create({ ownerID: req.session.currentUser._id, userName: req.session.currentUser.username, playlistName: req.body.playlistname, default : false })
     .then(() => {
       res.redirect('/playlists/bookmarked')
     })
@@ -134,5 +136,32 @@ router.post("/bookmarks/:source/:episodeID", (req, res) => {
     res.redirect('/playlists/bookmarked')
   })
 })
+
+router.get("/playlist/:name/edit", (req, res) => {
+  Playlist.find({ ownerID: req.session.currentUser._id })
+    .then((playlists) => {
+      let currentPLaylist = playlists.find(playlist => playlist.playlistName.toLowerCase() == req.params.name.toLowerCase())
+      res.render("users/editplaylist", {playlist : currentPLaylist})
+})
+})
+
+router.post("/playlist/:id/edit", (req, res) => {
+  Playlist.findOneAndUpdate(
+    { _id: req.params.id},
+    { playlistName: req.body.playlistname })
+    .then((playlist) => {
+      console.log("CHECK THISO OUT" + playlist)
+      res.redirect('/playlists/bookmarked')
+    })
+})
+
+router.post("/playlist/:id/delete", (req, res) => {
+  Playlist.findByIdAndDelete(req.params.id).then(() => {
+    res.redirect('/playlists/bookmarked')
+  })
+})
+
+
+
 
 module.exports = router;

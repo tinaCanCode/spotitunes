@@ -55,7 +55,7 @@
   <li>{{this.title}}</li>
   <img class="podcastDetailImg" src="{{this.thumbnail}}">
   <p>Release date: {{this.pub_date_ms}}</p>
-  <p>{{this.description}}</p>
+  <p id="listennotes-description">{{{this.description}}}</p>
   <p><a href="{{this.link}}" target="_blank">Listen now</a></p>
   <form action="/listennotes/details/{{../podcasts.id}}/{{this.id}}/addtoplaylist" method="POST">
         <input  class="btn btn-outline-secondary btn-sm" type="submit" value="Bookmark this episode">
