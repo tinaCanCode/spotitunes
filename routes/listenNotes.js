@@ -39,7 +39,7 @@ router.get("/listennotes/details/:showId", (req, res) => {
       if (podcastExists) {
         return Podcast.findOne({ podcastId: req.params.showId })
       } else {
-        return Podcast.create({ podcastId: req.params.showId })
+        return Podcast.create({ podcastId: req.params.showId, origin: "listennotes" })
       }
     })
     .catch(err => console.log('The error while searching show occurred: ', err));

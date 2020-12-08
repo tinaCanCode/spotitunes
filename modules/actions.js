@@ -195,7 +195,7 @@ module.exports = {
     return Podcast.exists({ podcastId: showId })
       .then(podcastExists => {
         if (!podcastExists) {
-          return Podcast.create({ podcastId: showId })
+          return Podcast.create({ podcastId: showId , origin: "listennotes"})
         } else {
           return Podcast.findOne({ podcastId: showId })
         }

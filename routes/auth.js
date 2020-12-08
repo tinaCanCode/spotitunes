@@ -224,20 +224,20 @@ router.post('/login', (req, res, next) => {
 
 router.get('/userProfile', (req, res) => {
   //console.log(req.session.currentUser)
-  //console.log("Calling the user profile GET route")
+  console.log("Calling the user profile GET route")
   if (req.session.currentUser.favoritePodcasts !== null) {
 
     User.findOne({ _id: req.session.currentUser._id })
       .then(user => {
         const podcastDbIds = user.favoritePodcasts
-        //console.log("DatabaseIDs: ", podcastDbIds)
+        console.log("DatabaseIDs: ", podcastDbIds)
         return Promise.all(podcastDbIds.map(async (id) => {
           return await Podcast.findOne({ _id: id })
         }))
       }).then(podcasts => {
-        //console.log("After map: ", podcasts) // Array of podcast objects in Mongobd incl. origin
-        const podcastDetails = Promise.all(podcasts.map(async (podcast) => {
-          //console.log(podcast.podcastId)
+        console.log("After map: ", podcasts) // Array of podcast objects in Mongobd incl. origin
+        return Promise.all(podcasts.map(async (podcast) => {
+          console.log(podcast.podcastId)
           if (podcast.origin === "spotify") {
             return await spotifyApi.getShow(podcast.podcastId, { market: "DE" })
           }
@@ -247,7 +247,8 @@ router.get('/userProfile', (req, res) => {
             return lnResponse.toJSON();
           }
         }))
-        return podcastDetails
+        // console.log("PodcastDetails: ", podcastDetails)
+        // return podcastDetails
       })
       .then(allPodcasts => {
         console.log("After 2nd map: ", allPodcasts)
