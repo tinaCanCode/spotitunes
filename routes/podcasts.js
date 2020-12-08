@@ -28,7 +28,7 @@ router.get('/search', (req, res, next) => {
 router.get('/search-results', (req, res) => {
   //console.log("HERE IS THE QUERY: " + req.query.podcast)
   const listenNotesSearch = unirest.get(`https://listen-api.listennotes.com/api/v2/search?q=${req.query.podcast}&type=podcast`)
-    .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
+    .header('X-ListenAPI-Key', process.env.LISTENNOTES_APIKEY)
   const spotifySearch = spotifyApi
     .searchShows(req.query.podcast, { market: "DE", limit: 6 })
 

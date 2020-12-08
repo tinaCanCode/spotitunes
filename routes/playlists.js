@@ -51,7 +51,7 @@ router.get('/playlists/:name', (req, res) => {
       for (let i = 0; i < currentPlaylist.episodes.length; i++) {
         if (currentPlaylist.episodes[i].source === "listennotes") {
           let request = unirest.get(`https://listen-api.listennotes.com/api/v2/episodes/${currentPlaylist.episodes[i].episodeID}`)
-            .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
+            .header('X-ListenAPI-Key', process.env.LISTENNOTES_APIKEY)
             .then((episode) => {
               // WORKS console.log("THIS IS THE EPiSODE : " + episode.body.title)
               let episodeSummary = {
