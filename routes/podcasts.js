@@ -36,7 +36,7 @@ router.get('/search-results', (req, res) => {
 
   Promise.all([listenNotesSearch, spotifySearch]).then((response) => {
     // console.log("THIS IS THE SEARCH RESULT: " + response);
-    // console.log("THIS IS THE SEARCH RESULT NUMBER 1 LN: " + response[0].toJSON().body.results[0].title_original);
+    console.log("THIS IS THE SEARCH RESULT NUMBER 1 LN: " + response[0].toJSON().body.results[0]);
     // console.log("THIS IS THE SEARCH RESULT SPTFY: " + response[1]);
 
 
@@ -49,6 +49,7 @@ router.get('/search-results', (req, res) => {
     for (let i = 0; i < listenNotesResults.length; i++) {
       let resultSummary = {
         id: listenNotesResults[i].id,
+        publisher: listenNotesResults[i].publisher_original,
         title: listenNotesResults[i].title_original,
         imageURL: listenNotesResults[i].image,
         description: listenNotesResults[i].description_original,
@@ -62,6 +63,7 @@ router.get('/search-results', (req, res) => {
       let resultSummary = {
         id: spotifyResults[i].id,
         title: spotifyResults[i].name,
+        publisher: spotifyResults[i].publisher,
         imageURL: spotifyResults[i].images[0].url,
         description: spotifyResults[i].description,
         origin: "spotify"
