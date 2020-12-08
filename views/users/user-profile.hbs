@@ -32,14 +32,16 @@
     {{#if this.body.listennotes_url}}
 
     <div class='col-md-3'>
-      <div class='card vertical-center'>
-        <a href="{{this.origin}}/details/{{this.id}}"> <img class="card-img-top" src="{{this.body.thumbnail}}">
+      <div class='card'>
+        <a href="/listennotes/details/{{this.body.id}}"> <img class="card-img-top" src="{{this.body.thumbnail}}">
         </a>
         <div class='card-body'>
           <h4 class="podcast-title">{{this.body.title}}</h4>
           <p>{{this.body.publisher}}</p>
           <a href="/listennotes/details/{{this.body.id}}"><button class="btn btn-outline-secondary btn-sm">Show Details</button></a>
-          <button class="btn btn-danger btn-sm">Remove from favorites</button>
+          <form action="/delete/{{this.body.id}}" method="POST">
+            <button class="btn btn-danger btn-sm">Remove from favorites</button>
+          </form>
         </div>
       </div>
     </div>
@@ -49,14 +51,16 @@
 
     <div class='col-md-3'>
       <div class='card'>
-        <a href="{{this.origin}}/details/{{this.id}}"> <img class="card-img-top" src="{{this.body.images.[1].url}}">
+        <a href="/spotify/details/{{this.body.id}}"> <img class="card-img-top" src="{{this.body.images.[1].url}}">
         </a>
         <div class='card-body'>
-          <p>{{this.body.title}} - {{this.body.publisher}}</p>
+          <p>{{this.title}} - {{this.body.publisher}}</p>
           <button class="btn btn-outline-secondary btn-sm">
-            <a href="/spotify/details/{{this.body.id}}">Show Details</a>
+            <a href="/spotify/details/{{this.body._id}}">Show Details</a>
           </button>
-          <button class="btn btn-danger btn-sm">Remove from favorites</button>
+          <form action="/delete/{{this.body.id}}" method="POST">
+            <button class="btn btn-danger btn-sm">Remove from favorites</button>
+          </form>
         </div>
       </div>
     </div>

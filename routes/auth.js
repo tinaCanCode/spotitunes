@@ -77,7 +77,7 @@ router.post('/signup', (req, res) => {
       });
     })
     .then(createdUser => {
-      console.log('Newly created user is: ', createdUser);
+      //console.log('Newly created user is: ', createdUser);
       //Create a bookmark playlist 
       return Playlist.create({
         ownerID: createdUser._id,
@@ -116,7 +116,7 @@ router.get('/login', (req, res) => res.render('auth/login'));
 // .post() login route ==> to process form data
 router.post('/login', (req, res, next) => {
   const { email, password } = req.body;
-  console.log("SESSION: ", req.session)
+  //console.log("SESSION: ", req.session)
 
   if (email === '' || password === '') {
     res.render('auth/login', {
@@ -250,7 +250,7 @@ router.get('/userProfile', (req, res) => {
         return podcastDetails
       })
       .then(allPodcasts => {
-        //console.log("After 2nd map: ", allPodcasts)
+        console.log("After 2nd map: ", allPodcasts)
         res.render('users/user-profile', { user: req.session.currentUser, podcasts: allPodcasts })
       })
   }

@@ -102,7 +102,7 @@ router.get("/listennotes/details/:showId", (req, res) => {
     const arrayOfDates = map1.map(element => new Date(element).toLocaleDateString("en-US"));
     console.log(arrayOfDates + '   wwwwwwwwtttttttffffff')
 
-    // console.log('The received data from the API about one show: ', values[0].toJSON().body.episodes);
+    console.log('The received data from the API about one show: ', values[0].toJSON().body.episodes);
 
     res.render("listennotes/details", {
       podcasts: values[0].toJSON().body, user: req.session.currentUser,
@@ -162,6 +162,16 @@ router.post('/listennotes/:id/addtofavorite', (req, res) => {
       .then(() => res.redirect("/userProfile"));
 
   }
+
+})
+
+router.post('listennotes/delete/:id', (req, res) => {
+  Podcast.findOne({ podcastId: req.params.id })
+    .then(podcast => {
+      console.log("Podcast we want to delete", podcast)
+      User.findOneAndUpdate({ _id: req.session.currentUser._id }, { $pull: { favoritePodcasts: podcast._id } }, { new: true })
+    })
+  res.redirect("/userProfile");
 
 })
 
