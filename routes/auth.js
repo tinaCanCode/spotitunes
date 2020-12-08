@@ -246,11 +246,11 @@ router.get('/userProfile', (req, res) => {
               .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
             return lnResponse.toJSON();
           }
-        }))
+        }))            
         return podcastDetails
       })
       .then(allPodcasts => {
-        console.log("After 2nd map: ", allPodcasts)
+        console.log("THIS IS THE SPOTIFY REPSONSE :" + allPodcasts[3].body.name)
         res.render('users/user-profile', { user: req.session.currentUser, podcasts: allPodcasts })
       })
   }

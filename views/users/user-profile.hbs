@@ -54,7 +54,8 @@
         <a href="/spotify/details/{{this.body.id}}"> <img class="card-img-top" src="{{this.body.images.[1].url}}">
         </a>
         <div class='card-body'>
-          <p>{{this.title}} - {{this.body.publisher}}</p>
+          <h4>{{this.body.name}}</h4>
+          <p>{{this.body.publisher}}</p>
           <button class="btn btn-outline-secondary btn-sm">
             <a href="/spotify/details/{{this.body._id}}">Show Details</a>
           </button>
