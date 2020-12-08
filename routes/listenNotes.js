@@ -58,13 +58,8 @@ router.get("/listennotes/details/:showId", (req, res) => {
     let beingUser = valForRating.some(valForRating => valForRating['author'] == `${userToCheckGet}`)
     let beingCommentingUser = valForComments.some(valForComments => valForComments['author'] == `${userToCheckGet}`)
 
-    let usersComment = valForComments.find((com) => {
-      return com.author == userToCheckGet
-    });
 
     // Converting the date
-
-    let lookingForDate = values[0].toJSON().body.episodes
 
     let usersComment = valForComments.find((com) => {
       return com.author == userToCheckGet
