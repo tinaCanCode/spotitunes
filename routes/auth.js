@@ -84,6 +84,7 @@ router.post('/signup', (req, res) => {
         userName: createdUser.username,
         playlistName: "Bookmarked",
         episodes: [],
+        default : true
       })
     })
     .then(() => {

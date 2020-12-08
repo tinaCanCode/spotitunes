@@ -9,6 +9,7 @@ const playlistSchema = new Schema({
     episodeID : String,
     source : String
   }],
+  default : Boolean
 })
 
 const Playlist = mongoose.model("Playlist", playlistSchema);
