@@ -251,7 +251,7 @@ router.get('/userProfile', (req, res) => {
         // return podcastDetails
       })
       .then(allPodcasts => {
-        console.log("After 2nd map: ", allPodcasts)
+        // console.log("THIS IS THE SPOTIFY REPSONSE :" + allPodcasts[3].body.name)
         res.render('users/user-profile', { user: req.session.currentUser, podcasts: allPodcasts })
       })
   }
