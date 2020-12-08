@@ -20,7 +20,7 @@
       <div class='card'>
         <a href="{{this.origin}}/details/{{this.id}}"><img class='card-img-top' src="{{this.imageURL}}"></a>
         <div class='card-body'>
-          <h4 class="podcast-title"><a href="{{this.origin}}/details/{{this.id}}">{{this.title}}</a></h4>
+          <p><a href="{{this.origin}}/details/{{this.id}}">{{this.title}}</a></p>
           <p class="podcast-title">{{this.publisher}}</p>
           <a href="{{this.origin}}/details/{{this.id}}"><button class="btn btn-outline-secondary btn-sm show-details">Show details</button></a>
           <form action="/{{this.origin}}/{{this.id}}/addtofavorite" method="post">
