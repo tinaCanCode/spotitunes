@@ -17,12 +17,12 @@ const SpotifyWebApi = require('spotify-web-api-node');
 // required setup for listennotes api
 
 // const response = await unirest.get('https://listen-api.listennotes.com/api/v2/search?q=star%20wars&sort_by_date=0&type=episode&offset=0&len_min=10&len_max=30&genre_ids=68%2C82&published_before=1580172454000&published_after=0&only_in=title%2Cdescription&language=English&safe_mode=0')
-// .header('X-ListenAPI-Key', '92deae50310140ab877e8f1d4e4c8fcd')
+// .header('X-ListenAPI-Key', process.env.LISTENNOTES_APIKEY)
 // response.toJSON();
 
 let result 
 unirest.get('https://listen-api.listennotes.com/api/v2/search?q=star%20wars&sort_by_date=0&type=episode&offset=0&len_min=10&len_max=30&genre_ids=68%2C82&published_before=1580172454000&published_after=0&only_in=title%2Cdescription&language=English&safe_mode=0')
-  .header('X-ListenAPI-Key', '92deae50310140ab877e8f1d4e4c8fcd').then(response=>{
+  .header('X-ListenAPI-Key', process.env.LISTENNOTES_APIKEY).then(response=>{
     //console.log("response from api",response.toJSON())
     result = response.toJSON()
   })
@@ -30,7 +30,7 @@ unirest.get('https://listen-api.listennotes.com/api/v2/search?q=star%20wars&sort
 
 
 mongoose
-  .connect('mongodb://localhost/spotitunes', { useNewUrlParser: true })
+  .connect(process.env.MONGODB_URI, { useNewUrlParser: true })
   .then(x => {
     console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
   })

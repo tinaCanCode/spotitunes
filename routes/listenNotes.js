@@ -18,7 +18,7 @@ router.get('/listennotes', (req, res, next) => {
 // router.get('/listennotes/search-results', (req, res) => {
 //   //console.log("HERE IS THE QUERY: " + req.query.podcast)
 //   unirest.get(`https://listen-api.listennotes.com/api/v2/search?q=${req.query.podcast}&type=podcast`)
-//     .header('X-ListenAPI-Key', '92deae50310140ab877e8f1d4e4c8fcd')
+//     .header('X-ListenAPI-Key', process.env.LISTENNOTES_APIKEY)
 //     .then((response) => {
 //       //console.log("the response: " + response.toJSON().body.results)
 //       response.toJSON()
@@ -32,7 +32,7 @@ router.get("/listennotes/details/:showId", (req, res) => {
   //console.log(req.params.showId)
   const fromListennotes = unirest
     .get(`https://listen-api.listennotes.com/api/v2/podcasts/${req.params.showId}?sort=recent_first`)
-    .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
+    .header('X-ListenAPI-Key', process.env.LISTENNOTES_APIKEY)
 
   const fromDb = Podcast.exists({ podcastId: req.params.showId })
     .then(podcastExists => {
