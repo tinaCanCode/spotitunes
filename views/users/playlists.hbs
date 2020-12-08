@@ -11,7 +11,7 @@
           title="search podcasts">Search and bookmark episodes</button></a>
       <div class="col">
         <div class="col dropdown">
-          <button class="btn m-2 btn-lg btn-outline-secondary col vertical-center">See your playlists and create new ones</button>
+          <button class="btn m-2 btn-md btn-outline-secondary col vertical-center">Playlists - see and create</button>
           <div class="dropdown-content">
             {{#each playlistsAll}}
             <a href="/playlists/{{this.playlistName}}">{{this.playlistName}}</a>
@@ -31,7 +31,7 @@
       <a href="/playlist/{{playlistObject.name}}/edit"><img id="edit-img"
           src="/images/editlogo-removebg-preview.png"></a>
       <form action="/playlist/{{playlistObject.id}}/delete" type="submit" method="POST">
-        <button class="btn btn-sm btn-danger mt-2">Delete</button></form>
+        <button class="btn btn-sm btn-dlt mt-2">Delete</button></form>
     </h4>
     <hr class="mb-3">
 
