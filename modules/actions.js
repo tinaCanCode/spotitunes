@@ -140,6 +140,19 @@ module.exports = {
       })
   },
 
+  addToPlaylistLN(episodeId, userId) {
+    return unirest
+      .get(`https://listen-api.listennotes.com/api/v2/episodes/${episodeId}`)
+      .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
+      .then((episode) => {
+        console.log(episode)
+        return Playlist.findOneAndUpdate(
+          { $and: [{ ownerID: userId }, { playlistName: "Bookmarked" }] },
+          { $push: { episodes: { episodeID: episode.body.id, source: "listennotes" } } })
+      })
+  },
+
+
   addToFavoritesLN(podcastId, userId) {
     return Podcast.exists({ podcastId: podcastId })
       .then(podcastExists => {
@@ -220,16 +233,5 @@ module.exports = {
       })
   },
 
-  addToPlaylistLN(episodeId, userId) {
-    return unirest
-      .get(`https://listen-api.listennotes.com/api/v2/episodes/${episodeId}`)
-      .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
-      .then((episode) => {
-        console.log(episode)
-        return Playlist.findOneAndUpdate(
-          { $and: [{ ownerID: userId }, { playlistName: "Bookmarked" }] },
-          { $push: { episodes: { episodeID: episode.body.id, source: "listennotes" } } })
-      })
-  }
-
+  
 }
