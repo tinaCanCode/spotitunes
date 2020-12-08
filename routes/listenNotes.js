@@ -6,8 +6,6 @@ const Podcast = require('../models/Podcast');
 const User = require('../models/User');
 const Playlist = require('../models/Playlist');
 const { default: Axios } = require('axios');
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
 
 /* GET search page */
 router.get('/listennotes', (req, res, next) => {

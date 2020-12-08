@@ -4,7 +4,8 @@
   <div class="container">
     <div class="list-title vertical-center">
       <h4 class="text-center"><a href="/playlists/bookmarked">Bookmarked</a></h4>
-      <p class="text-center">Here are the episodes you've bookmarked so far. <br><em>Click on the search button to
+      <p class="text-center">Here are the episodes you've bookmarked so far and your playlists. <br><em>Click on the
+          search button to
           explore and add.</em></p>
       <a href="/search"><button class="btn btn-lg btn-outline-secondary col vertical-center"
           title="search podcasts">Search and bookmark episodes</button></a>
@@ -21,8 +22,20 @@
       </div>
     </div>
     <hr class="mb-3">
+    {{#if playlistObject.default}}
     <h4 class="text-center">{{playlistObject.name}}</h4>
     <hr class="mb-3">
+
+    {{else}}
+    <h4 class="text-center">{{playlistObject.name}}
+      <a href="/playlist/{{playlistObject.name}}/edit"><img id="edit-img"
+          src="/images/editlogo-removebg-preview.png"></a>
+      <form action="/playlist/{{playlistObject.id}}/delete" type="submit" method="POST">
+        <button class="btn btn-sm btn-danger mt-2">Delete</button></form>
+    </h4>
+    <hr class="mb-3">
+
+    {{/if}}
 
     {{#each playlistObject.content}}
     <div class="col align-self-center vertical-center">
@@ -39,7 +52,8 @@
         </div>
         <div class="form-group col">
           <form action="/bookmarks/{{this.source}}/{{this.id}}" type="submit" method="POST">
-            <select class="form-control form-control-sm" name="selectpicker" required aria-invalid="false" onchange="this.form.submit()">
+            <select class="form-control form-control-sm" name="selectpicker" required aria-invalid="false"
+              onchange="this.form.submit()">
               <option value="">Move to...</option>
               {{#each ../playlistsAll}}
               <option value="{{playlistName}}" name="playlist">{{playlistName}}</option>
