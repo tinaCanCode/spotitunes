@@ -25,7 +25,7 @@ router.get("/details/:showId", (req, res) => {
   // console.log(req.params.showId)
   const fromSpotify = spotifyApi
     .getShow(req.params.showId
-      , { market: "DE" })
+      , { market: "DE", limit: '10' })
   // .catch(err => console.log('The error while searching show occurred: ', err));
 
   const fromOurDb = Podcast.exists({ podcastId: req.params.showId })

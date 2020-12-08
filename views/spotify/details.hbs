@@ -1,59 +1,203 @@
 {{> navbar }}
 
 <form action="/details/:showId" , method="GET"></form>
-<section class="podcastDetails">
 
-    <div>
+{{!-- Main info --}}
+    <div class='container my-5'>
+        <div class='row py-4'>
+
+            <div class='col-lg-6 mb-4 my-lg-auto'>
+                <h1 class='text-bright font-weight-bold mb-3'>{{podcasts.name}}</h1>
+
+                <h6 class='mb-4' font-weight-light> {{podcasts.description}}</h6>
+                <h6 class='mb-4'>Publisher: {{podcasts.publisher}}
+                </h6>
+                <h6 class='mb-4'>Number of episodes: {{podcasts.total_episodes}}</h6>
+                <form action="/spotify/{{podcasts.id}}/addtofavorite" method="post">
+                    <button class="btn btn-outline-secondary btn-lg">Add to favorites</button>
+                </form>
+            </div>
+
+            <div class='col-lg-6'>
+                <img class="w-100 podcastImg" src="{{podcasts.images.[0].url}}">
+            </div>
+
+        </div>
+    </div>
+
+<hr class="hr-light m-4 wow fadeInDown ">
+
+{{!-- Coments  --}}
+<div class='container my-5'>
+        <div class='row py-4'>
+
+
+
+
+    <div class='col-lg-6 text-center mt-3 my-lg-auto'>
+        {{#if usersCommentToPrint}}
+        <h3 class='pt-4'>Your Comment:</h3>
+        {{!-- <p>{{usersCommentToPrint.content}}</p> --}}
+        {{/if}}
+        <form action="/spotify/details/{{podcasts.id}}/newcomment" method="POST">
+
+
+
+            {{#if usersCommentToPrint}}
+            <textarea name="content" id="comment-content" cols="30"
+                rows="1">{{usersCommentToPrint.content}}</textarea><br>
+            <input class="btn btn-outline-secondary btn-sm" type="submit" value="Edit your comment">
+            </br>
+            {{else}}
+            <textarea name="content" id="comment-content-input" cols="30" rows="2"></textarea><br>
+            <input class="btn btn-outline-secondary btn-sm" type="submit" value="Comment this Podcast">
+            </br>
+            {{/if}}
+        </form>
+
+        <h3 class='pt-4'>Comments:</h3>
+        {{#each ourpodcasts.comments}}
+        <p class='pt-4'>"{{this.content}}"</p>
+        {{/each}}
+
+    </div>
+
+
+{{!-- Rating --}}
+    <div class='col-lg-6 text-center mt-3'>
+        <h3 class='pt-4'>Rating: {{ratingResults}}</h3>
+       
+        {{#if usersRatingToPrint}}
+        <p class='pt-4'>Your Rating: {{usersRatingToPrint.content}}</p>
+        {{else}}
+ <p class="pt-4">Rate this Podcast</p>
+        {{/if}}
+        <form id="starButton" action="/spotify/details/{{podcasts.id}}/newrating" method="POST">
+            <textarea type='text' name="content" id="rating-content-input" cols="1" rows="1"></textarea>
+            <div class="rating">
+                <i class="fa fa-star unchecked" id="one" name="content"></i>
+                <i class="fa fa-star unchecked" id="two" name="content"></i>
+                <i class="fa fa-star unchecked" id="three" name="content"></i>
+                <i class="fa fa-star unchecked" id="four" name="content"></i>
+                <i class="fa fa-star unchecked" id="five" name="content"></i>
+            </div>
+        </form>
+        
+    </div>
+
+
+ </div>
+    </div>
+
+{{!-- Last Episodes --}}
+
+
+     <div class='col-12 text-center mt-5'>
+         <hr class="hr-light my-4 wow fadeInDown">
+        <h1 class='pt-4'>Last Episodes</h1>
+        
+     </div>
+
+    {{#each podcasts.episodes.items}}
+    <div class='container my-5'>
+        <div class='row py-4'>
+
+            <div class='col-lg-4'>
+                <img class="w-100 podcastImg" src="{{this.images.[0].url}}">
+            </div>
+
+        <div class='col-lg-8 mb-4 my-lg-auto'>
+            <h4 class='text-bright font-weight-bold mb-3'>{{this.name}}</h4>
+
+            <p class='mb-4'>Release date: {{this.release_date}} </p>
+                <p class='mb-4' font-weight-light> {{this.description}}</p>
+                <form action="/spotify/details/{{../podcasts.id}}/{{this.id}}/addtoplaylist" method="POST">
+                    <input class="btn btn-outline-secondary btn-sm" type="submit" value="Bookmark this episode">
+                {{!-- </form><br>
+                <button  class="btn btn-outline-secondary btn-sm" type="submit">Add as favorite</button>
+                </br> --}}
+       </div>
+    </div>
+    </div>
+    {{/each}}
+     
+
+
+
+    {{!-- <h5>Last episodes: </h5>
+    {{#each podcasts.episodes.items}}
+    <li>{{this.name}}</li>
+    <img class="podcastDetailImg" src="{{this.images.[1].url}}">
+    <p>Release date: {{this.release_date}}</p>
+    <p>{{this.description}}</p>
+    <p><a href="{{this.external_urls.spotify}}" target="_blank">Play on Spotify</a></p>
+    <form action="/spotify/details/{{../podcasts.id}}/{{this.id}}/addtoplaylist" method="POST">
+        <input class="btn btn-outline-secondary btn-sm" type="submit" value="Bookmark this episode">
+    </form>
+    {{/each}}
+    <button type="submit">Add as favorite</button> --}}
+
+
+
+
+
+
+
+
+
+
+
+    {{!-- <div>
         <h2>{{podcasts.name}}</h2>
         <img class="podcastImg" src="{{podcasts.images.[1].url}}">
         <form action="/spotify/{{podcasts.id}}/addtofavorite" method="post">
-            <button class="btn btn-outline-secondary btn-sm">Add to favorites</button>
+            <button class="btn btn-outline-secondary btn-lg">Add to favorites</button>
         </form>
 
         <h4>Description</h4>
         <p>{{podcasts.description}}</p>
-        <h5>Publisher: {{podcasts.publisher}}</h5>
+        <h5>Publisher: {{podcasts.publisher}}</h5> --}}
 
-        {{!-- {{#if beingCommentingUser}} --}}
-        {{!-- <form action="/spotify/details/{{podcasts.id}}/newcomment"  method="POST"> --}}
-        {{!-- <textarea id="my-textarea"></textarea>
+    {{!-- {{#if beingCommentingUser}} --}}
+    {{!-- <form action="/spotify/details/{{podcasts.id}}/newcomment"  method="POST"> --}}
+    {{!-- <textarea id="my-textarea"></textarea>
 
 <input class="btn btn-outline-secondary btn-sm" type="submit" value="Change your comment">
 </form>
 {{else}} --}}
 
-{{#if usersCommentToPrint}}
+    {{!-- {{#if usersCommentToPrint}}
         <h5>Your Comment:</h5>
-        {{!-- <p>{{usersCommentToPrint.content}}</p> --}}
+        <p>{{usersCommentToPrint.content}}</p>
         {{/if}}
         <form action="/spotify/details/{{podcasts.id}}/newcomment" method="POST">
-            
+
 
 
             {{#if usersCommentToPrint}}
-            <textarea name="content" id="comment-content" cols="60" rows="1" >{{usersCommentToPrint.content}}</textarea>
+            <textarea name="content" id="comment-content" cols="60" rows="1">{{usersCommentToPrint.content}}</textarea>
             <input class="btn btn-outline-secondary btn-sm" type="submit" value="Edit your comment">
             {{else}}
             <textarea name="content" id="comment-content-input" cols="60" rows="1"></textarea>
             <input class="btn btn-outline-secondary btn-sm" type="submit" value="Comment a Podcast">
             {{/if}}
-        </form>
+        </form> --}}
 
 
-        {{!-- <form action="/spotify/details/{{podcasts.id}}/newcomment" onsubmit="return getContent()">
+    {{!-- <form action="/spotify/details/{{podcasts.id}}/newcomment" onsubmit="return getContent()">
     <textarea id="my-textarea" style="display:none"></textarea>
     <input type="submit" />
 </form> --}}
 
-        <h5>Comments:</h5>
+    {{!-- <h5>Comments:</h5>
 
         {{#each ourpodcasts.comments}}
         <li>{{this.content}}</li>
-        {{/each}}
-        
-        {{!-- *********RATING*********** --}}
-        
-        <h5>Rating: {{ratingResults}}</h5>
+        {{/each}} --}}
+
+    {{!-- *********RATING*********** --}}
+
+    {{!-- <h5>Rating: {{ratingResults}}</h5>
 
         {{#if usersRatingToPrint}}
         <h5>Your Rating: {{usersRatingToPrint.content}}</h5>
@@ -67,26 +211,29 @@
                 <i class="fa fa-star unchecked" id="four" name="content"></i>
                 <i class="fa fa-star unchecked" id="five" name="content"></i>
             </div>
-        </form>
-        <h5>Number of episodes: {{podcasts.total_episodes}}</h5>
-        <h5>Last episodes: </h5>
-        {{#each podcasts.episodes.items}}
-        <li>{{this.name}}</li>
-        <img class="podcastDetailImg" src="{{this.images.[1].url}}">
-        <p>Release date: {{this.release_date}}</p>
-        <p>{{this.description}}</p>
-        <p><a href="{{this.external_urls.spotify}}" target="_blank">Play on Spotify</a></p>
-        <form action="/spotify/details/{{../podcasts.id}}/{{this.id}}/addtoplaylist" method="POST">
-            <input class="btn btn-outline-secondary btn-sm" type="submit" value="Bookmark this episode">
-        </form>
-        {{/each}}
-        <button type="submit">Add as favorite</button>
-
-    </div>
+        </form> --}}
 
 
 
 
-</section>
+    {{!-- <h5>Last episodes: </h5>
+    {{#each podcasts.episodes.items}}
+    <li>{{this.name}}</li>
+    <img class="podcastDetailImg" src="{{this.images.[1].url}}">
+    <p>Release date: {{this.release_date}}</p>
+    <p>{{this.description}}</p>
+    <p><a href="{{this.external_urls.spotify}}" target="_blank">Play on Spotify</a></p>
+    <form action="/spotify/details/{{../podcasts.id}}/{{this.id}}/addtoplaylist" method="POST">
+        <input class="btn btn-outline-secondary btn-sm" type="submit" value="Bookmark this episode">
+    </form>
+    {{/each}}
+    <button type="submit">Add as favorite</button> --}}
 
- <script src="/javascripts/script.js"></script>
+
+
+
+
+
+
+
+<script src="/javascripts/script.js"></script>

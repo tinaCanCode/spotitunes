@@ -55,10 +55,16 @@ router.get("/listennotes/details/:showId", (req, res) => {
       userToCheckGet = null;
     }
 
-
-
     let beingUser = valForRating.some(valForRating => valForRating['author'] == `${userToCheckGet}`)
     let beingCommentingUser = valForComments.some(valForComments => valForComments['author'] == `${userToCheckGet}`)
+
+    let usersComment = valForComments.find((com) => {
+      return com.author == userToCheckGet
+    });
+
+    // Converting the date
+
+    let lookingForDate = values[0].toJSON().body.episodes
 
     let usersComment = valForComments.find((com) => {
       return com.author == userToCheckGet
@@ -93,14 +99,24 @@ router.get("/listennotes/details/:showId", (req, res) => {
     // console.log("Response from LN: ", values[0]);
     //console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
     //res.send("checked for details")
+
+
+    const map1 = lookingForDate.map(x => x.pub_date_ms);
+    console.log(map1 + 'wwwwwwwwtttttttffffff')
+
+    const arrayOfDates = map1.map(element => new Date(element).toLocaleDateString("en-US"));
+    console.log(arrayOfDates + '   wwwwwwwwtttttttffffff')
+
+    // console.log('The received data from the API about one show: ', values[0].toJSON().body.episodes);
+
     res.render("listennotes/details", {
       podcasts: values[0].toJSON().body, user: req.session.currentUser,
       ourpodcasts: values[1], ratingResults: sumRatingsPrint, beingUser: beingUser, beingCommentingUser: beingCommentingUser,
-      usersRatingToPrint: usersRating, usersCommentToPrint: usersComment
+      usersRatingToPrint: usersRating, usersCommentToPrint: usersComment, arrayOfDates: arrayOfDates
     })
   })
   // .catch(err => console.log('The error while searching show occurred: ', err));
-})
+});
 
 
 // Add episode to bookmarked playlist
