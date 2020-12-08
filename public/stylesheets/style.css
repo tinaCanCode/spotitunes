@@ -232,6 +232,10 @@ a:hover {
   background-color: #19181A;
   color: white
 }
+
+.nav-link{
+  font-family: 'Roboto', Helvetica, Arial, sans-serif;
+  
 /* @media (max-width: 991.98px) { ... }
 
 @media (max-width: 1199.98px) { ... } */
