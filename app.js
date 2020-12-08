@@ -97,7 +97,7 @@ hbs.registerPartials(__dirname + "/views/partials");
 
 // default value for title local
 // app.locals.title = 'Spotitunes - Find all your favorite Podcasts in one App';
-app.locals.title = 'Spotitunes';
+app.locals.title = 'Irontunes';
 
 
 
