@@ -3,7 +3,7 @@
 <div class='container-fluid padding'>
   <div class='row welcome text-center'>
     <div class='col-12'>
-      <h3 class='display-4'>Podcast Search Results</h3>
+      <h5 class='display-4'>Podcast Search Results</h5>
       <hr class="my-4 wow">
     </div>
 
@@ -14,17 +14,18 @@
 
 <div class='container-fluid padding'>
 
-  <div class='row padding'>
+  <div class='row padding text-center'>
     {{#each allResults}}
     <div class='col-md-3'>
       <div class='card'>
         <a href="{{this.origin}}/details/{{this.id}}"><img class='card-img-top' src="{{this.imageURL}}"></a>
         <div class='card-body'>
+
           <p class="card-text"><a href="{{this.origin}}/details/{{this.id}}">{{this.title}}</a></p>
+          <a href="{{this.origin}}/details/{{this.id}}"><button  class="btn btn-outline-secondary btn-sm show-details">Show details</button></a>
           <form action="/{{this.origin}}/{{this.id}}/addtofavorite" method="post">
             <button class="btn btn-outline-secondary btn-sm">Add to favorites</button>
           </form>
-          <a href="{{this.origin}}/details/{{this.id}}"><button  class="btn btn-outline-secondary btn-sm">Show details</button></a>
         </div>
       </div>
     </div>

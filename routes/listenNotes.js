@@ -29,7 +29,7 @@ router.get('/listennotes', (req, res, next) => {
 router.get("/listennotes/details/:showId", (req, res) => {
   //console.log(req.params.showId)
   const fromListennotes =unirest
-  .get(`https://listen-api.listennotes.com/api/v2/podcasts/${req.params.showId}?sort=recent_first`)
+  .get(`https://listen-api.listennotes.com/api/v2/podcasts/${req.params.showId}?sort=recent_first`, {limit: '10'})
     .header('X-ListenAPI-Key', 'eca50a3f8a6b4c6e96b837681be6bd3f')
 
     const fromDb = Podcast.exists({ podcastId: req.params.showId })
@@ -56,7 +56,6 @@ router.get("/listennotes/details/:showId", (req, res) => {
       let usersComment = valForComments.find((com) => {
         return com.author == userToCheckGet
       });
-      console.log('hereeeeeeeeeee' + usersComment);
       
       const sumRatings = (valForRating.reduce((sum, item) => sum + item.content, 0) / valForRating.length).toFixed(1)
       console.log(sumRatings);
@@ -64,28 +63,25 @@ router.get("/listennotes/details/:showId", (req, res) => {
       let usersRating = valForRating.find((rat)=>{
         return rat.author == userToCheckGet
       })
+// Converting the date
 
 let lookingForDate = values[0].toJSON().body.episodes
-let firstDate = lookingForDate[0].pub_date_ms
 
 
-new Date(firstDate).toLocaleDateString("en-US")
+const map1 = lookingForDate.map(x => x.pub_date_ms);
+console.log(map1 + 'wwwwwwwwtttttttffffff')
 
+const arrayOfDates = map1.map(element => new Date(element).toLocaleDateString("en-US"));
+console.log(arrayOfDates + '   wwwwwwwwtttttttffffff')
 
-// var s = new Date(firstDate).toLocaleDateString("en-US")
-// console.log(s + 'new method!!!!!!!!!')
-
-console.log('Lookig for this date here:' + lookingForDate[0].pub_date_ms)
-      // console.log('Lookig for date here:' + values[0].toJSON().body.episodes[0].pub_date_ms)
-      // console.log("Response from LN: ", values[0]);
-      //console.log('The received data from the API about one show: ', data.body.episodes.items[0]);
-      //res.send("checked for details")
+      // console.log('The received data from the API about one show: ', values[0].toJSON().body.episodes);
+     
       res.render("listennotes/details", { podcasts: values[0].toJSON().body, user: req.session.currentUser, 
       ourpodcasts: values[1], ratingResults: sumRatings, beingUser: beingUser, beingCommentingUser: beingCommentingUser, 
-      usersRatingToPrint: usersRating, usersCommentToPrint: usersComment})
+      usersRatingToPrint: usersRating, usersCommentToPrint: usersComment, arrayOfDates:arrayOfDates})
     })
     // .catch(err => console.log('The error while searching show occurred: ', err));
-})
+});
 
 
 // Add episode to bookmarked playlist
