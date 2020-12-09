@@ -101,7 +101,7 @@ router.post('/details/:showId/newcomment', (req, res, next) => {
       podcastId: req.params.showId,
       commentContent: req.body.content,
       origin: "spotify",
-      message: "You need to login to add a comment"
+      message: "You need to log in to add a comment"
     }
 
     req.session.pendingRequest = requestedAction

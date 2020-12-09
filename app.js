@@ -29,8 +29,11 @@ unirest.get('https://listen-api.listennotes.com/api/v2/search?q=star%20wars&sort
 //response.toJSON();
 
 
+
+
+
 mongoose
-  .connect(process.env.MONGODB_URI, { useNewUrlParser: true })
+  .connect('mongodb://localhost/spotitunes', { useNewUrlParser: true })
   .then(x => {
     console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
   })
