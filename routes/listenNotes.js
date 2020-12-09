@@ -10,7 +10,7 @@ const { default: Axios } = require('axios');
 
 /* GET search page */
 router.get('/listennotes', (req, res, next) => {
-  res.render('listenNotes/search');
+  res.render('listenotesviews/search');
 });
 
 
@@ -104,7 +104,7 @@ router.get("/listennotes/details/:showId", (req, res) => {
 
     console.log('The received data from the API about one show: ', values[0].toJSON().body.episodes);
 
-    res.render("listennotes/details", {
+    res.render("listennotesviews/details", {
       podcasts: values[0].toJSON().body, user: req.session.currentUser,
       ourpodcasts: values[1], ratingResults: sumRatingsPrint, beingUser: beingUser, beingCommentingUser: beingCommentingUser,
       usersRatingToPrint: usersRating, usersCommentToPrint: usersComment, arrayOfDates: arrayOfDates
