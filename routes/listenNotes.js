@@ -10,7 +10,7 @@ const { default: Axios } = require('axios');
 
 /* GET search page */
 router.get('/listennotes', (req, res, next) => {
-  res.render('listenotesviews/search');
+  res.render('listennotesviews/search');
 });
 
 
