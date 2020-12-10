@@ -251,6 +251,12 @@ a:hover {
   color: #a16e83;
 }
 
+input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  }
+
 /* Change color of dropdown links on hover */
 .dropdown-content a:hover {background-color: white}
 
