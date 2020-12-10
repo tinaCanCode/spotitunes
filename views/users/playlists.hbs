@@ -6,19 +6,21 @@
      <div class='col-12 text-center mt-5'>
        <div class="list-title vertical-center">
     {{!-- <div class="list-title vertical-center"> --}}
-      <h2><a class='bookmarked' href="/playlists/bookmarked">Bookmarks</a></h2>
-      <h4 class='bookmarked'>Your Playlists and bookmarked Episodes.</h4> 
+      <h2><a class='bookmarked' href="/playlists/bookmarked">My Bookmarks</a></h2>
+      <h4 class='bookmarked'>Your Playlists and Bookmarked Episodes.</h4> 
        <h6 class='mt-4'> Click on the
           search button to
-          explore and add.</h6>
+          explore and add. 
+          <strong>Bookmarked</strong> is your default playlist.
+          </h6>
 
     </div>      
     <div class="playlist-box container col vertical-center">
-      <a href="/search"><button class="btn mt-4 btn-lg btn-outline-secondary col vertical-center"
-          title="search podcasts">Search and bookmark episodes</button></a>
+      <a href="/search"><button class="btn mt-4 px-2 btn-md btn-outline-secondary col vertical-center"
+          title="search podcasts">Search and bookmark</button></a>
       <div class="col">
         <div class="col dropdown">
-          <button class="btn mt-4 btn-lg btn-outline-secondary col">Playlists - see and create</button>
+          <button class="btn mt-4 px-2 btn-md btn-outline-secondary col">See and create playlists</button>
           <div class="dropdown-content">
             {{#each playlistsAll}}
             <a href="/playlists/{{this.playlistName}}">{{this.playlistName}}</a>
@@ -37,9 +39,9 @@
     {{else}}
     <h4 class="text-center">{{playlistObject.name}}
       <a href="/playlist/{{playlistObject.name}}/edit"><img id="edit-img"
-          src="/images/editlogo-removebg-preview.png"></a>
+          src="/images/edit.png"></a>
       <form action="/playlist/{{playlistObject.id}}/delete" type="submit" method="POST">
-        <button class="btn btn-sm btn-dlt mt-2">Delete</button></form>
+        <button class="btn mt-2 btn-sm btn-remove">Delete</button></form>
     </h4>
     <hr class="mb-3">
 
