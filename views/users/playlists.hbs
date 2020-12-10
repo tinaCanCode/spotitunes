@@ -61,7 +61,7 @@
               now</button></a>
         </div>
         <div class="form-group col">
-          <form action="/bookmarks/{{this.source}}/{{this.id}}" type="submit" method="POST">
+          <form action="/bookmarks/{{this.source}}/{{this.id}}" method="POST">
             <select class="form-control form-control-sm" name="selectpicker" required aria-invalid="false"
               onchange="this.form.submit()">
               <option value="">Move to...</option>
@@ -74,8 +74,8 @@
           </div>
         </div>
         <div class="col">
-          <form action="/bookmarks/{{../playlistObject.name}}/{{this.id}}/delete" type="submit" method="POST">
-            <button class="btn btn-sm btn-remove">Remove</button>
+          <form action="/bookmarks/{{../playlistObject.name}}/{{this.id}}/delete" method="POST">
+            <input type="submit" class="btn btn-sm btn-remove" value="Remove"></input>
           </form>
         </div>
       </div>
