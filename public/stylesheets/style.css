@@ -9,7 +9,16 @@ body {
   height: 100%;
 }
 
+/* login classes */
+.signup-lower{
+margin-top: 20%;
+color: #b19f9e;
+}
 
+
+.searchicon{
+  margin-right: 5px;
+}
  
 
 /* Start page backgound image height and main info lower*/
@@ -21,6 +30,10 @@ body {
   margin-top: 10%;
   font-size: 350%;  
 }
+
+/* .title-card{
+  font-weight: 400;
+} */
 
 
 /* Search bar lower*/
@@ -61,6 +74,19 @@ a{
   color:#a16e83 ;
 
 }
+
+.btn-remove{
+  background-color: #cebc81;
+  border-color:  #cebc81;
+  color: #19181A
+}
+
+.btn-remove:hover{
+  background-color: transparent;
+   border-color: #cebc81;
+   color: #cebc81; 
+ 
+ }
 
 .nav-link{
   color: #b19f9e;
@@ -126,7 +152,7 @@ a{
  /* Cards */
 .card{
   background-color: #19181A;
-  border-color: #b19f9e;
+  /* border-color: #b19f9e; */
   margin: 10%;
 }
 
@@ -189,11 +215,11 @@ a:hover {
   margin-left : 5px
 }
 
-.btn-dlt {
+/* .btn-dlt {
   background-color : #A16e83;
   color : white;
   border : none;
-}
+} */
 
 /* The container <div> - needed to position the dropdown content */
 .dropdown {
@@ -218,6 +244,11 @@ a:hover {
   padding: 12px 16px;
   text-decoration: none;
   display: block;
+}
+
+/* title */
+.bookmarked{
+  color: #a16e83;
 }
 
 /* Change color of dropdown links on hover */

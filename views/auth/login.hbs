@@ -1,25 +1,38 @@
 {{> navbar }}
-{{#if pendingRequest}}
+{{!-- {{#if pendingRequest}}
 <div>
 {{pendingRequest.message}}
 </div>
-{{/if}}
+{{/if}} --}}
 <div id="login">
 <form action="/login" method="POST">
-<h3>Login</h3>
+{{#if pendingRequest}}
+<div class='mb-2'>
+{{pendingRequest.message}}
+</div>
+{{/if}}
+<h3>Log in</h3>
   <div class="form-group">
       <label for="input-email">Email</label>
+       {{#if preemaillog}}
+<input type="email" id="input-email" name="email" placeholder="Your email" value={{preemaillog}} class="form-control"/>
+{{else}}  
     <input type="email" id="input-email" name="email" placeholder="Your email" class="form-control"/>
+     {{/if}}
     <small id="emailHelp" class="form-text text-muted"></small>
   </div>
   <div class="form-group">
     <label for="input-password">Password</label>
     <input type="password" name="password" class="form-control" id="input-password" placeholder="********"/>
   </div>
-  <button type="submit" class="btn btn-sm btn-outline-secondary">Login</button>
+  <button type="submit" class="btn btn-sm btn-outline-secondary">Log in</button>
    {{#if errorMessage}}
     <p class="error">{{errorMessage}}</p>
   {{/if}}
+
+
+  <p class='signup-lower'>Not signed up to Spotitunes yet?</p>
+<a class="btn btn-sm btn-outline-secondary" href="/signup">Sign up</a>
 </form>
-<p>Not signed up to Spotitunes yet? Click <a href="/signup">here</a> to create an account</p>
+
 </div>

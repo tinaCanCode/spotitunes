@@ -119,8 +119,9 @@ router.post('/login', (req, res, next) => {
   //console.log("SESSION: ", req.session)
 
   if (email === '' || password === '') {
+    let preemaillog = email
     res.render('auth/login', {
-      errorMessage: 'Please enter both, email and password to login.'
+      errorMessage: 'Please enter both, email and password to login.', preemaillog:preemaillog
     });
     return;
   }
@@ -128,7 +129,8 @@ router.post('/login', (req, res, next) => {
   User.findOne({ email })
     .then(user => {
       if (!user) {
-        res.render('auth/login', { errorMessage: 'Email is not registered. Try with other email.' });
+        let preemaillog = email
+        res.render('auth/login', { errorMessage: 'Email is not registered. Try with other email.', preemaillog:preemaillog});
         return;
       } else if (bcryptjs.compareSync(password, user.password)) {
         //res.render("users/user-profile", {user});

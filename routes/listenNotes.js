@@ -97,10 +97,10 @@ router.get("/listennotes/details/:showId", (req, res) => {
 
 
     const map1 = lookingForDate.map(x => x.pub_date_ms);
-    console.log(map1 + 'wwwwwwwwtttttttffffff')
+    console.log(map1 + 'check this')
 
     const arrayOfDates = map1.map(element => new Date(element).toLocaleDateString("en-US"));
-    console.log(arrayOfDates + '   wwwwwwwwtttttttffffff')
+    console.log(arrayOfDates + '   check this')
 
     console.log('The received data from the API about one show: ', values[0].toJSON().body.episodes);
 
