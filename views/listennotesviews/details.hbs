@@ -3,7 +3,7 @@
 <form action="/details/:showId" , method="GET"></form>
 <section class="podcastDetails">
 
-{{!-- Main info --}}
+    {{!-- Main info --}}
     <div class='container my-5'>
         <div class='row py-4'>
 
@@ -27,71 +27,71 @@
     </div>
 
 
-<hr class="hr-light m-4 wow fadeInDown ">
+    <hr class="hr-light m-4 wow fadeInDown ">
 
-{{!-- Coments  --}}
-<div class='container my-5'>
+    {{!-- Coments  --}}
+    <div class='container my-5'>
         <div class='row py-4'>
-    <div class='col-lg-6 text-center mt-3 my-lg-auto'>
-        {{#if usersCommentToPrint}}
-        <h3 class='pt-4'>Your Comment:</h3>
-        
-        {{/if}}
-        <form action="/listennotes/details/{{podcasts.id}}/newcomment" method="POST">
+            <div class='col-lg-6 text-center mt-3 my-lg-auto'>
+                {{#if usersCommentToPrint}}
+                <h3 class='pt-4'>Your Comment:</h3>
 
-            {{#if usersCommentToPrint}}
-            <textarea class="comment-content" name="content" id="comment-content" cols="30"
-                rows="1">{{usersCommentToPrint.content}}</textarea><br>
-            <input class="btn btn-outline-secondary btn-sm" type="submit" value="Edit your comment">
-            </br>
-            {{else}}
-            <textarea name="content" id="comment-content-input" cols="30" rows="2"></textarea><br>
-            <input class="btn btn-outline-secondary btn-sm" type="submit" value="Comment this Podcast">
-            </br>
-            {{/if}}
-        </form>
+                {{/if}}
+                <form action="/listennotes/details/{{podcasts.id}}/newcomment" method="POST">
 
-        <h3 class='pt-4'>Comments:</h3>
-        {{#each ourpodcasts.comments}}
-        <p class='pt-4'>"{{this.content}}"</p>
-        {{/each}}
+                    {{#if usersCommentToPrint}}
+                    <textarea class="comment-content" name="content" id="comment-content" cols="30"
+                        rows="1">{{usersCommentToPrint.content}}</textarea><br>
+                    <input class="btn btn-outline-secondary btn-sm" type="submit" value="Edit your comment">
+                    </br>
+                    {{else}}
+                    <textarea name="content" id="comment-content-input" cols="30" rows="2"></textarea><br>
+                    <input class="btn btn-outline-secondary btn-sm" type="submit" value="Comment this Podcast">
+                    </br>
+                    {{/if}}
+                </form>
 
-    </div>
+                <h3 class='pt-4'>Comments:</h3>
+                {{#each ourpodcasts.comments}}
+                <p class='pt-4'>"{{this.content}}"</p>
+                {{/each}}
 
-{{!-- Rating --}}
-
-    <div class='col-lg-6 text-center mt-3'>
-        <h3 class='pt-4'>Rating: {{ratingResults}}</h3>
-       
-        {{#if usersRatingToPrint}}
-        <p class='pt-4'>Your Rating: {{usersRatingToPrint.content}}</p>
-        {{else}}
- <p class="pt-4">Rate this Podcast</p>
-        {{/if}}
-        <form id="starButton" action="/listennotes/details/{{podcasts.id}}/newrating" method="POST">
-            <textarea type='text' name="content" id="rating-content-input" cols="1" rows="1"></textarea>
-            <div class="rating">
-                <i class="fa fa-star unchecked" id="one" name="content"></i>
-                <i class="fa fa-star unchecked" id="two" name="content"></i>
-                <i class="fa fa-star unchecked" id="three" name="content"></i>
-                <i class="fa fa-star unchecked" id="four" name="content"></i>
-                <i class="fa fa-star unchecked" id="five" name="content"></i>
             </div>
-        </form>
-        
+
+            {{!-- Rating --}}
+
+            <div class='col-lg-6 text-center mt-3'>
+                <h3 class='pt-4'>Rating: {{ratingResults}}</h3>
+
+                {{#if usersRatingToPrint}}
+                <p class='pt-4'>Your Rating: {{usersRatingToPrint.content}}</p>
+                {{else}}
+                <p class="pt-4">Rate this Podcast</p>
+                {{/if}}
+                <form id="starButton" action="/listennotes/details/{{podcasts.id}}/newrating" method="POST">
+                    <textarea type='text' name="content" id="rating-content-input" cols="1" rows="1"></textarea>
+                    <div class="rating">
+                        <i class="fa fa-star unchecked" id="one" name="content"></i>
+                        <i class="fa fa-star unchecked" id="two" name="content"></i>
+                        <i class="fa fa-star unchecked" id="three" name="content"></i>
+                        <i class="fa fa-star unchecked" id="four" name="content"></i>
+                        <i class="fa fa-star unchecked" id="five" name="content"></i>
+                    </div>
+                </form>
+
+            </div>
+        </div>
     </div>
-</div>
-</div>
 
 
-{{!-- Last Episodes no proper date--}}
+    {{!-- Last Episodes no proper date--}}
 
 
-     <div class='col-12 text-center mt-5'>
-         <hr class="hr-light my-4 wow fadeInDown">
+    <div class='col-12 text-center mt-5'>
+        <hr class="hr-light my-4 wow fadeInDown">
         <h1 class='pt-4'>Latest Episodes</h1>
-        
-     </div>
+
+    </div>
 
 
     {{!-- {{#each podcasts.episodes}}
@@ -117,99 +117,107 @@
     </div>
     </div>
     {{/each}} --}}
-    
-{{!-- Last Episodes long but proper date--}}
 
- <div class='container my-5'>
+    {{!-- Last Episodes long but proper date--}}
+
+    <div class='container my-5'>
         <div class='row py-4'>
 
             <div class='col-lg-4'>
                 <img class="w-100 podcastImg" src="{{podcasts.episodes.[0].thumbnail}}">
             </div>
 
-        <div class='col-lg-8 mb-4 my-lg-auto'>
-            <h4 class='text-bright font-weight-bold mb-3'>{{podcasts.episodes.[0].title}}</h4>
+            <div class='col-lg-8 mb-4 my-lg-auto'>
+                <h4 class='text-bright font-weight-bold mb-3'>{{podcasts.episodes.[0].title}}</h4>
 
-            <p class='mb-4'>Release date: {{arrayOfDates.[0]}} </p>
+                <p class='mb-4'>Release date: {{arrayOfDates.[0]}} </p>
                 <p class='mb-4' font-weight-light>{{{podcasts.episodes.[0].description}}}</p>
-                 <p><a class="btn btn-outline-secondary btn-sm" href="{{podcasts.episodes.[0].link}}" target="_blank">Listen now</a></p>
-                 <form action="/listennotes/details/{{podcasts.id}}/{{podcasts.episodes.[0].id}}/addtoplaylist" method="POST">
+                <p><a class="btn btn-outline-secondary btn-sm" href="{{podcasts.episodes.[0].link}}"
+                        target="_blank">Listen now</a></p>
+                <form action="/listennotes/details/{{podcasts.id}}/{{podcasts.episodes.[0].id}}/addtoplaylist"
+                    method="POST">
                     <input class="btn btn-outline-secondary btn-sm" type="submit" value="Bookmark this episode">
                 </form>
                 {{!-- <br>
                 <button  class="btn btn-outline-secondary btn-sm" type="submit">Add as favorite</button>
                 </br> --}}
-       </div>
-    </div>
+            </div>
+        </div>
     </div>
 
 
-     <div class='container my-5'>
+    <div class='container my-5'>
         <div class='row py-4'>
 
             <div class='col-lg-4'>
                 <img class="w-100 podcastImg" src="{{podcasts.episodes.[1].thumbnail}}">
             </div>
 
-        <div class='col-lg-8 mb-4 my-lg-auto'>
-            <h4 class='text-bright font-weight-bold mb-3'>{{podcasts.episodes.[1].title}}</h4>
+            <div class='col-lg-8 mb-4 my-lg-auto'>
+                <h4 class='text-bright font-weight-bold mb-3'>{{podcasts.episodes.[1].title}}</h4>
 
-            <p class='mb-4'>Release date: {{arrayOfDates.[1]}} </p>
+                <p class='mb-4'>Release date: {{arrayOfDates.[1]}} </p>
                 <p class='mb-4' font-weight-light>{{{podcasts.episodes.[1].description}}}</p>
-                 <p><a class="btn btn-outline-secondary btn-sm" href="{{podcasts.episodes.[1].link}}" target="_blank">Listen now</a></p>
-                 <form action="/listennotes/details/{{podcasts.id}}/{{podcasts.episodes.[1].id}}/addtoplaylist" method="POST">
+                <p><a class="btn btn-outline-secondary btn-sm" href="{{podcasts.episodes.[1].link}}"
+                        target="_blank">Listen now</a></p>
+                <form action="/listennotes/details/{{podcasts.id}}/{{podcasts.episodes.[1].id}}/addtoplaylist"
+                    method="POST">
                     <input class="btn btn-outline-secondary btn-sm" type="submit" value="Bookmark this episode">
                 </form><br>
-                <button  class="btn btn-outline-secondary btn-sm" type="submit">Add as favorite</button>
+                <button class="btn btn-outline-secondary btn-sm" type="submit">Add as favorite</button>
                 </br>
-       </div>
-    </div>
+            </div>
+        </div>
     </div>
 
 
-  <div class='container my-5'>
+    <div class='container my-5'>
         <div class='row py-4'>
 
             <div class='col-lg-4'>
                 <img class="w-100 podcastImg" src="{{podcasts.episodes.[2].thumbnail}}">
             </div>
 
-        <div class='col-lg-8 mb-4 my-lg-auto'>
-            <h4 class='text-bright font-weight-bold mb-3'>{{podcasts.episodes.[2].title}}</h4>
+            <div class='col-lg-8 mb-4 my-lg-auto'>
+                <h4 class='text-bright font-weight-bold mb-3'>{{podcasts.episodes.[2].title}}</h4>
 
-            <p class='mb-4'>Release date: {{arrayOfDates.[2]}} </p>
+                <p class='mb-4'>Release date: {{arrayOfDates.[2]}} </p>
                 <p class='mb-4' font-weight-light>{{{podcasts.episodes.[2].description}}}</p>
-                 <p><a class="btn btn-outline-secondary btn-sm" href="{{podcasts.episodes.[2].link}}" target="_blank">Listen now</a></p>
-                 <form action="/listennotes/details/{{podcasts.id}}/{{podcasts.episodes.[2].id}}/addtoplaylist" method="POST">
+                <p><a class="btn btn-outline-secondary btn-sm" href="{{podcasts.episodes.[2].link}}"
+                        target="_blank">Listen now</a></p>
+                <form action="/listennotes/details/{{podcasts.id}}/{{podcasts.episodes.[2].id}}/addtoplaylist"
+                    method="POST">
                     <input class="btn btn-outline-secondary btn-sm" type="submit" value="Bookmark this episode">
                 </form><br>
-                <button  class="btn btn-outline-secondary btn-sm" type="submit">Add as favorite</button>
+                <button class="btn btn-outline-secondary btn-sm" type="submit">Add as favorite</button>
                 </br>
-       </div>
-    </div>
+            </div>
+        </div>
     </div>
 
 
-        <div class='container my-5'>
+    <div class='container my-5'>
         <div class='row py-4'>
 
             <div class='col-lg-4'>
                 <img class="w-100 podcastImg" src="{{podcasts.episodes.[3].thumbnail}}">
             </div>
 
-        <div class='col-lg-8 mb-4 my-lg-auto'>
-            <h4 class='text-bright font-weight-bold mb-3'>{{podcasts.episodes.[3].title}}</h4>
+            <div class='col-lg-8 mb-4 my-lg-auto'>
+                <h4 class='text-bright font-weight-bold mb-3'>{{podcasts.episodes.[3].title}}</h4>
 
-            <p class='mb-4'>Release date: {{arrayOfDates.[3]}} </p>
+                <p class='mb-4'>Release date: {{arrayOfDates.[3]}} </p>
                 <p class='mb-4' font-weight-light>{{{podcasts.episodes.[3].description}}}</p>
-                 <p><a class="btn btn-outline-secondary btn-sm" href="{{podcasts.episodes.[3].link}}" target="_blank">Listen now</a></p>
-                 <form action="/listennotes/details/{{podcasts.id}}/{{podcasts.episodes.[3].id}}/addtoplaylist" method="POST">
+                <p><a class="btn btn-outline-secondary btn-sm" href="{{podcasts.episodes.[3].link}}"
+                        target="_blank">Listen now</a></p>
+                <form action="/listennotes/details/{{podcasts.id}}/{{podcasts.episodes.[3].id}}/addtoplaylist"
+                    method="POST">
                     <input class="btn btn-outline-secondary btn-sm" type="submit" value="Bookmark this episode">
                 </form><br>
-                <button  class="btn btn-outline-secondary btn-sm" type="submit">Add as favorite</button>
+                <button class="btn btn-outline-secondary btn-sm" type="submit">Add as favorite</button>
                 </br>
-       </div>
-    </div>
+            </div>
+        </div>
     </div>
 
 
@@ -220,19 +228,21 @@
                 <img class="w-100 podcastImg" src="{{podcasts.episodes.[4].thumbnail}}">
             </div>
 
-        <div class='col-lg-8 mb-4 my-lg-auto'>
-            <h4 class='text-bright font-weight-bold mb-3'>{{podcasts.episodes.[4].title}}</h4>
+            <div class='col-lg-8 mb-4 my-lg-auto'>
+                <h4 class='text-bright font-weight-bold mb-3'>{{podcasts.episodes.[4].title}}</h4>
 
-            <p class='mb-4'>Release date: {{arrayOfDates.[4]}} </p>
+                <p class='mb-4'>Release date: {{arrayOfDates.[4]}} </p>
                 <p class='mb-4' font-weight-light>{{{podcasts.episodes.[4].description}}}</p>
-                 <p><a class="btn btn-outline-secondary btn-sm" href="{{podcasts.episodes.[4].link}}" target="_blank">Listen now</a></p>
-                 <form action="/listennotes/details/{{podcasts.id}}/{{podcasts.episodes.[4].id}}/addtoplaylist" method="POST">
+                <p><a class="btn btn-outline-secondary btn-sm" href="{{podcasts.episodes.[4].link}}"
+                        target="_blank">Listen now</a></p>
+                <form action="/listennotes/details/{{podcasts.id}}/{{podcasts.episodes.[4].id}}/addtoplaylist"
+                    method="POST">
                     <input class="btn btn-outline-secondary btn-sm" type="submit" value="Bookmark this episode">
                 </form><br>
-                <button  class="btn btn-outline-secondary btn-sm" type="submit">Add as favorite</button>
+                <button class="btn btn-outline-secondary btn-sm" type="submit">Add as favorite</button>
                 </br>
-       </div>
-    </div>
+            </div>
+        </div>
     </div>
 
 
@@ -244,24 +254,26 @@
                 <img class="w-100 podcastImg" src="{{podcasts.episodes.[5].thumbnail}}">
             </div>
 
-        <div class='col-lg-8 mb-4 my-lg-auto'>
-            <h4 class='text-bright font-weight-bold mb-3'>{{podcasts.episodes.[5].title}}</h4>
+            <div class='col-lg-8 mb-4 my-lg-auto'>
+                <h4 class='text-bright font-weight-bold mb-3'>{{podcasts.episodes.[5].title}}</h4>
 
-            <p class='mb-4'>Release date: {{arrayOfDates.[5]}} </p>
+                <p class='mb-4'>Release date: {{arrayOfDates.[5]}} </p>
                 <p class='mb-4' font-weight-light>{{{podcasts.episodes.[5].description}}}</p>
-                 <p><a class="btn btn-outline-secondary btn-sm" href="{{podcasts.episodes.[5].link}}" target="_blank">Listen now</a></p>
-                 <form action="/listennotes/details/{{podcasts.id}}/{{podcasts.episodes.[5].id}}/addtoplaylist" method="POST">
+                <p><a class="btn btn-outline-secondary btn-sm" href="{{podcasts.episodes.[5].link}}"
+                        target="_blank">Listen now</a></p>
+                <form action="/listennotes/details/{{podcasts.id}}/{{podcasts.episodes.[5].id}}/addtoplaylist"
+                    method="POST">
                     <input class="btn btn-outline-secondary btn-sm" type="submit" value="Bookmark this episode">
                 </form><br>
-                <button  class="btn btn-outline-secondary btn-sm" type="submit">Add as favorite</button>
+                <button class="btn btn-outline-secondary btn-sm" type="submit">Add as favorite</button>
                 </br>
-       </div>
+            </div>
+        </div>
     </div>
-    </div>
 
 
 
-{{!-- 
+    {{!-- 
   <div>
     <h2>{{podcasts.title}}</h2>
     <img class="podcastImg" src="{{podcasts.image}}">
@@ -307,10 +319,10 @@
 
   <h5>Publisher: {{podcasts.publisher}}</h5>
   <h5>Number of episodes: {{podcasts.total_episodes}}</h5> --}}
-  {{!-- {{#each arrayOfDates}}
+    {{!-- {{#each arrayOfDates}}
   <p>Release date: {{this}}</p>
   {{/each}} --}}
-  {{!-- <h5>Last episodes: </h5> 
+    {{!-- <h5>Last episodes: </h5> 
   {{#each arrayOfDates}}  
   <div>
   <p>Release date: {{this}}</p> 
@@ -329,4 +341,4 @@
    {{/each}}
   {{/each}}
 </section> --}}
- <script src="/javascripts/script.js"></script>
+    <script src="/javascripts/script.js"></script>
